@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Saudi Real Estate Tokenization — Deep Market Analysis</title>
+<link rel="icon" type="image/jpeg" href="../logo.jpeg">
+<link rel="apple-touch-icon" href="../logo.jpeg">
 <style>
 /* ============================================================
    DESIGN SYSTEM — Dark Navy + Electric Blue / Gold / Emerald
@@ -548,35 +550,18 @@ body {
     0% { transform: translateY(30px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
-  #mobile-block .block-icon {
-    width: 72px;
-    height: 52px;
+  #mobile-block .block-logo {
+    width: 64px;
+    height: 64px;
     margin: 0 auto 28px;
-    border: 2.5px solid var(--accent-blue);
-    border-radius: 6px;
-    position: relative;
-    box-shadow: 0 0 16px rgba(0, 212, 255, 0.3);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 212, 255, 0.2);
   }
-  #mobile-block .block-icon::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 24px;
-    height: 4px;
-    border-radius: 2px;
-    background: rgba(0, 212, 255, 0.4);
-  }
-  #mobile-block .block-icon::before {
-    content: '▶';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--accent-blue);
-    font-size: 16px;
-    opacity: 0.6;
+  #mobile-block .block-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   #mobile-block h2 {
     font-family: var(--font-heading);
@@ -3072,7 +3057,7 @@ body {
      ============================================================ -->
 <div id="mobile-block">
   <div class="block-card">
-    <div class="block-icon"></div>
+    <div class="block-logo"><img src="../logo.jpeg" alt="One Studio"></div>
     <h2>Desktop Only</h2>
     <div class="arabic-sub">هذا العرض مصمم للعرض على شاشة كبيرة</div>
     <p class="desc">This interactive presentation contains detailed charts, data visualizations, and multi-column layouts that require a desktop or laptop screen for the best experience.</p>
