@@ -1,0 +1,3378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Saudi Real Estate Tokenization — Deep Market Analysis</title>
+<style>
+/* ============================================================
+   DESIGN SYSTEM — Dark Navy + Electric Blue / Gold / Emerald
+   ============================================================ */
+:root {
+  --bg-primary: #0a0e27;
+  --bg-secondary: #0f1538;
+  --bg-card: rgba(15, 21, 56, 0.65);
+  --border-card: rgba(0, 212, 255, 0.12);
+  --accent-blue: #00d4ff;
+  --accent-gold: #ffd700;
+  --accent-emerald: #00c48c;
+  --accent-red: #ff4d6a;
+  --text-primary: #edf2ff;
+  --text-secondary: rgba(237, 242, 255, 0.6);
+  --text-muted: rgba(237, 242, 255, 0.35);
+  --glass-bg: rgba(15, 21, 56, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 24px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition-slide: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  --font-heading: -apple-system, 'SF Pro Display', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-body: -apple-system, 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* ---- RESET ---- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-emerald));
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 12px var(--accent-blue);
+}
+
+/* ============================================================
+   SLIDE COUNTER
+   ============================================================ */
+#slide-counter {
+  position: fixed; bottom: 28px; right: 36px; z-index: 1000;
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--text-muted); letter-spacing: 0.08em;
+  user-select: none; pointer-events: none;
+}
+#slide-counter .current { color: var(--accent-blue); font-weight: 600; }
+
+/* ============================================================
+   NAV HINT (bottom-center arrows)
+   ============================================================ */
+#nav-hint {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  z-index: 999; display: flex; gap: 8px; opacity: 0.25;
+  transition: opacity var(--transition-fast);
+}
+#nav-hint:hover { opacity: 0.6; }
+#nav-hint button {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--glass-border); background: var(--glass-bg);
+  color: var(--text-secondary); cursor: pointer; font-size: 16px;
+  display: grid; place-items: center;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+#nav-hint button:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+/* ============================================================
+   SLIDE CONTAINER
+   ============================================================ */
+#slideshow {
+  position: relative; width: 100vw; height: 100vh; overflow: hidden;
+}
+
+/* ---- Individual slide ---- */
+.slide {
+  position: absolute; inset: 0;
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 60px 80px;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity var(--transition-slide), transform var(--transition-slide);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+.slide.active {
+  opacity: 1; transform: translateX(0); pointer-events: auto; z-index: 2;
+}
+.slide.exit-left {
+  opacity: 0; transform: translateX(-60px); pointer-events: none;
+}
+.slide.exit-right {
+  opacity: 0; transform: translateX(60px); pointer-events: none;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.slide h1 {
+  font-family: var(--font-heading); font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  line-height: 1.1; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+.slide h2 {
+  font-family: var(--font-heading); font-weight: 600;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  line-height: 1.2; letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.slide h3 {
+  font-family: var(--font-heading); font-weight: 600;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: var(--accent-blue); text-transform: uppercase;
+  letter-spacing: 0.14em; font-size: 0.75rem;
+  margin-bottom: 20px;
+}
+.slide p, .slide li {
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.65; color: var(--text-secondary);
+}
+.slide .subtitle {
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: var(--text-secondary); font-weight: 400;
+  margin-bottom: 32px;
+}
+.slide .label {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   GLASS CARD
+   ============================================================ */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  padding: 32px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.glass:hover {
+  border-color: rgba(0, 212, 255, 0.22);
+  box-shadow: 0 8px 40px rgba(0, 212, 255, 0.06);
+}
+.glass-sm { padding: 20px; border-radius: var(--radius-sm); }
+
+/* ============================================================
+   STAT NUMBER (animated counter)
+   ============================================================ */
+.stat-number {
+  font-family: var(--font-heading); font-weight: 700;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.stat-number.blue { color: var(--accent-blue); }
+.stat-number.gold { color: var(--accent-gold); }
+.stat-number.emerald { color: var(--accent-emerald); }
+.stat-label {
+  font-size: 0.85rem; color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* ============================================================
+   LAYOUT HELPERS
+   ============================================================ */
+.slide-inner { width: 100%; max-width: 1200px; }
+.row { display: flex; gap: 24px; flex-wrap: wrap; }
+.col { flex: 1; min-width: 220px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+.center-content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.gap-40 { gap: 40px; }
+.mt-24 { margin-top: 24px; }
+.mt-40 { margin-top: 40px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-32 { margin-bottom: 32px; }
+
+/* ============================================================
+   TIMELINE COMPONENT
+   ============================================================ */
+.timeline-track {
+  position: relative; display: flex; align-items: flex-start;
+  justify-content: space-between; width: 100%; padding-top: 40px;
+}
+.timeline-track::before {
+  content: ''; position: absolute; top: 52px; left: 5%; right: 5%;
+  height: 2px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-emerald));
+  opacity: 0.4;
+}
+.timeline-node {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; z-index: 1; flex: 1; text-align: center;
+}
+.timeline-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent-blue); border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
+  margin-bottom: 14px;
+}
+.timeline-dot.gold { background: var(--accent-gold); box-shadow: 0 0 12px rgba(255, 215, 0, 0.4); }
+.timeline-dot.emerald { background: var(--accent-emerald); box-shadow: 0 0 12px rgba(0, 196, 140, 0.4); }
+
+/* ============================================================
+   PILLAR / COLUMN DIAGRAM
+   ============================================================ */
+.pillar {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 32px 24px; border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  min-height: 260px;
+}
+.pillar-icon {
+  font-size: 2rem; margin-bottom: 16px;
+}
+
+/* ============================================================
+   EXPANDABLE CARD (opportunity map)
+   ============================================================ */
+.expand-card {
+  cursor: pointer; transition: all var(--transition-fast);
+  overflow: hidden; max-height: 120px;
+}
+.expand-card.expanded {
+  max-height: 600px;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 32px rgba(0, 212, 255, 0.1);
+}
+.expand-card .expand-body {
+  opacity: 0; max-height: 0; overflow: hidden;
+  transition: opacity 0.3s, max-height 0.4s;
+}
+.expand-card.expanded .expand-body {
+  opacity: 1; max-height: 400px; margin-top: 16px;
+}
+
+/* ============================================================
+   STACK DIAGRAM (TokenStack)
+   ============================================================ */
+.stack {
+  display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 700px;
+}
+.stack-layer {
+  padding: 20px 28px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: space-between;
+  font-weight: 600; font-size: 1.05rem;
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-fast);
+}
+.stack-layer:hover { transform: translateX(6px); border-color: var(--accent-blue); }
+.stack-layer .layer-num {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--text-muted); letter-spacing: 0.12em;
+}
+
+/* ============================================================
+   COVER SLIDE ANIMATED BG
+   ============================================================ */
+#cover {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0, 212, 255, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0, 196, 140, 0.05) 0%, transparent 50%),
+    var(--bg-primary);
+  overflow: hidden;
+}
+#cover::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,212,255,0.015) 0px, transparent 1px, transparent 80px),
+    repeating-linear-gradient(0deg, rgba(0,212,255,0.015) 0px, transparent 1px, transparent 80px);
+  animation: gridPulse 8s ease-in-out infinite alternate;
+}
+@keyframes gridPulse {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.7; }
+}
+#cover .orb {
+  position: absolute; border-radius: 50%; filter: blur(80px);
+  animation: orbFloat 12s ease-in-out infinite alternate;
+}
+#cover .orb-1 {
+  width: 500px; height: 500px; top: -10%; left: -8%;
+  background: radial-gradient(circle, rgba(0,212,255,0.12), transparent 70%);
+}
+#cover .orb-2 {
+  width: 400px; height: 400px; bottom: -10%; right: -5%;
+  background: radial-gradient(circle, rgba(0,196,140,0.08), transparent 70%);
+  animation-delay: -4s; animation-duration: 15s;
+}
+@keyframes orbFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, -20px) scale(1.1); }
+}
+
+/* ============================================================
+   OVERVIEW / GRID MODE
+   ============================================================ */
+#overview {
+  position: fixed; inset: 0; z-index: 5000;
+  background: rgba(5, 7, 20, 0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  display: none; /* toggled via JS */
+  overflow-y: auto; padding: 40px;
+}
+#overview.open { display: block; }
+#overview .overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px; max-width: 1400px; margin: 0 auto;
+}
+#overview .overview-thumb {
+  aspect-ratio: 16/9; border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--bg-secondary);
+  cursor: pointer; padding: 16px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+#overview .overview-thumb:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.12);
+  transform: translateY(-2px);
+}
+#overview .overview-thumb.current {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+}
+#overview .overview-thumb .thumb-num {
+  position: absolute; top: 8px; left: 12px;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: var(--text-muted); letter-spacing: 0.1em;
+}
+#overview .overview-thumb h4 {
+  font-size: 0.85rem; color: var(--text-primary);
+  line-height: 1.3; font-weight: 600;
+}
+#overview .overview-title {
+  text-align: center; font-size: 0.75rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-muted);
+  margin-bottom: 28px; font-family: var(--font-mono);
+}
+
+/* ============================================================
+   FADE-IN ANIMATIONS (scroll / slide triggered)
+   ============================================================ */
+.anim-fade { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.anim-fade.visible { opacity: 1; transform: translateY(0); }
+.anim-fade-delay-1 { transition-delay: 0.1s; }
+.anim-fade-delay-2 { transition-delay: 0.2s; }
+.anim-fade-delay-3 { transition-delay: 0.3s; }
+.anim-fade-delay-4 { transition-delay: 0.4s; }
+.anim-fade-delay-5 { transition-delay: 0.5s; }
+.anim-fade-delay-6 { transition-delay: 0.6s; }
+.anim-fade-delay-7 { transition-delay: 0.7s; }
+
+/* ============================================================
+   ICON CARD (pain points, etc.)
+   ============================================================ */
+.icon-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 24px 16px;
+}
+.icon-card .icon {
+  font-size: 2rem; margin-bottom: 12px;
+  width: 56px; height: 56px; display: grid; place-items: center;
+  border-radius: 14px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.12);
+}
+.icon-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+.icon-card p { font-size: 0.8rem; color: var(--text-muted); }
+
+/* ============================================================
+   COMPARISON TABLE
+   ============================================================ */
+.compare-table { width: 100%; border-collapse: collapse; }
+.compare-table th, .compare-table td {
+  padding: 14px 20px; text-align: left; font-size: 0.9rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+.compare-table th {
+  color: var(--text-muted); font-weight: 500; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.compare-table td { color: var(--text-secondary); }
+.compare-table .highlight { color: var(--accent-blue); font-weight: 600; }
+
+/* ============================================================
+   PHASE / ROADMAP
+   ============================================================ */
+.phase-card {
+  position: relative; padding-left: 20px;
+}
+.phase-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; border-radius: 2px;
+  background: var(--accent-blue);
+}
+.phase-card.phase-2::before { background: var(--accent-gold); }
+.phase-card.phase-3::before { background: var(--accent-emerald); }
+
+/* ============================================================
+   CTA BUTTON
+   ============================================================ */
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 36px; border-radius: 60px;
+  font-weight: 600; font-size: 1rem;
+  border: none; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent-blue), #0098cc);
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(0, 212, 255, 0.3);
+  transition: all var(--transition-fast);
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 212, 255, 0.4);
+}
+
+/* ============================================================
+   BADGE / TAG
+   ============================================================ */
+.badge {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge-blue { background: rgba(0,212,255,0.12); color: var(--accent-blue); }
+.badge-gold { background: rgba(255,215,0,0.12); color: var(--accent-gold); }
+.badge-emerald { background: rgba(0,196,140,0.12); color: var(--accent-emerald); }
+.badge-red { background: rgba(255,77,106,0.12); color: var(--accent-red); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  /* --- MOBILE SCROLL MODE --- */
+  body.mobile-mode {
+    overflow: auto !important;
+    overflow-x: hidden !important;
+  }
+  body.mobile-mode #slideshow {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+  body.mobile-mode .slide {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    z-index: 1 !important;
+    transition: none !important;
+  }
+  body.mobile-mode .slide.exit-left,
+  body.mobile-mode .slide.exit-right {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  /* Slide padding */
+  .slide { padding: 32px 20px; }
+
+  /* Grid overrides */
+  .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+  .row { flex-direction: column; }
+
+  /* Glass card */
+  .glass { padding: 20px; }
+
+  /* Stat numbers */
+  .stat-number { font-size: clamp(1.8rem, 8vw, 2.8rem); }
+
+  /* Timeline stack vertically */
+  .timeline-track { flex-direction: column; gap: 20px; align-items: flex-start; }
+  .timeline-track::before { display: none; }
+
+  /* Nav arrows: hide */
+  #nav-hint { display: none; }
+
+  /* Stack layout */
+  .stack { max-width: 100%; }
+
+  /* Reduce backdrop-filter for performance */
+  .glass,
+  .exec-stat-card,
+  .platform-card,
+  .infra-leader-card,
+  .timeline-card,
+  .mktsize-growth,
+  .comp-col {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Cover slide: reduce animation intensity */
+  body.mobile-mode #cover .orb {
+    animation-duration: 20s !important;
+    filter: blur(100px) !important;
+  }
+  body.mobile-mode #cover::before {
+    animation: none !important;
+    opacity: 0.4 !important;
+  }
+
+  /* --- SLIDE COUNTER: sticky badge at top-right --- */
+  body.mobile-mode #slide-counter {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    bottom: auto;
+    left: auto;
+    font-size: 11px;
+    background: rgba(10, 14, 39, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    z-index: 1000;
+  }
+
+  /* --- BACK TO TOP BUTTON --- */
+  #mobile-back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(10, 14, 39, 0.9);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    color: var(--accent-blue);
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  body.mobile-mode #mobile-back-to-top.visible {
+    display: flex;
+  }
+
+  /* --- MOBILE DISCLAIMER MODAL --- */
+  #mobile-disclaimer {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 14, 39, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    opacity: 0;
+    animation: mobileModalFadeIn 0.5s ease forwards;
+  }
+  @keyframes mobileModalFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  #mobile-disclaimer .modal-card {
+    background: rgba(15, 21, 56, 0.9);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 24px;
+    padding: 40px 32px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: mobileModalSlideUp 0.5s ease 0.15s forwards;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(0, 212, 255, 0.08);
+  }
+  @keyframes mobileModalSlideUp {
+    0% { transform: translateY(30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  #mobile-disclaimer .modal-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    display: block;
+    opacity: 0.85;
+  }
+  #mobile-disclaimer h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  #mobile-disclaimer .arabic-sub {
+    font-size: 0.9rem;
+    color: rgba(255, 215, 0, 0.7);
+    margin-bottom: 16px;
+    direction: rtl;
+  }
+  #mobile-disclaimer .desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 28px;
+  }
+  #mobile-disclaimer .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent-blue), #0098cc);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #mobile-disclaimer .btn-primary:active {
+    transform: scale(0.97);
+  }
+  #mobile-disclaimer .btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 12px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  #mobile-disclaimer .btn-secondary:active {
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Toast notification */
+  #copy-toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(0, 196, 140, 0.9);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+  #copy-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Inline style overrides for slide-specific inline layouts */
+  body.mobile-mode [style*="display:flex"][style*="gap:32px"],
+  body.mobile-mode .exec-stats-row {
+    gap: 16px !important;
+  }
+  body.mobile-mode .exec-stat-card {
+    min-width: unset !important;
+    max-width: 100% !important;
+    padding: 28px 20px !important;
+  }
+  body.mobile-mode .exec-big-number {
+    font-size: 42px !important;
+  }
+  body.mobile-mode .mktsize-hero-number {
+    font-size: 48px !important;
+  }
+  body.mobile-mode .global-big {
+    font-size: 36px !important;
+  }
+  body.mobile-mode .global-arrow-glow {
+    font-size: 28px !important;
+  }
+
+  /* Dual regulation: stack the pillars vertically */
+  body.mobile-mode #dual-regulation [style*="display:flex"][style*="align-items:stretch"] {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  body.mobile-mode #dual-regulation [style*="flex:0 0 200px"] {
+    flex: none !important;
+    width: 100% !important;
+  }
+  body.mobile-mode #dual-regulation [style*="flex:1;max-width:280px"] {
+    max-width: 100% !important;
+  }
+  body.mobile-mode #dual-regulation [style*="border-radius:16px 0 0 16px"] {
+    border-radius: 16px 16px 0 0 !important;
+  }
+  body.mobile-mode #dual-regulation [style*="border-radius:0 16px 16px 0"] {
+    border-radius: 0 0 16px 16px !important;
+  }
+
+  /* Roadmap: stack phases vertically */
+  body.mobile-mode #roadmap [style*="display:flex"][style*="align-items:stretch"] {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  body.mobile-mode #roadmap [style*="font-size:1.5rem"][style*="padding:0 4px"] {
+    display: none !important;
+  }
+
+  /* Registry truth diagram: make responsive */
+  body.mobile-mode #registry-truth [style*="height:420px"] {
+    height: auto !important;
+    min-height: 350px;
+  }
+
+  /* Enabler thesis: fix grid */
+  body.mobile-mode #enabler-thesis [style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Consumer platforms grid */
+  body.mobile-mode #consumer-platforms [style*="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Multi-asset grid */
+  body.mobile-mode #multi-asset [style*="grid-template-columns:repeat(auto-fit,minmax(360px,1fr))"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Opportunity map grid */
+  body.mobile-mode #opportunity-map [style*="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Non-mobile: hide mobile-only elements */
+@media (min-width: 769px) {
+  #mobile-disclaimer { display: none !important; }
+  #mobile-back-to-top { display: none !important; }
+  #copy-toast { display: none !important; }
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  body { overflow: visible; background: #fff; color: #111; }
+  #progress-bar, #slide-counter, #nav-hint, #overview { display: none !important; }
+  .slide {
+    position: relative !important;
+    opacity: 1 !important; transform: none !important;
+    pointer-events: auto !important;
+    page-break-after: always;
+    height: auto; min-height: 100vh;
+    border-bottom: 1px solid #ccc;
+  }
+  .slide h1 { -webkit-text-fill-color: #111; background: none; color: #111; }
+  .glass { background: #f5f5f5; border-color: #ddd; backdrop-filter: none; }
+}
+
+
+/* ============================================================
+   CONTENT SLIDE STYLES (from data + strategy files)
+   ============================================================ */
+/* --- Styles for slide: exec-summary --- */
+
+    .exec-stats-row {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .exec-stat-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      flex: 1;
+      min-width: 260px;
+      max-width: 360px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+    }
+    .exec-stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, #00d4ff), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .exec-stat-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--card-glow, rgba(0,212,255,0.1));
+    }
+    .exec-stat-card:hover::before { opacity: 1; }
+    .exec-stat-card:nth-child(1) { --card-accent: #00d4ff; --card-glow: rgba(0,212,255,0.15); }
+    .exec-stat-card:nth-child(2) { --card-accent: #ffd700; --card-glow: rgba(255,215,0,0.15); }
+    .exec-stat-card:nth-child(3) { --card-accent: #00c48c; --card-glow: rgba(0,196,140,0.15); }
+    .exec-big-number {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    .exec-stat-card:nth-child(1) .exec-big-number { color: #00d4ff; }
+    .exec-stat-card:nth-child(2) .exec-big-number { color: #ffd700; }
+    .exec-stat-card:nth-child(3) .exec-big-number { color: #00c48c; }
+    .exec-label {
+      font-size: 15px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+    .exec-sublabel {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 400;
+    }
+    .exec-thesis {
+      text-align: center;
+      font-size: 18px;
+      color: rgba(255,255,255,0.7);
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.6;
+      padding: 24px 32px;
+      background: rgba(0,212,255,0.04);
+      border: 1px solid rgba(0,212,255,0.1);
+      border-radius: 12px;
+      font-style: italic;
+    }
+    .exec-thesis strong {
+      color: #00d4ff;
+      font-style: normal;
+    }
+  
+
+/* --- Styles for slide: timeline --- */
+
+    .timeline-container {
+      position: relative;
+      padding: 40px 0;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .timeline-line {
+      position: absolute;
+      top: 50%;
+      left: 40px;
+      right: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(0,212,255,0.1), rgba(0,212,255,0.4), rgba(0,212,255,0.1));
+      transform: translateY(-1px);
+    }
+    .timeline-events {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    .timeline-event {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      padding: 0 8px;
+      position: relative;
+    }
+    .timeline-event:nth-child(odd) .timeline-card { order: -1; margin-bottom: 24px; }
+    .timeline-event:nth-child(even) .timeline-card { order: 1; margin-top: 24px; }
+    .timeline-dot-wrapper {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .timeline-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #00d4ff;
+      box-shadow: 0 0 20px rgba(0,212,255,0.6);
+      position: relative;
+      z-index: 2;
+    }
+    .timeline-dot-pulse {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(0,212,255,0.3);
+      animation: tlPulse 2s ease-in-out infinite;
+    }
+    .timeline-event:nth-child(1) .timeline-dot-pulse { animation-delay: 0s; }
+    .timeline-event:nth-child(2) .timeline-dot-pulse { animation-delay: 0.4s; }
+    .timeline-event:nth-child(3) .timeline-dot-pulse { animation-delay: 0.8s; }
+    .timeline-event:nth-child(4) .timeline-dot-pulse { animation-delay: 1.2s; }
+    .timeline-event:nth-child(5) .timeline-dot-pulse { animation-delay: 1.6s; }
+    .timeline-event:nth-child(5) .timeline-dot { background: rgba(0,212,255,0.5); border: 2px dashed rgba(0,212,255,0.6); width: 10px; height: 10px; }
+    @keyframes tlPulse {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(2.8); opacity: 0; }
+    }
+    .timeline-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px 18px;
+      text-align: center;
+      min-width: 160px;
+      max-width: 200px;
+      transition: all 0.3s;
+    }
+    .timeline-card:hover {
+      border-color: rgba(0,212,255,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .timeline-date {
+      font-size: 12px;
+      font-weight: 700;
+      color: #00d4ff;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+    .timeline-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+    }
+    .timeline-event:nth-child(5) .timeline-date { color: rgba(0,212,255,0.5); }
+    .timeline-event:nth-child(5) .timeline-card { border-style: dashed; border-color: rgba(255,255,255,0.06); }
+
+    @media (max-width: 768px) {
+      .timeline-line {
+        top: 0; bottom: 0; left: 24px; right: auto;
+        width: 2px; height: auto;
+        transform: none;
+      }
+      .timeline-events {
+        flex-direction: column;
+        gap: 32px;
+        padding-left: 56px;
+      }
+      .timeline-event {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .timeline-dot-wrapper {
+        position: absolute;
+        left: -42px;
+        top: 14px;
+      }
+      .timeline-event:nth-child(odd) .timeline-card,
+      .timeline-event:nth-child(even) .timeline-card {
+        order: unset;
+        margin: 0;
+        text-align: left;
+        max-width: 100%;
+      }
+    }
+  
+
+/* --- Styles for slide: platforms-overview --- */
+
+    .platforms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) { .platforms-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { .platforms-grid { grid-template-columns: 1fr; } }
+    .platform-card {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 22px 22px 22px 26px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .platform-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+    }
+    .platform-card:hover {
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    .platform-card[data-type="b2g"]::before { background: #00d4ff; }
+    .platform-card[data-type="b2b"]::before { background: #ffd700; }
+    .platform-card[data-type="b2c"]::before { background: #00c48c; }
+    .platform-card[data-type="cultural"]::before { background: #c084fc; }
+    .platform-card[data-type="multi"]::before { background: #ff6b6b; }
+    .platform-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .platform-name-ar {
+      font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      margin-left: 6px;
+    }
+    .platform-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    [data-type="b2g"] .platform-badge { background: rgba(0,212,255,0.15); color: #00d4ff; }
+    [data-type="b2b"] .platform-badge { background: rgba(255,215,0,0.15); color: #ffd700; }
+    [data-type="b2c"] .platform-badge { background: rgba(0,196,140,0.15); color: #00c48c; }
+    [data-type="cultural"] .platform-badge { background: rgba(192,132,252,0.15); color: #c084fc; }
+    [data-type="multi"] .platform-badge { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+    .platform-min {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+    .platform-min strong {
+      color: rgba(255,255,255,0.8);
+      font-weight: 600;
+    }
+    .platform-stat {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.4;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+  
+
+/* --- Styles for slide: infrastructure-leaders --- */
+
+    .infra-leaders-row {
+      display: flex;
+      gap: 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: stretch;
+    }
+    @media (max-width: 768px) { .infra-leaders-row { flex-direction: column; } }
+    .infra-leader-card {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s;
+    }
+    .infra-leader-card:hover {
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    }
+    .infra-leader-card::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .infra-card-dropp::after { background: radial-gradient(circle, #00d4ff, transparent 70%); }
+    .infra-card-nola::after { background: radial-gradient(circle, #ffd700, transparent 70%); }
+    .infra-card-dropp { border-top: 2px solid rgba(0,212,255,0.4); }
+    .infra-card-nola { border-top: 2px solid rgba(255,215,0,0.4); }
+    .infra-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+    .infra-card-dropp .infra-icon { background: rgba(0,212,255,0.1); }
+    .infra-card-nola .infra-icon { background: rgba(255,215,0,0.1); }
+    .infra-leader-title {
+      font-size: 22px; font-weight: 800; color: #fff;
+      margin-bottom: 4px;
+    }
+    .infra-leader-subtitle {
+      font-size: 14px; font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .infra-card-dropp .infra-leader-subtitle { color: #00d4ff; }
+    .infra-card-nola .infra-leader-subtitle { color: #ffd700; }
+    .infra-detail {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .infra-detail-icon {
+      flex-shrink: 0;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-top: 7px;
+    }
+    .infra-card-dropp .infra-detail-icon { background: #00d4ff; }
+    .infra-card-nola .infra-detail-icon { background: #ffd700; }
+    .infra-detail-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(255,255,255,0.4);
+      margin-bottom: 2px;
+    }
+    .infra-detail-value {
+      font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.5;
+    }
+    .infra-partners {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+    }
+    .infra-partner-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+  
+
+/* --- Styles for slide: market-size --- */
+
+    .mktsize-container {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .mktsize-hero {
+      margin-bottom: 40px;
+    }
+    .mktsize-hero-number {
+      font-size: 80px;
+      font-weight: 900;
+      color: #00d4ff;
+      letter-spacing: -3px;
+      line-height: 1;
+      text-shadow: 0 0 60px rgba(0,212,255,0.3);
+    }
+    .mktsize-hero-label {
+      font-size: 18px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 8px;
+    }
+    .mktsize-sub-stat {
+      font-size: 20px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+    }
+    .mktsize-sub-stat strong { color: #ffd700; font-weight: 700; }
+    .mktsize-vision-row {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 36px 0 44px;
+    }
+    .mktsize-vision-pill {
+      background: rgba(255,215,0,0.06);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 40px;
+      padding: 12px 24px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+    }
+    .mktsize-vision-pill strong { color: #ffd700; }
+    .mktsize-growth {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 36px 40px;
+    }
+    .mktsize-growth-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .mktsize-growth-year {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 600;
+    }
+    .mktsize-growth-year strong {
+      font-size: 28px;
+      color: #fff;
+      display: block;
+      margin-top: 2px;
+    }
+    .mktsize-cagr-badge {
+      background: rgba(0,196,140,0.12);
+      color: #00c48c;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(0,196,140,0.2);
+    }
+    .mktsize-bar-track {
+      width: 100%;
+      height: 40px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .mktsize-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      position: relative;
+      transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mktsize-bar-2025 {
+      background: linear-gradient(90deg, #00d4ff, #0090b0);
+      width: 0%;
+    }
+    .mktsize-bar-2025.animate { width: 56%; }
+    .mktsize-bar-2034 {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(0,212,255,0.2), rgba(0,212,255,0.08));
+      border-radius: 10px;
+      border: 1px dashed rgba(0,212,255,0.3);
+      width: 0%;
+      transition: width 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition-delay: 0.5s;
+    }
+    .mktsize-bar-2034.animate { width: 100%; }
+    .mktsize-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+    .mktsize-growth-arrow {
+      color: rgba(255,255,255,0.15);
+      font-size: 32px;
+      line-height: 1;
+    }
+  
+
+/* --- Styles for slide: global-context --- */
+
+    .global-container {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .global-growth-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .global-big {
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: -2px;
+    }
+    .global-big-from { color: rgba(255,255,255,0.5); }
+    .global-big-to { color: #00d4ff; text-shadow: 0 0 40px rgba(0,212,255,0.3); }
+    .global-arrow-glow {
+      font-size: 40px;
+      color: #00d4ff;
+      animation: arrowPulse 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px rgba(0,212,255,0.5));
+    }
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.6; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(6px); }
+    }
+    .global-multiplier {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffd700;
+      margin-bottom: 8px;
+    }
+    .global-sublabel {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 40px;
+    }
+    .global-gcc {
+      background: rgba(255,215,0,0.06);
+      border: 1px solid rgba(255,215,0,0.12);
+      border-radius: 14px;
+      padding: 20px 32px;
+      display: inline-block;
+      margin-bottom: 44px;
+    }
+    .global-gcc-number {
+      font-size: 36px;
+      font-weight: 800;
+      color: #ffd700;
+    }
+    .global-gcc-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+    }
+    .global-adoption {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .global-donut-wrapper {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+    .global-donut-svg {
+      transform: rotate(-90deg);
+    }
+    .global-donut-seg {
+      fill: none;
+      stroke-width: 22;
+      stroke-linecap: butt;
+      transition: stroke-dasharray 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .global-donut-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .global-donut-center-num {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .global-donut-center-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .global-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .global-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+    .global-legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .global-legend-pct {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      min-width: 48px;
+    }
+    .global-legend-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+    }
+  
+
+/* --- Styles for slide: dubai-comparison --- */
+
+    .comp-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .comp-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 700px) { .comp-columns { grid-template-columns: 1fr; } }
+    .comp-col {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .comp-col-header {
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .comp-dubai .comp-col-header {
+      background: linear-gradient(135deg, rgba(255,107,107,0.08), rgba(255,107,107,0.02));
+      border-bottom: 1px solid rgba(255,107,107,0.1);
+    }
+    .comp-saudi .comp-col-header {
+      background: linear-gradient(135deg, rgba(0,196,140,0.08), rgba(0,196,140,0.02));
+      border-bottom: 1px solid rgba(0,196,140,0.1);
+    }
+    .comp-flag {
+      font-size: 32px;
+      line-height: 1;
+    }
+    .comp-col-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .comp-col-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+    .comp-rows {
+      padding: 8px 0;
+    }
+    .comp-row {
+      padding: 16px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .comp-row:last-child { border-bottom: none; }
+    .comp-row-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 6px;
+    }
+    .comp-row-value {
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.5;
+    }
+    .comp-saudi .comp-row-value { color: rgba(255,255,255,0.9); }
+    .comp-highlight-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .badge-ahead {
+      background: rgba(255,107,107,0.12);
+      color: #ff8a8a;
+    }
+    .badge-advantage {
+      background: rgba(0,196,140,0.12);
+      color: #00c48c;
+    }
+    .comp-edge-bar {
+      margin: 28px auto 0;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(0,196,140,0.15);
+      border-radius: 14px;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      max-width: 1000px;
+    }
+    .comp-edge-icon {
+      width: 40px; height: 40px;
+      background: rgba(0,196,140,0.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+    .comp-edge-text {
+      font-size: 15px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.5;
+    }
+    .comp-edge-text strong { color: #00c48c; }
+  
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PROGRESS BAR
+     ============================================================ -->
+<div id="progress-bar" style="width: 0%"></div>
+
+<!-- ============================================================
+     SLIDE COUNTER
+     ============================================================ -->
+<div id="slide-counter">
+  <span class="current">1</span> / <span class="total">18</span>
+</div>
+
+<!-- ============================================================
+     NAV HINT
+     ============================================================ -->
+<div id="nav-hint">
+  <button onclick="slideshow.prev()" aria-label="Previous slide">&#8592;</button>
+  <button onclick="slideshow.next()" aria-label="Next slide">&#8594;</button>
+</div>
+
+<!-- ============================================================
+     OVERVIEW MODE
+     ============================================================ -->
+<div id="overview">
+  <div class="overview-title">Slide Overview &mdash; Press ESC to close</div>
+  <div class="overview-grid" id="overview-grid"></div>
+</div>
+
+<!-- ============================================================
+     SLIDESHOW CONTAINER
+     ============================================================ -->
+<div id="slideshow">
+
+  <!-- ========== 1. COVER ========== -->
+  <section class="slide" id="cover" data-slide="1">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="slide-inner center-content" style="position:relative;z-index:1;">
+      <h3 class="anim-fade">One Studio | March 2026</h3>
+      <h1 class="anim-fade anim-fade-delay-1" style="font-size:clamp(2.4rem,6vw,4.5rem);">Saudi Real Estate<br>Tokenization</h1>
+      <p class="subtitle anim-fade anim-fade-delay-2">Deep Market Analysis &amp; Opportunity Map</p>
+      <div class="anim-fade anim-fade-delay-3" style="margin-top:40px;display:flex;gap:32px;">
+        <div><span class="stat-number blue" data-count="533" data-prefix="$" data-suffix="B">$0B</span><div class="stat-label">Market Size</div></div>
+        <div><span class="stat-number gold" data-count="9">0</span><div class="stat-label">Licensed Platforms</div></div>
+        <div><span class="stat-number emerald" data-count="3.2" data-prefix="$" data-suffix="T" data-decimals="1">$0T</span><div class="stat-label">2030 Projection</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 2. EXEC SUMMARY ========== -->
+  <section class="slide" id="exec-summary" data-slide="2">
+    <div class="slide-content" id="exec-summary-content">
+  <div class="exec-stats-row">
+    <div class="exec-stat-card">
+      <div class="exec-big-number" data-countup="533" data-prefix="$" data-suffix="B">$0B</div>
+      <div class="exec-label">Annual RE Transactions (2024)</div>
+      <div class="exec-sublabel">622,000+ deals</div>
+    </div>
+    <div class="exec-stat-card">
+      <div class="exec-big-number" data-countup="9" data-prefix="" data-suffix="">0</div>
+      <div class="exec-label">REGA-Licensed Platforms</div>
+      <div class="exec-sublabel">First cohort graduated</div>
+    </div>
+    <div class="exec-stat-card">
+      <div class="exec-big-number" data-countup="3.2" data-prefix="$" data-suffix="T" data-decimals="1">$0T</div>
+      <div class="exec-label">Projected Market by 2030</div>
+      <div class="exec-sublabel">BCG estimate</div>
+    </div>
+  </div>
+  <div class="exec-thesis">
+    Saudi Arabia launched the world's first national-scale real estate tokenization infrastructure — <strong>the enabler layer is wide open.</strong>
+  </div>
+
+  </div>
+<!-- END SLIDE: exec-summary -->
+  </section>
+
+  <!-- ========== 3. TIMELINE ========== -->
+  <section class="slide" id="timeline" data-slide="3">
+    <div class="slide-content" id="timeline-content">
+  <div class="timeline-container">
+    <div class="timeline-line"></div>
+    <div class="timeline-events">
+      <div class="timeline-event">
+        <div class="timeline-card">
+          <div class="timeline-date">Jun 2025</div>
+          <div class="timeline-desc">Rafal / droppRWA pilot — first private-sector tokenized RE</div>
+        </div>
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot-pulse"></div>
+          <div class="timeline-dot"></div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot-pulse"></div>
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-card">
+          <div class="timeline-date">Nov 2025</div>
+          <div class="timeline-desc">First sovereign tokenized deed transfer (66 seconds)</div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-card">
+          <div class="timeline-date">Jan 2026</div>
+          <div class="timeline-desc">Aamal Portal + live tokenization at RE Future Forum</div>
+        </div>
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot-pulse"></div>
+          <div class="timeline-dot"></div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot-pulse"></div>
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-card">
+          <div class="timeline-date">Feb 2026</div>
+          <div class="timeline-desc">Second sandbox cohort opened</div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-card">
+          <div class="timeline-date">~Jun 2026</div>
+          <div class="timeline-desc">Formal regulations expected</div>
+        </div>
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot-pulse"></div>
+          <div class="timeline-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END SLIDE: timeline -->
+  </section>
+
+  <!-- ========== 4. REGISTRY TRUTH ========== -->
+  <section class="slide" id="registry-truth" data-slide="4">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2.2rem;margin-bottom:50px;text-align:center;background:linear-gradient(135deg,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;">Registry as the Single Source of Truth</h2>
+
+  <div style="position:relative;width:100%;max-width:800px;height:420px;">
+    <!-- Center hub -->
+    <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(0,212,255,0.25),rgba(0,212,255,0.05));border:2px solid #00d4ff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(0,212,255,0.3),0 0 80px rgba(0,212,255,0.1),inset 0 0 30px rgba(0,212,255,0.1);z-index:2;">
+      <div style="font-size:2.5rem;margin-bottom:6px;">⛓️</div>
+      <div style="font-size:0.85rem;font-weight:700;color:#00d4ff;text-align:center;line-height:1.3;padding:0 10px;">Real Estate<br>Registry (RER)</div>
+      <div style="font-size:0.6rem;color:rgba(255,255,255,0.5);margin-top:4px;">Blockchain-backed</div>
+    </div>
+
+    <!-- Connecting lines via SVG -->
+    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;" viewBox="0 0 800 420">
+      <defs>
+        <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0"/><stop offset="50%" style="stop-color:#00d4ff;stop-opacity:0.6"/><stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0"/></linearGradient>
+        <linearGradient id="lineGradV" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0"/><stop offset="50%" style="stop-color:#00d4ff;stop-opacity:0.6"/><stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0"/></linearGradient>
+        <filter id="glow1"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <!-- Top line -->
+      <line x1="400" y1="110" x2="400" y2="50" stroke="url(#lineGradV)" stroke-width="2" filter="url(#glow1)"/>
+      <!-- Left line -->
+      <line x1="300" y1="210" x2="170" y2="210" stroke="url(#lineGrad1)" stroke-width="2" filter="url(#glow1)"/>
+      <!-- Right line -->
+      <line x1="500" y1="210" x2="630" y2="210" stroke="url(#lineGrad1)" stroke-width="2" filter="url(#glow1)"/>
+      <!-- Bottom line -->
+      <line x1="400" y1="310" x2="400" y2="370" stroke="url(#lineGradV)" stroke-width="2" filter="url(#glow1)"/>
+    </svg>
+
+    <!-- Top node: Tokenized Deed -->
+    <div style="position:absolute;left:50%;top:0;transform:translateX(-50%);background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.4);border-radius:14px;padding:14px 24px;text-align:center;backdrop-filter:blur(10px);box-shadow:0 0 20px rgba(255,215,0,0.15);z-index:2;">
+      <div style="font-size:1.3rem;">📜</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#ffd700;">Tokenized Deed = Legal Title</div>
+      <div style="font-size:0.6rem;color:rgba(255,255,255,0.5);margin-top:2px;">1:1 Mapping</div>
+    </div>
+
+    <!-- Left node: Yakeen -->
+    <div style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:rgba(0,196,140,0.08);border:1px solid rgba(0,196,140,0.4);border-radius:14px;padding:14px 24px;text-align:center;backdrop-filter:blur(10px);box-shadow:0 0 20px rgba(0,196,140,0.15);z-index:2;">
+      <div style="font-size:1.3rem;">🪪</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#00c48c;">Yakeen</div>
+      <div style="font-size:0.6rem;color:rgba(255,255,255,0.5);margin-top:2px;">Identity Verification</div>
+    </div>
+
+    <!-- Right node: Sadad -->
+    <div style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.4);border-radius:14px;padding:14px 24px;text-align:center;backdrop-filter:blur(10px);box-shadow:0 0 20px rgba(168,85,247,0.15);z-index:2;">
+      <div style="font-size:1.3rem;">💳</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#a855f7;">Sadad</div>
+      <div style="font-size:0.6rem;color:rgba(255,255,255,0.5);margin-top:2px;">National Payments</div>
+    </div>
+
+    <!-- Bottom node: Nafath -->
+    <div style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.4);border-radius:14px;padding:14px 24px;text-align:center;backdrop-filter:blur(10px);box-shadow:0 0 20px rgba(0,212,255,0.15);z-index:2;">
+      <div style="font-size:1.3rem;">🔐</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#00d4ff;">Nafath</div>
+      <div style="font-size:0.6rem;color:rgba(255,255,255,0.5);margin-top:2px;">KYC / Authentication</div>
+    </div>
+  </div>
+
+  <div style="margin-top:50px;max-width:720px;text-align:center;padding:20px 30px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);border-radius:12px;backdrop-filter:blur(8px);">
+    <p style="font-size:1.05rem;color:#e0e6f0;line-height:1.6;margin:0;">Saudi Arabia is the <span style="color:#ffd700;font-weight:700;">first country</span> where tokenized ownership <span style="color:#00d4ff;font-weight:700;">IS</span> official legal ownership — <em style="color:rgba(255,255,255,0.7);">not a parallel system.</em></p>
+  </div>
+</div>
+<!-- END SLIDE: registry-truth -->
+  </section>
+
+  <!-- ========== 5. DUAL REGULATION ========== -->
+  <section class="slide" id="dual-regulation" data-slide="5">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2.2rem;margin-bottom:40px;text-align:center;background:linear-gradient(135deg,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Dual Regulatory Framework</h2>
+
+  <div style="position:relative;display:flex;align-items:stretch;justify-content:center;gap:0;max-width:900px;width:100%;">
+
+    <!-- Left Pillar: REGA -->
+    <div style="flex:1;max-width:280px;z-index:1;">
+      <div style="background:rgba(0,196,140,0.08);border:1px solid rgba(0,196,140,0.3);border-radius:16px 0 0 16px;padding:30px 24px;height:100%;backdrop-filter:blur(10px);box-shadow:-4px 0 30px rgba(0,196,140,0.1);">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:2rem;margin-bottom:8px;">🏛️</div>
+          <div style="font-size:1.3rem;font-weight:800;color:#00c48c;">REGA</div>
+          <div style="font-size:0.65rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;">Real Estate General Authority</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="padding:10px 14px;background:rgba(0,196,140,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00c48c;">Real Estate Standards</div>
+          <div style="padding:10px 14px;background:rgba(0,196,140,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00c48c;">Property Registry</div>
+          <div style="padding:10px 14px;background:rgba(0,196,140,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00c48c;">PropTech Sandbox</div>
+          <div style="padding:10px 14px;background:rgba(0,196,140,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00c48c;">Tokenization Standards</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Overlap -->
+    <div style="flex:0 0 200px;z-index:2;display:flex;align-items:center;justify-content:center;">
+      <div style="background:linear-gradient(135deg,rgba(0,196,140,0.15),rgba(0,212,255,0.15));border-top:1px solid rgba(255,215,0,0.3);border-bottom:1px solid rgba(255,215,0,0.3);padding:30px 20px;text-align:center;backdrop-filter:blur(12px);box-shadow:0 0 40px rgba(255,215,0,0.1);width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="font-size:2.2rem;margin-bottom:10px;">🏠⛓️</div>
+        <div style="font-size:1rem;font-weight:800;color:#ffd700;line-height:1.3;">Tokenized<br>Real Estate</div>
+        <div style="font-size:0.65rem;color:rgba(255,255,255,0.5);margin-top:8px;line-height:1.4;">Both regulators<br>must approve</div>
+        <div style="width:40px;height:2px;background:linear-gradient(90deg,#00c48c,#ffd700,#00d4ff);border-radius:1px;margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- Right Pillar: CMA -->
+    <div style="flex:1;max-width:280px;z-index:1;">
+      <div style="background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.3);border-radius:0 16px 16px 0;padding:30px 24px;height:100%;backdrop-filter:blur(10px);box-shadow:4px 0 30px rgba(0,212,255,0.1);">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:2rem;margin-bottom:8px;">⚖️</div>
+          <div style="font-size:1.3rem;font-weight:800;color:#00d4ff;">CMA</div>
+          <div style="font-size:0.65rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;">Capital Market Authority</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="padding:10px 14px;background:rgba(0,212,255,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00d4ff;">Securities Classification</div>
+          <div style="padding:10px 14px;background:rgba(0,212,255,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00d4ff;">Investor Protection</div>
+          <div style="padding:10px 14px;background:rgba(0,212,255,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00d4ff;">SPV Requirements</div>
+          <div style="padding:10px 14px;background:rgba(0,212,255,0.1);border-radius:8px;font-size:0.8rem;border-left:3px solid #00d4ff;">Foreign Investor Access</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:35px;padding:14px 28px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);border-radius:10px;backdrop-filter:blur(8px);">
+    <p style="margin:0;font-size:0.95rem;color:rgba(255,255,255,0.8);text-align:center;">Every platform must satisfy <span style="color:#00c48c;font-weight:700;">REGA</span> + <span style="color:#00d4ff;font-weight:700;">CMA</span> — dual compliance is non-negotiable.</p>
+  </div>
+</div>
+<!-- END SLIDE: dual-regulation -->
+  </section>
+
+  <!-- ========== 6. PLATFORMS OVERVIEW ========== -->
+  <section class="slide" id="platforms-overview" data-slide="6">
+    <div class="slide-content" id="platforms-overview-content">
+  <div class="platforms-grid">
+    <div class="platform-card" data-type="b2g">
+      <div class="platform-name">droppRWA</div>
+      <div class="platform-badge">B2G Infrastructure</div>
+      <div class="platform-min">Min: <strong>1 SAR</strong></div>
+      <div class="platform-stat">First sovereign deed transfer</div>
+    </div>
+    <div class="platform-card" data-type="b2b">
+      <div class="platform-name">Nola <span class="platform-name-ar">نولا</span></div>
+      <div class="platform-badge">B2B Infrastructure</div>
+      <div class="platform-min">Min: <strong>Institutional</strong></div>
+      <div class="platform-stat">Ex-Tadawul CEO + Al Rajhi Bank</div>
+    </div>
+    <div class="platform-card" data-type="b2c">
+      <div class="platform-name">Ghanem <span class="platform-name-ar">غانم</span></div>
+      <div class="platform-badge">B2C Consumer</div>
+      <div class="platform-min">Min: <strong>1,000 SAR</strong></div>
+      <div class="platform-stat">$7.1M funded</div>
+    </div>
+    <div class="platform-card" data-type="b2c">
+      <div class="platform-name">Jozo <span class="platform-name-ar">جزء</span></div>
+      <div class="platform-badge">B2C Consumer</div>
+      <div class="platform-min">Min: <strong>&lt;1,000 SAR</strong></div>
+      <div class="platform-stat">First private tokenized deed</div>
+    </div>
+    <div class="platform-card" data-type="b2c">
+      <div class="platform-name">Madak <span class="platform-name-ar">مداك</span></div>
+      <div class="platform-badge">B2C Consumer</div>
+      <div class="platform-min">Min: <strong>500 SAR</strong></div>
+      <div class="platform-stat">585 investors in 1 week</div>
+    </div>
+    <div class="platform-card" data-type="b2c">
+      <div class="platform-name">HissaTech <span class="platform-name-ar">حصتك</span></div>
+      <div class="platform-badge">B2C Consumer</div>
+      <div class="platform-min">Min: <strong>500 SAR</strong></div>
+      <div class="platform-stat">$670K pre-seed</div>
+    </div>
+    <div class="platform-card" data-type="b2c">
+      <div class="platform-name">Sahl <span class="platform-name-ar">سهل</span></div>
+      <div class="platform-badge">B2C Consumer</div>
+      <div class="platform-min">Min: <strong>1,000 SAR</strong></div>
+      <div class="platform-stat">Corporate JV backed</div>
+    </div>
+    <div class="platform-card" data-type="multi">
+      <div class="platform-name">Osool Gamma <span class="platform-name-ar">قاما</span></div>
+      <div class="platform-badge">B2C Multi-asset</div>
+      <div class="platform-min">Min: <strong>500 SAR</strong></div>
+      <div class="platform-stat">RE + vehicles + franchises</div>
+    </div>
+    <div class="platform-card" data-type="cultural">
+      <div class="platform-name">Makkah Lovers</div>
+      <div class="platform-badge">Cultural / Innovation</div>
+      <div class="platform-min">Min: <strong>N/A</strong></div>
+      <div class="platform-stat">Community sandbox</div>
+    </div>
+  </div>
+</div>
+<!-- END SLIDE: platforms-overview -->
+  </section>
+
+  <!-- ========== 7. INFRASTRUCTURE LEADERS ========== -->
+  <section class="slide" id="infrastructure-leaders" data-slide="7">
+    <div class="slide-content" id="infra-leaders-content">
+  <div class="infra-leaders-row">
+    <div class="infra-leader-card infra-card-dropp">
+      <div class="infra-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><line x1="10" y1="6.5" x2="14" y2="6.5"/><line x1="6.5" y1="10" x2="6.5" y2="14"/></svg>
+      </div>
+      <div class="infra-leader-title">droppRWA</div>
+      <div class="infra-leader-subtitle">The Infrastructure Leader</div>
+
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Headquarters</div>
+          <div class="infra-detail-value">Miami + Riyadh</div>
+        </div>
+      </div>
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Key Achievement</div>
+          <div class="infra-detail-value">First sovereign tokenized deed (66 sec) — G20's first sovereign-grade transaction</div>
+        </div>
+      </div>
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Technology</div>
+          <div class="infra-detail-value">Proprietary sovereign-grade blockchain</div>
+        </div>
+      </div>
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Partners</div>
+          <div class="infra-partners">
+            <span class="infra-partner-tag">RAFAL</span>
+            <span class="infra-partner-tag">NHC</span>
+            <span class="infra-partner-tag">REDF</span>
+            <span class="infra-partner-tag">EDF</span>
+            <span class="infra-partner-tag">Saudi Aramco</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="infra-leader-card infra-card-nola">
+      <div class="infra-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M9 20v-6h6v6"/><path d="M9 12h6"/></svg>
+      </div>
+      <div class="infra-leader-title">Nola <span style="color:rgba(255,255,255,0.4);font-weight:400;font-size:18px">نولا</span></div>
+      <div class="infra-leader-subtitle">Institutional Capital Markets</div>
+
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Team Highlight</div>
+          <div class="infra-detail-value">Dr. Abdulelah Alkhuraif (former Tadawul CEO)</div>
+        </div>
+      </div>
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Regulation</div>
+          <div class="infra-detail-value">Triple regulated: CMA + SAMA + REGA</div>
+        </div>
+      </div>
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Live Product</div>
+          <div class="infra-detail-value">PayNola (live with Al Rajhi Bank)</div>
+        </div>
+      </div>
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Scope</div>
+          <div class="infra-detail-value">Multi-asset: sukuk, funds, PE, real estate</div>
+        </div>
+      </div>
+      <div class="infra-detail">
+        <div class="infra-detail-icon"></div>
+        <div>
+          <div class="infra-detail-label">Technology</div>
+          <div class="infra-detail-value">Multi-chain, MPC custody</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END SLIDE: infrastructure-leaders -->
+  </section>
+
+  <!-- ========== 8. CONSUMER PLATFORMS ========== -->
+  <section class="slide" id="consumer-platforms" data-slide="8">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2rem;margin-bottom:10px;text-align:center;background:linear-gradient(135deg,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Consumer Tokenization Platforms</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:30px;">The 5 players competing for retail investors</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:960px;width:100%;">
+
+    <!-- Ghanem -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #00d4ff;border-radius:12px;padding:20px;backdrop-filter:blur(10px);transition:transform 0.2s,box-shadow 0.2s;" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(0,212,255,0.15)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:0.75rem;font-weight:800;color:#0a0e27;background:#00d4ff;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">1</div>
+        <div><span style="font-size:1.05rem;font-weight:700;color:#fff;">Ghanem</span> <span style="font-size:0.9rem;color:rgba(255,255,255,0.5);">غانم</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
+        <div style="padding:6px 10px;background:rgba(0,212,255,0.08);border-radius:6px;color:#00d4ff;font-weight:600;">$7.1M funded by Al-Romaih Group</div>
+        <div style="color:rgba(255,255,255,0.7);">Dual model: ownership + usufruct</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:4px;">CEO: Saleh Al-Ghamdi (ex-Lean Tech, angel investor)</div>
+      </div>
+    </div>
+
+    <!-- Jozo -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #ffd700;border-radius:12px;padding:20px;backdrop-filter:blur(10px);transition:transform 0.2s,box-shadow 0.2s;" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(255,215,0,0.15)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:0.75rem;font-weight:800;color:#0a0e27;background:#ffd700;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">2</div>
+        <div><span style="font-size:1.05rem;font-weight:700;color:#fff;">Jozo</span> <span style="font-size:0.9rem;color:rgba(255,255,255,0.5);">جزء</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
+        <div style="padding:6px 10px;background:rgba(255,215,0,0.08);border-radius:6px;color:#ffd700;font-weight:600;">First private tokenized deed in KSA history</div>
+        <div style="color:rgba(255,255,255,0.7);">Triple licensed: REGA + CMA + MoC</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:4px;">Focus: luxury RE, ~5% rental + 30% capital appreciation</div>
+      </div>
+    </div>
+
+    <!-- Madak -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #00c48c;border-radius:12px;padding:20px;backdrop-filter:blur(10px);transition:transform 0.2s,box-shadow 0.2s;" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(0,196,140,0.15)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:0.75rem;font-weight:800;color:#0a0e27;background:#00c48c;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">3</div>
+        <div><span style="font-size:1.05rem;font-weight:700;color:#fff;">Madak</span> <span style="font-size:0.9rem;color:rgba(255,255,255,0.5);">مداك</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
+        <div style="padding:6px 10px;background:rgba(0,196,140,0.08);border-radius:6px;color:#00c48c;font-weight:600;">2.5M SAR in 1 week, 585 investors</div>
+        <div style="color:rgba(255,255,255,0.7);">Lowest minimum: 500 SAR</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:4px;">Strategic RER partnership</div>
+      </div>
+    </div>
+
+    <!-- HissaTech -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #a855f7;border-radius:12px;padding:20px;backdrop-filter:blur(10px);transition:transform 0.2s,box-shadow 0.2s;" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(168,85,247,0.15)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:0.75rem;font-weight:800;color:#fff;background:#a855f7;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">4</div>
+        <div><span style="font-size:1.05rem;font-weight:700;color:#fff;">HissaTech</span> <span style="font-size:0.9rem;color:rgba(255,255,255,0.5);">حصتك</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
+        <div style="padding:6px 10px;background:rgba(168,85,247,0.08);border-radius:6px;color:#a855f7;font-weight:600;">$670K pre-seed</div>
+        <div style="color:rgba(255,255,255,0.7);">Legal-first: M&A lawyer co-founder</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:4px;">Focus: income-generating properties</div>
+      </div>
+    </div>
+
+    <!-- Sahl -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #f97316;border-radius:12px;padding:20px;backdrop-filter:blur(10px);transition:transform 0.2s,box-shadow 0.2s;" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(249,115,22,0.15)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="font-size:0.75rem;font-weight:800;color:#0a0e27;background:#f97316;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">5</div>
+        <div><span style="font-size:1.05rem;font-weight:700;color:#fff;">Sahl</span> <span style="font-size:0.9rem;color:rgba(255,255,255,0.5);">سهل</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
+        <div style="padding:6px 10px;background:rgba(249,115,22,0.08);border-radius:6px;color:#f97316;font-weight:600;">Corporate JV: Suhail + Al-Majdia</div>
+        <div style="color:rgba(255,255,255,0.7);">Most consumer-friendly branding</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:4px;">Self-funded, RE developer backed</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- END SLIDE: consumer-platforms -->
+  </section>
+
+  <!-- ========== 9. MULTI-ASSET ========== -->
+  <section class="slide" id="multi-asset" data-slide="9">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2rem;margin-bottom:10px;text-align:center;background:linear-gradient(135deg,#00d4ff,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Specialty & Multi-Asset Platforms</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:35px;">Beyond pure-play real estate tokenization</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:24px;max-width:900px;width:100%;">
+
+    <!-- Osool Gamma -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(0,212,255,0.25);border-radius:16px;padding:28px;backdrop-filter:blur(12px);box-shadow:0 4px 30px rgba(0,212,255,0.08);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#00d4ff,#a855f7);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🌐</div>
+        <div>
+          <div style="font-size:1.1rem;font-weight:700;color:#fff;">Osool Gamma <span style="color:rgba(255,255,255,0.5);font-size:0.9rem;">قاما يونيڤرس</span></div>
+          <div style="font-size:0.75rem;color:#00d4ff;font-weight:600;margin-top:2px;">The Multi-Asset Play</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">
+        <span style="padding:4px 10px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);border-radius:20px;font-size:0.68rem;color:#00d4ff;">🏠 BrickShare (RE)</span>
+        <span style="padding:4px 10px;background:rgba(0,196,140,0.12);border:1px solid rgba(0,196,140,0.25);border-radius:20px;font-size:0.68rem;color:#00c48c;">🚗 GearShare (vehicles)</span>
+        <span style="padding:4px 10px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);border-radius:20px;font-size:0.68rem;color:#ffd700;">🏪 Gamma Franchise</span>
+        <span style="padding:4px 10px;background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);border-radius:20px;font-size:0.68rem;color:#a855f7;">🏭 CoUnit (industrial)</span>
+        <span style="padding:4px 10px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);border-radius:20px;font-size:0.68rem;color:#f97316;">🎨 CoAuction (collectibles)</span>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:4px;font-size:0.7rem;">🇹🇷 Turkey</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:4px;font-size:0.7rem;">🇸🇦 Saudi</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:4px;font-size:0.7rem;">🇺🇸 USA</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:4px;font-size:0.7rem;">🇬🇧 UK</span>
+      </div>
+
+      <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);">Founder: Kamiran Khalil</div>
+    </div>
+
+    <!-- Makkah Lovers -->
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;backdrop-filter:blur(12px);opacity:0.7;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🕋</div>
+        <div>
+          <div style="font-size:1.1rem;font-weight:700;color:rgba(255,255,255,0.7);">Makkah Lovers <span style="color:rgba(255,255,255,0.4);font-size:0.9rem;">محبي مكة</span></div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);font-weight:600;margin-top:2px;">Cultural Innovation Sandbox</div>
+        </div>
+      </div>
+
+      <div style="padding:8px 12px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;margin-bottom:14px;font-size:0.75rem;color:#f97316;">
+        ⚠️ Primarily a community platform — NOT a dedicated tokenization platform
+      </div>
+
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:10px;">Exploring: blockchain, IoT, AI, Digital Twins</div>
+
+      <div style="padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:0.75rem;color:rgba(255,255,255,0.4);border-left:2px solid rgba(255,255,255,0.15);">
+        No live tokenization product — experimental only
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- END SLIDE: multi-asset -->
+  </section>
+
+  <!-- ========== 10. MARKET SIZE ========== -->
+  <section class="slide" id="market-size" data-slide="10">
+    <div class="slide-content" id="market-size-content">
+  <div class="mktsize-container">
+    <div class="mktsize-hero">
+      <div class="mktsize-hero-number" data-countup="77.2" data-prefix="$" data-suffix="B" data-decimals="1">$0B</div>
+      <div class="mktsize-hero-label">Total Saudi RE Market (2025)</div>
+      <div class="mktsize-sub-stat"><strong>$533B</strong> in transactions (2024)</div>
+    </div>
+
+    <div class="mktsize-vision-row">
+      <div class="mktsize-vision-pill"><strong>70%</strong> homeownership target</div>
+      <div class="mktsize-vision-pill"><strong>500K+</strong> new housing units</div>
+      <div class="mktsize-vision-pill"><strong>$1.3T</strong> mega-projects</div>
+    </div>
+
+    <div class="mktsize-growth">
+      <div class="mktsize-growth-header">
+        <div class="mktsize-growth-year">2025<strong>$77B</strong></div>
+        <div class="mktsize-growth-arrow">&rarr;</div>
+        <div class="mktsize-cagr-badge">6.7% CAGR</div>
+        <div class="mktsize-growth-arrow">&rarr;</div>
+        <div class="mktsize-growth-year">2034<strong>$138B</strong></div>
+      </div>
+      <div class="mktsize-bar-track">
+        <div class="mktsize-bar-2034" id="bar2034"></div>
+        <div class="mktsize-bar-fill mktsize-bar-2025" id="bar2025"></div>
+      </div>
+      <div class="mktsize-bar-labels">
+        <span>$77B (current)</span>
+        <span>$138B (projected)</span>
+      </div>
+    </div>
+  </div>
+
+  </div>
+<!-- END SLIDE: market-size -->
+  </section>
+
+  <!-- ========== 11. GLOBAL CONTEXT ========== -->
+  <section class="slide" id="global-context" data-slide="11">
+    <div class="slide-content" id="global-context-content">
+  <div class="global-container">
+    <div class="global-growth-row">
+      <div class="global-big global-big-from">$3.1B</div>
+      <div class="global-arrow-glow">&rarr;</div>
+      <div class="global-big global-big-to">$3.2T</div>
+    </div>
+    <div class="global-sublabel">Global tokenization market (2025 &rarr; 2030)</div>
+    <div class="global-multiplier">~1,000x growth in 5 years</div>
+
+    <div class="global-gcc">
+      <div class="global-gcc-number">$500B</div>
+      <div class="global-gcc-label">GCC Opportunity by 2030</div>
+    </div>
+
+    <div class="global-adoption">
+      <div class="global-donut-wrapper">
+        <svg class="global-donut-svg" width="180" height="180" viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="70" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="22"/>
+          <!-- 12% adopted = 43.2deg -->
+          <circle class="global-donut-seg" cx="90" cy="90" r="70" stroke="#00c48c"
+            stroke-dasharray="0 440" data-target="52.8 387.2" style="stroke-dasharray:0 440"/>
+          <!-- 46% pilot = 165.6deg -->
+          <circle class="global-donut-seg" cx="90" cy="90" r="70" stroke="#00d4ff"
+            stroke-dasharray="0 440" data-target="202.4 237.6" data-offset="52.8" style="stroke-dasharray:0 440;stroke-dashoffset:-52.8"/>
+          <!-- 42% exploring = 151.2deg -->
+          <circle class="global-donut-seg" cx="90" cy="90" r="70" stroke="rgba(255,255,255,0.12)"
+            stroke-dasharray="0 440" data-target="184.8 255.2" data-offset="255.2" style="stroke-dasharray:0 440;stroke-dashoffset:-255.2"/>
+        </svg>
+        <div class="global-donut-center">
+          <div class="global-donut-center-num">100%</div>
+          <div class="global-donut-center-label">Surveyed</div>
+        </div>
+      </div>
+      <div class="global-legend">
+        <div class="global-legend-item">
+          <div class="global-legend-dot" style="background:#00c48c"></div>
+          <div class="global-legend-pct">12%</div>
+          <div class="global-legend-label">Adopted</div>
+        </div>
+        <div class="global-legend-item">
+          <div class="global-legend-dot" style="background:#00d4ff"></div>
+          <div class="global-legend-pct">46%</div>
+          <div class="global-legend-label">In Pilot</div>
+        </div>
+        <div class="global-legend-item">
+          <div class="global-legend-dot" style="background:rgba(255,255,255,0.2)"></div>
+          <div class="global-legend-pct">42%</div>
+          <div class="global-legend-label">Exploring</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+<!-- END SLIDE: global-context -->
+  </section>
+
+  <!-- ========== 12. DUBAI COMPARISON ========== -->
+  <section class="slide" id="dubai-comparison" data-slide="12">
+    <div class="slide-content" id="dubai-comparison-content">
+  <div class="comp-container">
+    <div class="comp-columns">
+      <div class="comp-col comp-dubai">
+        <div class="comp-col-header">
+          <div class="comp-flag" role="img" aria-label="UAE flag">&#x1F1E6;&#x1F1EA;</div>
+          <div>
+            <div class="comp-col-title">Dubai</div>
+            <div class="comp-col-subtitle">First mover</div>
+          </div>
+        </div>
+        <div class="comp-rows">
+          <div class="comp-row">
+            <div class="comp-row-label">Status</div>
+            <div class="comp-row-value">Live + secondary trading <span class="comp-highlight-badge badge-ahead">12-18mo ahead</span></div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Regulator</div>
+            <div class="comp-row-value">VARA + DLD</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Blockchain</div>
+            <div class="comp-row-value">XRP Ledger</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Target</div>
+            <div class="comp-row-value">$16B by 2033</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Foreign Access</div>
+            <div class="comp-row-value">UAE residents only</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Edge</div>
+            <div class="comp-row-value">Speed to market, live secondary exchange</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-col comp-saudi" style="border-color:rgba(0,196,140,0.15); box-shadow: 0 0 40px rgba(0,196,140,0.05);">
+        <div class="comp-col-header">
+          <div class="comp-flag" role="img" aria-label="Saudi flag">&#x1F1F8;&#x1F1E6;</div>
+          <div>
+            <div class="comp-col-title">Saudi Arabia</div>
+            <div class="comp-col-subtitle">Stronger legal integration</div>
+          </div>
+        </div>
+        <div class="comp-rows">
+          <div class="comp-row">
+            <div class="comp-row-label">Status</div>
+            <div class="comp-row-value">National infra, sandbox active <span class="comp-highlight-badge badge-advantage">Sovereign-grade</span></div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Regulator</div>
+            <div class="comp-row-value">REGA + CMA</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Blockchain</div>
+            <div class="comp-row-value">SettleMint (sovereign)</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Target</div>
+            <div class="comp-row-value">Not yet quantified</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Foreign Access</div>
+            <div class="comp-row-value">Open to all (new law) <span class="comp-highlight-badge badge-advantage">Global</span></div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">Edge</div>
+            <div class="comp-row-value">Deeper legal integration, sovereign deeds on-chain</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-edge-bar">
+      <div class="comp-edge-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#00c48c" stroke-width="1.5"><path d="M10 1l2.5 6H19l-5.5 4 2 6.5L10 14l-5.5 3.5 2-6.5L1 7h6.5z"/></svg>
+      </div>
+      <div class="comp-edge-text">
+        <strong>Saudi's legal advantage:</strong> Tokenized deeds are sovereign legal instruments tied to the national land registry — not just financial wrappers. This is the deepest on-chain legal integration anywhere in the world.
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END SLIDE: dubai-comparison -->
+  </section>
+
+  <!-- ========== 13. PAIN POINTS ========== -->
+  <section class="slide" id="pain-points" data-slide="13">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2rem;margin-bottom:8px;text-align:center;background:linear-gradient(135deg,#ff6b6b,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Market Pain Points</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:30px;">Where the ecosystem is breaking — and where opportunity lives</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;max-width:900px;width:100%;">
+
+    <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:1.5rem;">💧</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ff6b6b;">Liquidity</span>
+      </div>
+      <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.4;">Tokens mostly trade within issuance platform only — no cross-platform market.</p>
+    </div>
+
+    <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:1.5rem;">📋</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ff6b6b;">Regulatory Fragmentation</span>
+      </div>
+      <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.4;">72% of institutional investors cite regulatory uncertainty as top barrier.</p>
+    </div>
+
+    <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:1.5rem;">🤝</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ff6b6b;">Trust Gap</span>
+      </div>
+      <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.4;">Few large-scale success stories to build retail investor confidence.</p>
+    </div>
+
+    <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:1.5rem;">📊</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ff6b6b;">Valuation Opacity</span>
+      </div>
+      <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.4;">No standardized on-chain valuation methodology across platforms.</p>
+    </div>
+
+    <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:1.5rem;">📚</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ff6b6b;">Investor Education</span>
+      </div>
+      <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.4;">Retail investors don't understand tokenization — adoption is bottlenecked.</p>
+    </div>
+
+    <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:1.5rem;">🔐</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ff6b6b;">KYC/AML Friction</span>
+      </div>
+      <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.4;">Cross-border compliance not standardized — each platform builds its own.</p>
+    </div>
+
+    <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:1.5rem;">🏗️</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ff6b6b;">Property Mgmt Gap</span>
+      </div>
+      <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.4;">No bridge between the token layer and actual property operations.</p>
+    </div>
+
+  </div>
+</div>
+<!-- END SLIDE: pain-points -->
+  </section>
+
+  <!-- ========== 14. ENABLER THESIS ========== -->
+  <section class="slide" id="enabler-thesis" data-slide="14">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2rem;margin-bottom:30px;text-align:center;background:linear-gradient(135deg,#ffd700,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Why Enabler, Not Platform #10</h2>
+
+  <!-- Platform dots -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;justify-content:center;">
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#00d4ff;">GNM</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.3);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#ffd700;">JZO</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,196,140,0.15);border:1px solid rgba(0,196,140,0.3);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#00c48c;">MDK</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#a855f7;">HST</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#f97316;">SHL</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:rgba(255,255,255,0.5);">NLA</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:rgba(255,255,255,0.5);">DRP</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:rgba(255,255,255,0.5);">STL</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:rgba(255,255,255,0.5);">+</div>
+  </div>
+  <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);margin-bottom:16px;">9+ platforms competing for investors</div>
+
+  <!-- Arrow down -->
+  <div style="font-size:1.2rem;color:rgba(255,215,0,0.6);margin-bottom:16px;">▼ ▼ ▼</div>
+
+  <!-- Enabler Layer Bar -->
+  <div style="width:100%;max-width:700px;padding:16px 24px;background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(0,212,255,0.12));border:2px solid rgba(255,215,0,0.4);border-radius:12px;text-align:center;margin-bottom:28px;box-shadow:0 0 40px rgba(255,215,0,0.1);">
+    <div style="font-size:1.1rem;font-weight:800;color:#ffd700;margin-bottom:4px;">⚙️ Service & Enabler Layer</div>
+    <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);">One Studio sits HERE — powering all platforms from below</div>
+  </div>
+
+  <!-- Don't / Do grid -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px;width:100%;margin-bottom:28px;">
+    <!-- DON'T column -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="padding:10px 14px;background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.2);border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:8px;">
+        <span style="color:#ff4d4d;font-weight:800;font-size:1rem;">✕</span> Don't build platform #10
+      </div>
+      <div style="padding:10px 14px;background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.2);border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:8px;">
+        <span style="color:#ff4d4d;font-weight:800;font-size:1rem;">✕</span> Don't compete with droppRWA/SettleMint on infra
+      </div>
+      <div style="padding:10px 14px;background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.2);border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:8px;">
+        <span style="color:#ff4d4d;font-weight:800;font-size:1rem;">✕</span> Don't compete with Nola on institutional
+      </div>
+    </div>
+    <!-- DO column -->
+    <div style="display:flex;align-items:center;">
+      <div style="padding:20px;background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(0,196,140,0.1));border:2px solid rgba(255,215,0,0.35);border-radius:12px;text-align:center;width:100%;box-shadow:0 0 25px rgba(255,215,0,0.08);">
+        <div style="font-size:1.4rem;color:#ffd700;font-weight:800;margin-bottom:6px;">✓ DO</div>
+        <div style="font-size:0.9rem;color:#00c48c;font-weight:600;line-height:1.4;">Build the picks-and-shovels that ALL 9+ platforms need</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote -->
+  <div style="max-width:600px;text-align:center;margin-bottom:16px;">
+    <div style="font-size:1.3rem;font-style:italic;color:rgba(255,215,0,0.9);font-weight:300;">"In a gold rush, sell shovels."</div>
+  </div>
+
+  <!-- TAM -->
+  <div style="padding:10px 20px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:8px;">
+    <span style="font-size:0.8rem;color:rgba(255,255,255,0.6);">TAM: 9 platforms x $50-200K/year = </span>
+    <span style="font-size:0.9rem;color:#00d4ff;font-weight:700;">$450K - $1.8M ARR</span>
+    <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);"> growing with each sandbox cohort</span>
+  </div>
+</div>
+<!-- END SLIDE: enabler-thesis -->
+  </section>
+
+  <!-- ========== 15. OPPORTUNITY MAP ========== -->
+  <section class="slide" id="opportunity-map" data-slide="15">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2rem;margin-bottom:8px;text-align:center;background:linear-gradient(135deg,#00d4ff,#00c48c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Opportunity Map</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:28px;">8 service opportunities ranked by strategic value</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;max-width:960px;width:100%;">
+
+    <!-- #1 -->
+    <div style="background:rgba(255,215,0,0.06);border:1.5px solid rgba(255,215,0,0.3);border-radius:14px;padding:18px;backdrop-filter:blur(10px);box-shadow:0 4px 25px rgba(255,215,0,0.08);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#f97316);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#0a0e27;">1</div>
+        <span style="font-size:1.3rem;">🔍</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ffd700;">Investor Aggregator / Marketplace</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,77,77,0.12);border:1px solid rgba(255,77,77,0.25);border-radius:4px;font-size:0.65rem;color:#ff6b6b;">Criticality: High</span>
+        <span style="padding:3px 8px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);border-radius:4px;font-size:0.65rem;color:#ffd700;">Gap: None exists</span>
+        <span style="padding:3px 8px;background:rgba(0,196,140,0.12);border:1px solid rgba(0,196,140,0.25);border-radius:4px;font-size:0.65rem;color:#00c48c;">Moat: Network effects</span>
+      </div>
+    </div>
+
+    <!-- #2 -->
+    <div style="background:rgba(255,215,0,0.06);border:1.5px solid rgba(255,215,0,0.3);border-radius:14px;padding:18px;backdrop-filter:blur(10px);box-shadow:0 4px 25px rgba(255,215,0,0.08);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#f97316);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#0a0e27;">2</div>
+        <span style="font-size:1.3rem;">🏠</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ffd700;">Property Management Middleware</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,77,77,0.12);border:1px solid rgba(255,77,77,0.25);border-radius:4px;font-size:0.65rem;color:#ff6b6b;">Criticality: Must-have</span>
+        <span style="padding:3px 8px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);border-radius:4px;font-size:0.65rem;color:#ffd700;">Gap: Ejar untouched</span>
+        <span style="padding:3px 8px;background:rgba(0,196,140,0.12);border:1px solid rgba(0,196,140,0.25);border-radius:4px;font-size:0.65rem;color:#00c48c;">Moat: Ejar + RER integration</span>
+      </div>
+    </div>
+
+    <!-- #3 -->
+    <div style="background:rgba(255,215,0,0.06);border:1.5px solid rgba(255,215,0,0.3);border-radius:14px;padding:18px;backdrop-filter:blur(10px);box-shadow:0 4px 25px rgba(255,215,0,0.08);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#f97316);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#0a0e27;">3</div>
+        <span style="font-size:1.3rem;">🤖</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ffd700;">AI Valuation + Doc Processing</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,77,77,0.12);border:1px solid rgba(255,77,77,0.25);border-radius:4px;font-size:0.65rem;color:#ff6b6b;">Criticality: Must-have</span>
+        <span style="padding:3px 8px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);border-radius:4px;font-size:0.65rem;color:#ffd700;">Gap: No Saudi AVM</span>
+        <span style="padding:3px 8px;background:rgba(0,196,140,0.12);border:1px solid rgba(0,196,140,0.25);border-radius:4px;font-size:0.65rem;color:#00c48c;">Moat: Arabic NLP + data</span>
+      </div>
+    </div>
+
+    <!-- #4 -->
+    <div style="background:rgba(255,215,0,0.06);border:1.5px solid rgba(255,215,0,0.3);border-radius:14px;padding:18px;backdrop-filter:blur(10px);box-shadow:0 4px 25px rgba(255,215,0,0.08);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#f97316);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#0a0e27;">4</div>
+        <span style="font-size:1.3rem;">✅</span>
+        <span style="font-size:0.95rem;font-weight:700;color:#ffd700;">Compliance-as-a-Service</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,77,77,0.12);border:1px solid rgba(255,77,77,0.25);border-radius:4px;font-size:0.65rem;color:#ff6b6b;">Criticality: Must-have</span>
+        <span style="padding:3px 8px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);border-radius:4px;font-size:0.65rem;color:#ffd700;">Gap: No unified provider</span>
+        <span style="padding:3px 8px;background:rgba(0,196,140,0.12);border:1px solid rgba(0,196,140,0.25);border-radius:4px;font-size:0.65rem;color:#00c48c;">Moat: Nafath/Yakeen</span>
+      </div>
+    </div>
+
+    <!-- #5 -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:rgba(255,255,255,0.7);">5</div>
+        <span style="font-size:1.3rem;">📊</span>
+        <span style="font-size:0.95rem;font-weight:700;color:rgba(255,255,255,0.8);">Reporting & Analytics</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Criticality: At scale</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Gap: Yes</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Moat: Arabic + Saudi tax</span>
+      </div>
+    </div>
+
+    <!-- #6 -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:rgba(255,255,255,0.7);">6</div>
+        <span style="font-size:1.3rem;">☪️</span>
+        <span style="font-size:0.95rem;font-weight:700;color:rgba(255,255,255,0.8);">Sharia Compliance + Education</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Criticality: Market growth</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Gap: No specialized</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Moat: Scholars + tech</span>
+      </div>
+    </div>
+
+    <!-- #7 -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:rgba(255,255,255,0.7);">7</div>
+        <span style="font-size:1.3rem;">⚖️</span>
+        <span style="font-size:0.95rem;font-weight:700;color:rgba(255,255,255,0.8);">Legal Template Library</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Criticality: Must-have</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Gap: Custom only</span>
+        <span style="padding:3px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">Moat: CMA/REGA expertise</span>
+      </div>
+    </div>
+
+    <!-- #8 -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:18px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:rgba(255,255,255,0.7);">8</div>
+        <span style="font-size:1.3rem;">🔄</span>
+        <span style="font-size:0.95rem;font-weight:700;color:rgba(255,255,255,0.8);">Secondary Market Infra</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="padding:3px 8px;background:rgba(255,77,77,0.12);border:1px solid rgba(255,77,77,0.25);border-radius:4px;font-size:0.65rem;color:#ff6b6b;">Criticality: Highest value</span>
+        <span style="padding:3px 8px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);border-radius:4px;font-size:0.65rem;color:#ffd700;">Gap: Massive</span>
+        <span style="padding:3px 8px;background:rgba(0,196,140,0.12);border:1px solid rgba(0,196,140,0.25);border-radius:4px;font-size:0.65rem;color:#00c48c;">Moat: CMA license required</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- END SLIDE: opportunity-map -->
+  </section>
+
+  <!-- ========== 16. TOKENSTACK ========== -->
+  <section class="slide" id="tokenstack" data-slide="16">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2rem;margin-bottom:8px;text-align:center;background:linear-gradient(135deg,#00d4ff,#ffd700,#00c48c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">TokenStack</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:35px;">The full-service enabler platform</p>
+
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:720px;width:100%;perspective:800px;">
+
+    <!-- Layer 5 (top): Report -->
+    <div style="padding:18px 24px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.3);border-radius:10px;display:flex;align-items:center;gap:16px;transform:translateZ(0);transition:all 0.3s;cursor:default;box-shadow:0 2px 15px rgba(0,212,255,0.08);" onmouseenter="this.style.transform='translateY(-4px) scale(1.02)';this.style.boxShadow='0 8px 30px rgba(0,212,255,0.2)'" onmouseleave="this.style.transform='translateZ(0)';this.style.boxShadow='0 2px 15px rgba(0,212,255,0.08)'">
+      <div style="width:44px;height:44px;border-radius:10px;background:rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📈</div>
+      <div style="flex:1;">
+        <div style="font-size:0.95rem;font-weight:700;color:#00d4ff;">Report</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:2px;">Dashboards + tax/zakat + portfolio analytics</div>
+      </div>
+      <div style="width:6px;height:100%;min-height:40px;background:#00d4ff;border-radius:3px;opacity:0.5;flex-shrink:0;"></div>
+    </div>
+
+    <!-- Layer 4: Discover -->
+    <div style="padding:18px 24px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.3);border-radius:10px;display:flex;align-items:center;gap:16px;transform:translateZ(0);transition:all 0.3s;cursor:default;box-shadow:0 2px 15px rgba(168,85,247,0.08);" onmouseenter="this.style.transform='translateY(-4px) scale(1.02)';this.style.boxShadow='0 8px 30px rgba(168,85,247,0.2)'" onmouseleave="this.style.transform='translateZ(0)';this.style.boxShadow='0 2px 15px rgba(168,85,247,0.08)'">
+      <div style="width:44px;height:44px;border-radius:10px;background:rgba(168,85,247,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🔍</div>
+      <div style="flex:1;">
+        <div style="font-size:0.95rem;font-weight:700;color:#a855f7;">Discover</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:2px;">Investor aggregator + education + Sharia certification</div>
+      </div>
+      <div style="width:6px;height:100%;min-height:40px;background:#a855f7;border-radius:3px;opacity:0.5;flex-shrink:0;"></div>
+    </div>
+
+    <!-- Layer 3: Connect -->
+    <div style="padding:18px 24px;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:10px;display:flex;align-items:center;gap:16px;transform:translateZ(0);transition:all 0.3s;cursor:default;box-shadow:0 2px 15px rgba(255,215,0,0.08);" onmouseenter="this.style.transform='translateY(-4px) scale(1.02)';this.style.boxShadow='0 8px 30px rgba(255,215,0,0.2)'" onmouseleave="this.style.transform='translateZ(0)';this.style.boxShadow='0 2px 15px rgba(255,215,0,0.08)'">
+      <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,215,0,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🔗</div>
+      <div style="flex:1;">
+        <div style="font-size:0.95rem;font-weight:700;color:#ffd700;">Connect</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:2px;">Ejar integration + rent-to-distribution automation</div>
+      </div>
+      <div style="width:6px;height:100%;min-height:40px;background:#ffd700;border-radius:3px;opacity:0.5;flex-shrink:0;"></div>
+    </div>
+
+    <!-- Layer 2: Value -->
+    <div style="padding:18px 24px;background:rgba(0,196,140,0.08);border:1px solid rgba(0,196,140,0.3);border-radius:10px;display:flex;align-items:center;gap:16px;transform:translateZ(0);transition:all 0.3s;cursor:default;box-shadow:0 2px 15px rgba(0,196,140,0.08);" onmouseenter="this.style.transform='translateY(-4px) scale(1.02)';this.style.boxShadow='0 8px 30px rgba(0,196,140,0.2)'" onmouseleave="this.style.transform='translateZ(0)';this.style.boxShadow='0 2px 15px rgba(0,196,140,0.08)'">
+      <div style="width:44px;height:44px;border-radius:10px;background:rgba(0,196,140,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📊</div>
+      <div style="flex:1;">
+        <div style="font-size:0.95rem;font-weight:700;color:#00c48c;">Value</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:2px;">AI property valuation + Arabic document processing + risk scoring</div>
+      </div>
+      <div style="width:6px;height:100%;min-height:40px;background:#00c48c;border-radius:3px;opacity:0.5;flex-shrink:0;"></div>
+    </div>
+
+    <!-- Layer 1 (bottom): Comply -->
+    <div style="padding:18px 24px;background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.3);border-radius:10px;display:flex;align-items:center;gap:16px;transform:translateZ(0);transition:all 0.3s;cursor:default;box-shadow:0 2px 15px rgba(0,100,255,0.08);" onmouseenter="this.style.transform='translateY(-4px) scale(1.02)';this.style.boxShadow='0 8px 30px rgba(0,100,255,0.2)'" onmouseleave="this.style.transform='translateZ(0)';this.style.boxShadow='0 2px 15px rgba(0,100,255,0.08)'">
+      <div style="width:44px;height:44px;border-radius:10px;background:rgba(0,100,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🔐</div>
+      <div style="flex:1;">
+        <div style="font-size:0.95rem;font-weight:700;color:#4d8eff;">Comply</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:2px;">KYC/AML + Nafath + Yakeen + CMA/REGA rules</div>
+      </div>
+      <div style="width:6px;height:100%;min-height:40px;background:#4d8eff;border-radius:3px;opacity:0.5;flex-shrink:0;"></div>
+    </div>
+
+  </div>
+
+  <!-- Tagline -->
+  <div style="margin-top:30px;text-align:center;">
+    <div style="font-size:1.1rem;color:rgba(255,255,255,0.8);font-style:italic;margin-bottom:8px;">"Everything tokenization platforms need, except the platform itself."</div>
+    <div style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Per-module or full-stack subscription</div>
+  </div>
+</div>
+<!-- END SLIDE: tokenstack -->
+  </section>
+
+  <!-- ========== 17. ROADMAP ========== -->
+  <section class="slide" id="roadmap" data-slide="17">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2rem;margin-bottom:8px;text-align:center;background:linear-gradient(135deg,#00d4ff,#00c48c,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Execution Roadmap</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:35px;">12-month path from MVP to full stack</p>
+
+  <div style="display:flex;align-items:stretch;gap:0;max-width:960px;width:100%;position:relative;">
+
+    <!-- Phase 1 -->
+    <div style="flex:1;display:flex;flex-direction:column;">
+      <div style="background:rgba(0,212,255,0.08);border:1.5px solid rgba(0,212,255,0.3);border-radius:14px;padding:22px;backdrop-filter:blur(10px);flex:1;margin:0 6px;box-shadow:0 4px 20px rgba(0,212,255,0.08);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#0088cc);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:900;color:#fff;">1</div>
+          <span style="font-size:1rem;font-weight:700;color:#00d4ff;">Build + Validate</span>
+        </div>
+        <div style="font-size:0.7rem;color:rgba(0,212,255,0.6);margin-bottom:14px;">Months 0-3</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.78rem;color:rgba(255,255,255,0.7);">
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#00d4ff;">-</span> Investor Aggregator MVP</div>
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#00d4ff;">-</span> Education content (Arabic)</div>
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#00d4ff;">-</span> 2-3 platform partners</div>
+        </div>
+        <div style="margin-top:14px;padding:8px 12px;background:rgba(0,212,255,0.08);border-radius:6px;font-size:0.7rem;color:#00d4ff;text-align:center;">Revenue: $0-50K ARR</div>
+      </div>
+      <!-- Arrow -->
+      <div style="text-align:center;font-size:1.2rem;color:rgba(0,212,255,0.5);padding:8px 0;display:none;">→</div>
+    </div>
+
+    <!-- Arrow connector -->
+    <div style="display:flex;align-items:center;font-size:1.5rem;color:rgba(255,255,255,0.2);padding:0 4px;">→</div>
+
+    <!-- Phase 2 -->
+    <div style="flex:1;display:flex;flex-direction:column;">
+      <div style="background:rgba(0,196,140,0.08);border:1.5px solid rgba(0,196,140,0.3);border-radius:14px;padding:22px;backdrop-filter:blur(10px);flex:1;margin:0 6px;box-shadow:0 4px 20px rgba(0,196,140,0.08);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#00c48c,#008866);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:900;color:#fff;">2</div>
+          <span style="font-size:1rem;font-weight:700;color:#00c48c;">Add Value Layer</span>
+        </div>
+        <div style="font-size:0.7rem;color:rgba(0,196,140,0.6);margin-bottom:14px;">Months 3-6</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.78rem;color:rgba(255,255,255,0.7);">
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#00c48c;">-</span> AI Valuation API</div>
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#00c48c;">-</span> Arabic NLP pipeline</div>
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#00c48c;">-</span> Ejar R&D integration</div>
+        </div>
+        <div style="margin-top:14px;padding:8px 12px;background:rgba(0,196,140,0.08);border-radius:6px;font-size:0.7rem;color:#00c48c;text-align:center;">Revenue: $100-300K ARR</div>
+      </div>
+    </div>
+
+    <!-- Arrow connector -->
+    <div style="display:flex;align-items:center;font-size:1.5rem;color:rgba(255,255,255,0.2);padding:0 4px;">→</div>
+
+    <!-- Phase 3 -->
+    <div style="flex:1;display:flex;flex-direction:column;">
+      <div style="background:rgba(255,215,0,0.08);border:1.5px solid rgba(255,215,0,0.3);border-radius:14px;padding:22px;backdrop-filter:blur(10px);flex:1;margin:0 6px;box-shadow:0 4px 20px rgba(255,215,0,0.08);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#cc9900);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:900;color:#0a0e27;">3</div>
+          <span style="font-size:1rem;font-weight:700;color:#ffd700;">Full Stack</span>
+        </div>
+        <div style="font-size:0.7rem;color:rgba(255,215,0,0.6);margin-bottom:14px;">Months 6-12</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.78rem;color:rgba(255,255,255,0.7);">
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#ffd700;">-</span> Compliance-as-a-Service</div>
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#ffd700;">-</span> Reporting dashboards</div>
+          <div style="display:flex;align-items:flex-start;gap:6px;"><span style="color:#ffd700;">-</span> Secondary market exploration</div>
+        </div>
+        <div style="margin-top:14px;padding:8px 12px;background:rgba(255,215,0,0.08);border-radius:6px;font-size:0.7rem;color:#ffd700;text-align:center;">Revenue: $450K-1.8M ARR</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Timeline bar -->
+  <div style="max-width:900px;width:100%;margin-top:24px;padding:0 12px;">
+    <div style="height:4px;border-radius:2px;background:linear-gradient(90deg,#00d4ff 0%,#00d4ff 30%,#00c48c 30%,#00c48c 55%,#ffd700 55%,#ffd700 100%);box-shadow:0 0 10px rgba(0,212,255,0.3);"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.65rem;color:rgba(255,255,255,0.4);">
+      <span>Month 0</span><span>Month 3</span><span>Month 6</span><span>Month 12</span>
+    </div>
+  </div>
+</div>
+<!-- END SLIDE: roadmap -->
+  </section>
+
+  <!-- ========== 18. NEXT STEPS ========== -->
+  <section class="slide" id="next-steps" data-slide="18">
+    <div class="slide-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e0e6f0;">
+
+  <h2 style="font-size:2.5rem;margin-bottom:40px;text-align:center;background:linear-gradient(135deg,#ffd700,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;">Next Steps</h2>
+
+  <div style="display:flex;flex-direction:column;gap:18px;max-width:600px;width:100%;margin-bottom:50px;">
+
+    <div style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:14px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateX(6px)'" onmouseleave="this.style.transform=''">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#f97316);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#0a0e27;flex-shrink:0;">1</div>
+      <div>
+        <div style="font-size:1rem;font-weight:700;color:#ffd700;">Validate with 2-3 platforms as early partners</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:3px;">Ghanem, Jozo, and Madak as primary targets</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.25);border-radius:14px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateX(6px)'" onmouseleave="this.style.transform=''">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#0088cc);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#0a0e27;flex-shrink:0;">2</div>
+      <div>
+        <div style="font-size:1rem;font-weight:700;color:#00d4ff;">Build Investor Aggregator MVP (Arabic-first)</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:3px;">Cross-platform discovery and comparison engine</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:rgba(0,196,140,0.06);border:1px solid rgba(0,196,140,0.25);border-radius:14px;backdrop-filter:blur(10px);transition:transform 0.2s;" onmouseenter="this.style.transform='translateX(6px)'" onmouseleave="this.style.transform=''">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#00c48c,#008866);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#0a0e27;flex-shrink:0;">3</div>
+      <div>
+        <div style="font-size:1rem;font-weight:700;color:#00c48c;">Leverage network for REGA/RER introductions</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:3px;">Regulatory relationships are the ultimate moat</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Branding footer -->
+  <div style="text-align:center;margin-top:auto;">
+    <div style="display:inline-flex;align-items:center;gap:12px;padding:16px 32px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;backdrop-filter:blur(10px);">
+      <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#ffd700,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#0a0e27;">OS</div>
+      <div style="text-align:left;">
+        <div style="font-size:1rem;font-weight:700;color:#fff;">One Studio</div>
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Startup Studio</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Prepared by <span style="color:rgba(255,215,0,0.7);">Nala</span> <span style="color:rgba(255,255,255,0.3);">(&#1606;&#1575;&#1604;&#1575;)</span> — One Studio HQ Agent</div>
+      <div style="font-size:0.7rem;color:rgba(255,255,255,0.25);margin-top:4px;">March 2026 — First Draft</div>
+    </div>
+  </div>
+</div>
+<!-- END SLIDE: next-steps -->
+  </section>
+
+</div><!-- /slideshow -->
+
+<!-- ============================================================
+     JAVASCRIPT — SlideShow Controller
+     ============================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  class SlideShow {
+    constructor() {
+      this.slides = Array.from(document.querySelectorAll('.slide'));
+      this.total = this.slides.length;
+      this.current = 0;
+      this.isOverview = false;
+      this.isAnimating = false;
+      this.touchStartX = 0;
+      this.touchStartY = 0;
+      this.swipeThreshold = 50;
+
+      // DOM refs
+      this.progressBar = document.getElementById('progress-bar');
+      this.counterCurrent = document.querySelector('#slide-counter .current');
+      this.counterTotal = document.querySelector('#slide-counter .total');
+      this.overview = document.getElementById('overview');
+      this.overviewGrid = document.getElementById('overview-grid');
+
+      this.counterTotal.textContent = this.total;
+
+      this.init();
+    }
+
+    init() {
+      // Parse hash
+      const hash = window.location.hash;
+      if (hash) {
+        const match = hash.match(/slide-(\d+)/);
+        if (match) {
+          const idx = parseInt(match[1], 10) - 1;
+          if (idx >= 0 && idx < this.total) this.current = idx;
+        }
+      }
+
+      // Show initial slide
+      this.slides.forEach((s, i) => {
+        s.classList.remove('active', 'exit-left', 'exit-right');
+        if (i < this.current) s.classList.add('exit-left');
+        else if (i > this.current) s.classList.add('exit-right');
+      });
+      this.slides[this.current].classList.add('active');
+      this.updateUI();
+      this.triggerAnimations(this.current);
+
+      // Build overview grid
+      this.buildOverview();
+
+      // Bind events
+      this.bindKeyboard();
+      this.bindTouch();
+      this.bindHash();
+    }
+
+    // ---- NAVIGATION ----
+
+    goTo(index, direction) {
+      if (index < 0 || index >= this.total || index === this.current || this.isAnimating) return;
+      this.isAnimating = true;
+
+      const dir = direction || (index > this.current ? 'next' : 'prev');
+      const oldSlide = this.slides[this.current];
+      const newSlide = this.slides[index];
+
+      // Remove all transition classes
+      oldSlide.classList.remove('active');
+      oldSlide.classList.add(dir === 'next' ? 'exit-left' : 'exit-right');
+
+      // Prepare new slide on the correct side
+      newSlide.classList.remove('exit-left', 'exit-right');
+      // Force reflow for transition
+      newSlide.offsetHeight;
+      newSlide.classList.add('active');
+
+      this.current = index;
+      this.updateUI();
+      this.triggerAnimations(index);
+
+      // Update hash
+      window.history.replaceState(null, '', `#slide-${index + 1}`);
+
+      setTimeout(() => { this.isAnimating = false; }, 650);
+    }
+
+    next() { this.goTo(this.current + 1, 'next'); }
+    prev() { this.goTo(this.current - 1, 'prev'); }
+
+    // ---- UI UPDATE ----
+
+    updateUI() {
+      // Progress bar
+      const pct = ((this.current + 1) / this.total) * 100;
+      this.progressBar.style.width = pct + '%';
+      // Counter
+      this.counterCurrent.textContent = this.current + 1;
+      // Overview highlight
+      this.overviewGrid.querySelectorAll('.overview-thumb').forEach((t, i) => {
+        t.classList.toggle('current', i === this.current);
+      });
+    }
+
+    // ---- ANIMATIONS ----
+
+    triggerAnimations(index) {
+      const slide = this.slides[index];
+      // Reset all anim-fade elements
+      const els = slide.querySelectorAll('.anim-fade');
+      els.forEach(el => el.classList.remove('visible'));
+      // Trigger after small delay so transition can start
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          els.forEach(el => el.classList.add('visible'));
+        });
+      });
+      // Count-up numbers
+      this.animateCounters(slide);
+    }
+
+    animateCounters(slide) {
+      const counters = slide.querySelectorAll('[data-count]');
+      counters.forEach(el => {
+        const target = parseFloat(el.dataset.count);
+        if (isNaN(target) || target === 0) return;
+        const prefix = el.dataset.prefix || '';
+        const suffix = el.dataset.suffix || '';
+        const decimals = parseInt(el.dataset.decimals) || 0;
+        const duration = 1200;
+        const startTime = performance.now();
+
+        const update = (now) => {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease-out cubic
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const val = target * ease;
+          el.textContent = prefix + val.toFixed(decimals) + suffix;
+          if (progress < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+      });
+    }
+
+    // ---- OVERVIEW MODE ----
+
+    buildOverview() {
+      const titles = [
+        'Cover', 'Executive Summary', 'REGA Timeline', 'Registry as Truth',
+        'Dual Regulation', '9 Platforms Overview', 'Infrastructure Leaders',
+        'Consumer Platforms', 'Multi-Asset Platforms', 'Market Size',
+        'Global Context', 'Saudi vs Dubai', 'Pain Points', 'Enabler Thesis',
+        'Opportunity Map', 'TokenStack', 'Roadmap', 'Next Steps'
+      ];
+      this.overviewGrid.innerHTML = '';
+      titles.forEach((title, i) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'overview-thumb' + (i === this.current ? ' current' : '');
+        thumb.innerHTML = `<span class="thumb-num">${String(i + 1).padStart(2, '0')}</span><h4>${title}</h4>`;
+        thumb.addEventListener('click', () => {
+          this.closeOverview();
+          this.goTo(i);
+        });
+        this.overviewGrid.appendChild(thumb);
+      });
+    }
+
+    toggleOverview() {
+      this.isOverview = !this.isOverview;
+      this.overview.classList.toggle('open', this.isOverview);
+    }
+
+    closeOverview() {
+      this.isOverview = false;
+      this.overview.classList.remove('open');
+    }
+
+    // ---- KEYBOARD ----
+
+    bindKeyboard() {
+      document.addEventListener('keydown', (e) => {
+        if (this.isOverview && e.key !== 'Escape') return;
+        switch (e.key) {
+          case 'ArrowRight':
+          case ' ':
+            e.preventDefault();
+            this.next();
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            this.prev();
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            this.next();
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            this.prev();
+            break;
+          case 'Escape':
+            e.preventDefault();
+            this.toggleOverview();
+            break;
+          case 'Home':
+            e.preventDefault();
+            this.goTo(0);
+            break;
+          case 'End':
+            e.preventDefault();
+            this.goTo(this.total - 1);
+            break;
+        }
+      });
+    }
+
+    // ---- TOUCH / SWIPE ----
+
+    bindTouch() {
+      const el = document.getElementById('slideshow');
+      el.addEventListener('touchstart', (e) => {
+        this.touchStartX = e.changedTouches[0].screenX;
+        this.touchStartY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      el.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].screenX - this.touchStartX;
+        const dy = e.changedTouches[0].screenY - this.touchStartY;
+        // Only horizontal swipes (avoid scroll interference)
+        if (Math.abs(dx) > this.swipeThreshold && Math.abs(dx) > Math.abs(dy)) {
+          if (dx < 0) this.next();
+          else this.prev();
+        }
+      }, { passive: true });
+    }
+
+    // ---- HASH NAV ----
+
+    bindHash() {
+      window.addEventListener('hashchange', () => {
+        const match = window.location.hash.match(/slide-(\d+)/);
+        if (match) {
+          const idx = parseInt(match[1], 10) - 1;
+          if (idx >= 0 && idx < this.total && idx !== this.current) {
+            this.goTo(idx);
+          }
+        }
+      });
+    }
+  }
+
+  // ---- BOOT ----
+  window.slideshow = new SlideShow();
+
+})();
+
+
+/* ============================================================
+   CONTENT SLIDE SCRIPTS (from data + strategy files)
+   ============================================================ */
+// --- Script for slide: exec-summary ---
+
+  (function() {
+    function animateCountUp(el) {
+      const target = parseFloat(el.dataset.countup);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const decimals = parseInt(el.dataset.decimals) || 0;
+      const duration = 2000;
+      const startTime = performance.now();
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = eased * target;
+        el.textContent = prefix + current.toFixed(decimals) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('[data-countup]').forEach(animateCountUp);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    const container = document.getElementById('exec-summary-content');
+    if (container) observer.observe(container);
+  })();
+  
+
+// --- Script for slide: market-size ---
+
+  (function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.getElementById('bar2025').classList.add('animate');
+          document.getElementById('bar2034').classList.add('animate');
+          entry.target.querySelectorAll('[data-countup]').forEach(el => {
+            const target = parseFloat(el.dataset.countup);
+            const prefix = el.dataset.prefix || '';
+            const suffix = el.dataset.suffix || '';
+            const decimals = parseInt(el.dataset.decimals) || 0;
+            const duration = 2000;
+            const startTime = performance.now();
+            function update(now) {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              el.textContent = prefix + (eased * target).toFixed(decimals) + suffix;
+              if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    const c = document.getElementById('market-size-content');
+    if (c) observer.observe(c);
+  })();
+  
+
+// --- Script for slide: global-context ---
+
+  (function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.global-donut-seg').forEach(seg => {
+            const t = seg.dataset.target;
+            if (t) seg.style.strokeDasharray = t;
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    const c = document.getElementById('global-context-content');
+    if (c) observer.observe(c);
+  })();
+  
+</script>
+
+<!-- ============================================================
+     MOBILE DISCLAIMER MODAL
+     ============================================================ -->
+<div id="mobile-disclaimer" style="display:none;">
+  <div class="modal-card">
+    <span class="modal-icon">&#x1F5A5;</span>
+    <h2>Best Viewed on Desktop</h2>
+    <div class="arabic-sub">&#x064A;&#x064F;&#x0646;&#x0635;&#x062D; &#x0628;&#x0645;&#x0634;&#x0627;&#x0647;&#x062F;&#x0629; &#x0627;&#x0644;&#x0639;&#x0631;&#x0636; &#x0639;&#x0644;&#x0649; &#x0634;&#x0627;&#x0634;&#x0629; &#x0623;&#x0643;&#x0628;&#x0631;</div>
+    <p class="desc">This presentation contains interactive charts and detailed data visualizations optimized for larger screens.</p>
+    <button class="btn-primary" id="mobile-continue-btn">Continue Anyway &rarr;</button>
+    <button class="btn-secondary" id="mobile-share-btn">Share to Desktop</button>
+  </div>
+</div>
+
+<!-- BACK TO TOP BUTTON -->
+<button id="mobile-back-to-top" aria-label="Back to top">&#8593;</button>
+
+<!-- COPY TOAST -->
+<div id="copy-toast">Link copied to clipboard</div>
+
+<!-- ============================================================
+     MOBILE MODE JAVASCRIPT
+     ============================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  var isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (!isMobile) return;
+
+  var disclaimer = document.getElementById('mobile-disclaimer');
+  var continueBtn = document.getElementById('mobile-continue-btn');
+  var shareBtn = document.getElementById('mobile-share-btn');
+  var backToTop = document.getElementById('mobile-back-to-top');
+  var copyToast = document.getElementById('copy-toast');
+  var slideCounter = document.getElementById('slide-counter');
+  var slides = document.querySelectorAll('.slide');
+
+  // Check sessionStorage for dismissal
+  var dismissed = sessionStorage.getItem('mobile-disclaimer-dismissed');
+
+  if (!dismissed) {
+    disclaimer.style.display = 'flex';
+  } else {
+    enterMobileMode();
+  }
+
+  // Continue button
+  continueBtn.addEventListener('click', function() {
+    sessionStorage.setItem('mobile-disclaimer-dismissed', '1');
+    disclaimer.style.display = 'none';
+    enterMobileMode();
+  });
+
+  // Share to desktop button
+  shareBtn.addEventListener('click', function() {
+    var url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        showToast();
+      }).catch(function() {
+        fallbackCopy(url);
+      });
+    } else {
+      fallbackCopy(url);
+    }
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast(); }
+    catch(e) {}
+    document.body.removeChild(ta);
+  }
+
+  function showToast() {
+    copyToast.classList.add('show');
+    setTimeout(function() { copyToast.classList.remove('show'); }, 2200);
+  }
+
+  function enterMobileMode() {
+    document.body.classList.add('mobile-mode');
+
+    // Remove all slide transition classes and make all visible
+    slides.forEach(function(s) {
+      s.classList.remove('exit-left', 'exit-right');
+      s.classList.add('active');
+    });
+
+    // Disable the slideshow's touch/swipe handler on mobile
+    // We do this by overriding the slideshow methods
+    if (window.slideshow) {
+      window.slideshow.next = function() {};
+      window.slideshow.prev = function() {};
+      window.slideshow.goTo = function() {};
+      window.slideshow.bindTouch = function() {};
+    }
+
+    // Trigger all animations immediately
+    slides.forEach(function(s) {
+      s.querySelectorAll('.anim-fade').forEach(function(el) {
+        el.classList.add('visible');
+      });
+    });
+
+    // Trigger count-up animations when visible via IntersectionObserver
+    var countObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          // data-count elements
+          entry.target.querySelectorAll('[data-count]').forEach(function(el) {
+            var target = parseFloat(el.dataset.count);
+            if (isNaN(target) || target === 0) return;
+            var prefix = el.dataset.prefix || '';
+            var suffix = el.dataset.suffix || '';
+            var decimals = parseInt(el.dataset.decimals) || 0;
+            var duration = 1200;
+            var startTime = performance.now();
+            function update(now) {
+              var elapsed = now - startTime;
+              var progress = Math.min(elapsed / duration, 1);
+              var ease = 1 - Math.pow(1 - progress, 3);
+              el.textContent = prefix + (target * ease).toFixed(decimals) + suffix;
+              if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+          });
+          // data-countup elements
+          entry.target.querySelectorAll('[data-countup]').forEach(function(el) {
+            var target = parseFloat(el.dataset.countup);
+            if (isNaN(target) || target === 0) return;
+            var prefix = el.dataset.prefix || '';
+            var suffix = el.dataset.suffix || '';
+            var decimals = parseInt(el.dataset.decimals) || 0;
+            var duration = 2000;
+            var startTime = performance.now();
+            function update(now) {
+              var elapsed = now - startTime;
+              var progress = Math.min(elapsed / duration, 1);
+              var ease = 1 - Math.pow(1 - progress, 3);
+              el.textContent = prefix + (target * ease).toFixed(decimals) + suffix;
+              if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+          });
+          countObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    slides.forEach(function(s) { countObserver.observe(s); });
+
+    // Trigger market-size bars when visible
+    var barObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var b25 = document.getElementById('bar2025');
+          var b34 = document.getElementById('bar2034');
+          if (b25) b25.classList.add('animate');
+          if (b34) b34.classList.add('animate');
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    var mktSlide = document.getElementById('market-size');
+    if (mktSlide) barObserver.observe(mktSlide);
+
+    // Trigger donut chart when visible
+    var donutObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.global-donut-seg').forEach(function(seg) {
+            var t = seg.dataset.target;
+            if (t) seg.style.strokeDasharray = t;
+          });
+          donutObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    var globalSlide = document.getElementById('global-context');
+    if (globalSlide) donutObserver.observe(globalSlide);
+
+    // Update slide counter on scroll
+    var updateCounter = function() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var vh = window.innerHeight;
+      var currentIdx = 0;
+      slides.forEach(function(s, i) {
+        var rect = s.getBoundingClientRect();
+        if (rect.top < vh * 0.5) currentIdx = i;
+      });
+      var counterCurrent = document.querySelector('#slide-counter .current');
+      if (counterCurrent) counterCurrent.textContent = currentIdx + 1;
+
+      // Update progress bar
+      var pct = ((currentIdx + 1) / slides.length) * 100;
+      var progressBar = document.getElementById('progress-bar');
+      if (progressBar) progressBar.style.width = pct + '%';
+
+      // Back to top button
+      if (scrollTop > vh) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    };
+
+    var scrollTick = false;
+    window.addEventListener('scroll', function() {
+      if (!scrollTick) {
+        requestAnimationFrame(function() {
+          updateCounter();
+          scrollTick = false;
+        });
+        scrollTick = true;
+      }
+    }, { passive: true });
+
+    // Back to top
+    backToTop.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Initial counter update
+    updateCounter();
+  }
+})();
+</script>
+</body>
+</html>
