@@ -10,19 +10,21 @@
 <link rel="apple-touch-icon" href="./logo.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg-deep: #060a1f;
-    --bg-primary: #0a0e27;
+    --bg-deep: #110e0d;
+    --bg-primary: #1c1816;
     --border: rgba(255,255,255,0.06);
-    --text-primary: #e8eaf0;
-    --text-secondary: #8a8fa8;
-    --text-muted: #4a4f6a;
-    --cyan: #00d4ff;
-    --gold: #ffd700;
+    --text-primary: #f4f3ef;
+    --text-secondary: #8a8580;
+    --text-muted: #4a4540;
+    --brand: #ff5619;
+    --brand-gold: #f5a822;
+    --cyan: #ff5619;
+    --gold: #f5a822;
     --emerald: #00c48c;
   }
 
@@ -68,19 +70,19 @@
   }
   .bg-orb--cyan {
     width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(0,212,255,0.07), transparent 70%);
+    background: radial-gradient(circle, rgba(255,86,25,0.08), transparent 70%);
     top: -15%; right: -10%;
     animation-delay: 0s;
   }
   .bg-orb--gold {
     width: 450px; height: 450px;
-    background: radial-gradient(circle, rgba(255,215,0,0.04), transparent 70%);
+    background: radial-gradient(circle, rgba(245,168,34,0.05), transparent 70%);
     bottom: -5%; left: -12%;
     animation-delay: -8s;
   }
   .bg-orb--emerald {
     width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(0,196,140,0.04), transparent 70%);
+    background: radial-gradient(circle, rgba(255,86,25,0.04), transparent 70%);
     top: 55%; left: 50%;
     animation-delay: -16s;
   }
@@ -124,7 +126,7 @@
     height: 48px;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 0 25px rgba(0,212,255,0.15);
+    box-shadow: 0 0 25px rgba(255,86,25,0.2);
   }
   .logo-mark img {
     width: 100%;
@@ -133,13 +135,11 @@
   }
 
   .logo-text {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.03em;
-    color: var(--text-primary);
-  }
-  .logo-text span {
-    color: var(--cyan);
+    color: var(--brand);
   }
 
   /* ── Divider ── */
@@ -239,12 +239,12 @@
   <div class="content">
     <div class="logo">
       <div class="logo-mark"><img src="./logo.jpeg" alt="One Studio"></div>
-      <div class="logo-text">One <span>Studio</span></div>
+      <div class="logo-text">One Studio</div>
     </div>
 
     <div class="divider"></div>
 
-    <div class="tagline">Presentations &amp; Interactive Decks</div>
+    <div class="tagline">Fastest Value Delivery</div>
 
     <p class="message">Looking for a specific presentation?<br>Check the link shared with you.</p>
     <p class="message-hint">Each deck has its own private URL.</p>
@@ -252,7 +252,7 @@
 </main>
 
 <footer class="footer">
-  <div class="footer-line"><a href="#">one-studio.co</a></div>
+  <div class="footer-line"><a href="https://one-studio.co">one-studio.co</a></div>
   <div class="footer-nala">Powered by Nala (&#x0646;&#x0627;&#x0644;&#x0627;)</div>
   <div class="footer-line">&copy; 2026</div>
 </footer>
