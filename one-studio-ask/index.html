@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Studio Ask — A Partnership Conversation</title>
+<link rel="icon" type="image/jpeg" href="../logo.jpeg">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #0a0e27;
+  --navy-light: #111638;
+  --navy-mid: #161b44;
+  --blue: #00d4ff;
+  --gold: #ffd700;
+  --emerald: #00c48c;
+  --orange: #ff5619;
+  --red-muted: #ff4d6a;
+  --white: #f0f2ff;
+  --white-dim: #8890b5;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg-hover: rgba(255, 255, 255, 0.07);
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== MOBILE BLOCK ===== */
+#mobile-block {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: linear-gradient(135deg, #070a1f 0%, #0d1235 50%, #0a0e27 100%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+#mobile-block .mb-icon {
+  width: 80px; height: 80px;
+  margin-bottom: 2rem;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+#mobile-block .mb-icon img { width: 100%; height: 100%; object-fit: cover; }
+#mobile-block h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+#mobile-block .mb-arabic {
+  font-size: 1.1rem;
+  color: var(--white-dim);
+  margin-bottom: 2.5rem;
+  direction: rtl;
+  line-height: 1.6;
+}
+#mobile-block .mb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  color: var(--blue);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#mobile-block .mb-btn:hover {
+  background: rgba(0, 212, 255, 0.18);
+  border-color: rgba(0, 212, 255, 0.5);
+}
+#mobile-block .mb-copied {
+  color: var(--emerald);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (max-width: 768px) {
+  #mobile-block { display: flex !important; }
+  #presentation, #progress-bar, #slide-counter { display: none !important; }
+}
+
+/* ===== PRESENTATION ===== */
+#presentation {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 6rem;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.slide.exit-left {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+.slide-inner {
+  max-width: 1100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===== PROGRESS BAR ===== */
+#progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--gold));
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+}
+
+#slide-counter {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 2rem;
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  letter-spacing: 0.08em;
+  z-index: 100;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== BACKGROUND ===== */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.12;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.bg-orb:nth-child(1) {
+  width: 600px; height: 600px;
+  background: var(--blue);
+  top: -200px; left: -100px;
+  animation-delay: 0s;
+}
+.bg-orb:nth-child(2) {
+  width: 500px; height: 500px;
+  background: var(--gold);
+  bottom: -200px; right: -100px;
+  animation-delay: -7s;
+  opacity: 0.08;
+}
+.bg-orb:nth-child(3) {
+  width: 400px; height: 400px;
+  background: var(--emerald);
+  top: 50%; left: 60%;
+  animation-delay: -14s;
+  opacity: 0.06;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.05); }
+  66% { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+/* ===== TYPOGRAPHY ===== */
+.slide-title {
+  font-size: 2.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 2rem;
+  text-align: center;
+  line-height: 1.2;
+  background: linear-gradient(135deg, var(--white) 0%, rgba(240,242,255,0.75) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.slide-subtitle {
+  font-size: 1.2rem;
+  color: var(--white-dim);
+  text-align: center;
+  max-width: 700px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* ===== GLASS CARDS ===== */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+.glass-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+.card-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.card-text {
+  font-size: 0.92rem;
+  color: var(--white-dim);
+  line-height: 1.6;
+}
+
+/* ===== STAT CARDS ===== */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.4rem;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--white-dim);
+  line-height: 1.5;
+}
+
+/* ===== TWO COLUMN ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* ===== THREE CARDS ROW ===== */
+.three-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+}
+
+/* ===== CHECK LIST ===== */
+.check-list {
+  list-style: none;
+  padding: 0;
+}
+.check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(240,242,255,0.9);
+}
+.check-list li .icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  margin-top: 1px;
+}
+
+/* ===== PATHS ===== */
+.paths-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+}
+.path-card {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  cursor: default;
+}
+.path-number {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 auto 1.25rem;
+}
+.path-card .card-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
+
+/* ===== TIMELINE ===== */
+.timeline-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 1.5rem 0;
+  position: relative;
+}
+.timeline-bar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-50%);
+}
+.timeline-node {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.timeline-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  margin: 0 auto 0.6rem;
+}
+.timeline-label {
+  font-size: 0.78rem;
+  color: var(--white-dim);
+  line-height: 1.4;
+}
+.timeline-date {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* ===== PILLAR STRUCTURE ===== */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+}
+.pillar-card {
+  text-align: center;
+  padding: 2rem 1.25rem;
+}
+.pillar-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin: 0 auto 1rem;
+}
+
+/* ===== X-LIST (negation) ===== */
+.x-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.x-item {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+.x-mark {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  background: rgba(255, 77, 106, 0.1);
+  border: 1px solid rgba(255, 77, 106, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--red-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.x-content {}
+.x-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.3rem;
+}
+.x-desc {
+  font-size: 0.9rem;
+  color: var(--white-dim);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ===== RESULTS TABLE ===== */
+.results-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.result-row {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+.result-badge {
+  flex-shrink: 0;
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* ===== NEXT STEPS ===== */
+.steps-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.step-item {
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.step-num {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  color: var(--blue);
+}
+.step-text {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.step-timeline {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold);
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+/* ===== VISUAL: ZIP TO SLIDES ===== */
+.spark-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.spark-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.spark-icon-box {
+  width: 72px; height: 72px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+.spark-icon-label {
+  font-size: 0.75rem;
+  color: var(--white-dim);
+}
+.spark-arrow {
+  font-size: 2rem;
+  color: var(--blue);
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.5; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(6px); }
+}
+.spark-icon-box.big {
+  width: 96px; height: 96px;
+  font-size: 2.4rem;
+}
+
+/* ===== COVER ===== */
+.cover-title {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--white) 0%, rgba(240,242,255,0.6) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.75rem;
+}
+.cover-subtitle {
+  font-size: 1.3rem;
+  color: var(--white-dim);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 4rem;
+}
+.cover-footer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  opacity: 0.5;
+  position: absolute;
+  bottom: 3rem;
+}
+.cover-footer img {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+}
+.cover-footer span {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  letter-spacing: 0.04em;
+}
+.cover-footer .sep {
+  width: 1px;
+  height: 16px;
+  background: rgba(255,255,255,0.15);
+}
+
+/* ===== BOTTOM LINK ===== */
+.bottom-link {
+  margin-top: 2rem;
+  font-size: 0.78rem;
+  color: var(--white-dim);
+  opacity: 0.6;
+}
+.bottom-link a {
+  color: var(--blue);
+  text-decoration: none;
+  opacity: 0.8;
+}
+.bottom-link a:hover { opacity: 1; text-decoration: underline; }
+
+/* ===== BOTTOM NOTE ===== */
+.bottom-note {
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  text-align: center;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+/* ===== GOLD QUOTE ===== */
+.gold-quote {
+  margin-top: 2.5rem;
+  font-size: 1.1rem;
+  color: var(--gold);
+  text-align: center;
+  font-style: italic;
+  font-weight: 500;
+  max-width: 650px;
+  line-height: 1.6;
+  position: relative;
+  padding: 1.25rem 2rem;
+}
+.gold-quote::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ===== CLOSE SECTION ===== */
+.close-footer {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0.7;
+}
+.close-footer img {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+}
+.close-footer .brand-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--orange);
+}
+.close-footer .brand-slogan {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  letter-spacing: 0.06em;
+}
+.close-footer .brand-credit {
+  font-size: 0.7rem;
+  color: var(--white-dim);
+  opacity: 0.5;
+  margin-top: 0.25rem;
+}
+
+/* ===== ENTITY TYPE ===== */
+.entity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  color: rgba(240,242,255,0.8);
+  margin-top: 1rem;
+}
+
+/* ===== CANDIDATE PILLS ===== */
+.candidates {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.candidate-pill {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  background: rgba(255, 215, 0, 0.06);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  color: rgba(240,242,255,0.7);
+}
+
+/* ===== LIGHT PATH (Path 3) ===== */
+.light-card {
+  max-width: 700px;
+  width: 100%;
+  padding: 2.5rem;
+}
+.light-card .card-text {
+  margin-bottom: 0.75rem;
+}
+.light-activate {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--emerald);
+  opacity: 0.8;
+}
+
+/* ===== STAGGER ANIMATION ===== */
+.slide.active .stagger { animation: fadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.slide.active .stagger:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .stagger:nth-child(2) { animation-delay: 0.2s; }
+.slide.active .stagger:nth-child(3) { animation-delay: 0.3s; }
+.slide.active .stagger:nth-child(4) { animation-delay: 0.35s; }
+.slide.active .stagger:nth-child(5) { animation-delay: 0.4s; }
+.slide.active .stagger:nth-child(6) { animation-delay: 0.45s; }
+.slide.active .stagger:nth-child(7) { animation-delay: 0.5s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== PRINT ===== */
+@media print {
+  body { overflow: visible; height: auto; }
+  .slide {
+    position: relative !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    page-break-after: always;
+    height: 100vh;
+  }
+  #progress-bar, #slide-counter, .bg-orbs, #mobile-block { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Block -->
+<div id="mobile-block">
+  <div class="mb-icon"><img src="../logo.jpeg" alt="One Studio"></div>
+  <h2>Desktop Only</h2>
+  <p class="mb-arabic">هذا العرض مصمم للعرض على شاشة كبيرة</p>
+  <button class="mb-btn" onclick="copyLink()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    Copy Link to Open on Desktop
+  </button>
+  <div class="mb-copied" id="mb-copied">Link copied!</div>
+</div>
+
+<!-- Background -->
+<div class="bg-orbs">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+</div>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+<div id="slide-counter"></div>
+
+<!-- Presentation -->
+<div id="presentation">
+
+  <!-- ==================== SLIDE 1: COVER ==================== -->
+  <div class="slide active" data-slide="1">
+    <div class="slide-inner" style="justify-content: center; text-align: center;">
+      <div class="cover-title stagger">One Studio Ask</div>
+      <div class="cover-subtitle stagger">A Partnership Conversation</div>
+    </div>
+    <div class="cover-footer stagger">
+      <img src="../logo.jpeg" alt="One Studio">
+      <span>March 2026</span>
+      <div class="sep"></div>
+      <span>Confidential</span>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 2: THE SPARK ==================== -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <div class="slide-title stagger">It Started With a File</div>
+      <div class="slide-subtitle stagger" style="margin-bottom: 2rem;">You shared 9 platforms. We saw something bigger.</div>
+
+      <div class="spark-visual stagger">
+        <div class="spark-icon">
+          <div class="spark-icon-box" style="background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.15);">
+            <svg width="32" height="32" fill="none" stroke="var(--gold)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <div class="spark-icon-label">9 platforms</div>
+        </div>
+        <div class="spark-arrow">&rarr;</div>
+        <div class="spark-icon">
+          <div class="spark-icon-box big" style="background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2);">
+            <svg width="44" height="44" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="spark-icon-label">Interactive analysis</div>
+        </div>
+      </div>
+
+      <div class="slide-subtitle stagger" style="font-size: 0.95rem; margin-top: 1.5rem; max-width: 750px;">
+        In 24 hours, we delivered a deep market analysis with 50+ sources, 18 interactive slides, and an enabler strategy that none of the 9 platforms are pursuing.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 3: THREE INSIGHTS ==================== -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner">
+      <div class="slide-title stagger">Three Insights That Matter</div>
+
+      <div class="three-cards stagger" style="margin-top: 1rem;">
+        <div class="glass-card">
+          <div class="card-label" style="color: var(--blue);">Insight 1</div>
+          <div class="card-title">Registry as Truth</div>
+          <div class="card-text">Saudi is the <strong style="color:var(--white);">first country</strong> where tokenized ownership IS legal ownership. Not a parallel system &mdash; real registry integration.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-label" style="color: var(--gold);">Insight 2</div>
+          <div class="card-title">9 Platforms, Zero Enablers</div>
+          <div class="card-text">Every platform builds alone. No shared services layer exists. The <strong style="color:var(--white);">picks-and-shovels opportunity</strong> is wide open.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-label" style="color: var(--emerald);">Insight 3</div>
+          <div class="card-title">April 30 Deadline</div>
+          <div class="card-text">REGA's second PropTech sandbox closes in <strong style="color:var(--white);">6 weeks</strong>. The window is now.</div>
+        </div>
+      </div>
+
+      <div class="bottom-link stagger">Full analysis &rarr; <a href="https://onestudio-co.github.io/slides/saudi-re-tokenization/" target="_blank">onestudio-co.github.io/slides/saudi-re-tokenization/</a></div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 4: WHO WE ARE ==================== -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <div class="slide-title stagger"><span style="-webkit-text-fill-color: var(--orange);">One Studio</span><span style="-webkit-text-fill-color: var(--white-dim); font-weight: 400;"> &mdash; Fastest Value Delivery</span></div>
+
+      <div class="stat-grid stagger">
+        <div class="glass-card stat-card">
+          <div class="stat-number" style="color: var(--blue);">24h</div>
+          <div class="stat-label">From signal to deep analysis<br>with 50+ sources</div>
+        </div>
+        <div class="glass-card stat-card">
+          <div class="stat-number" style="color: var(--gold);">8</div>
+          <div class="stat-label">Active ventures across<br>Saudi, Turkey, UAE, Libya</div>
+        </div>
+        <div class="glass-card stat-card">
+          <div class="stat-number" style="color: var(--emerald);">15+</div>
+          <div class="stat-label">Full-stack product team<br>ready to deploy</div>
+        </div>
+      </div>
+
+      <div class="bottom-note stagger" style="color: var(--white-dim);">
+        We're a venture builder. We turn signals into products &mdash; fast.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 5: WHERE WE STAND ==================== -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <div class="slide-title stagger">Transparent About Where We Stand</div>
+
+      <div class="two-col stagger" style="margin-top: 0.5rem;">
+        <div class="glass-card" style="border-color: rgba(0, 196, 140, 0.15);">
+          <div class="card-label" style="color: var(--emerald);">What We Have</div>
+          <ul class="check-list" style="margin-top: 0.75rem;">
+            <li><span class="icon" style="color: var(--emerald);">&#10003;</span> Proven execution engine &mdash; team, methodology, track record</li>
+            <li><span class="icon" style="color: var(--emerald);">&#10003;</span> AI-native capabilities (Nala, the agent that produced the analysis)</li>
+            <li><span class="icon" style="color: var(--emerald);">&#10003;</span> Active portfolio of ventures generating learnings</li>
+            <li><span class="icon" style="color: var(--emerald);">&#10003;</span> Deep tech talent from a distressed market (cost advantage)</li>
+          </ul>
+        </div>
+        <div class="glass-card" style="border-color: rgba(255, 215, 0, 0.15);">
+          <div class="card-label" style="color: var(--gold);">What We Need</div>
+          <ul class="check-list" style="margin-top: 0.75rem;">
+            <li><span class="icon" style="color: var(--gold);">&rarr;</span> Saudi legal entity (no CR yet)</li>
+            <li><span class="icon" style="color: var(--gold);">&rarr;</span> Local market access and relationships</li>
+            <li><span class="icon" style="color: var(--gold);">&rarr;</span> Domain expertise in key verticals</li>
+            <li><span class="icon" style="color: var(--gold);">&rarr;</span> A partner who opens doors we can't reach alone</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bottom-note stagger" style="color: var(--white-dim); font-size: 0.92rem; margin-top: 1.75rem;">
+        We're not looking for charity. We're looking for the right structure.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 6: WHAT WE'RE NOT ASKING ==================== -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <div class="slide-title stagger">Let's Be Clear</div>
+
+      <div class="x-list stagger">
+        <div class="glass-card x-item">
+          <div class="x-mark">&times;</div>
+          <div class="x-content">
+            <div class="x-title">We're not asking you to invest in the studio</div>
+            <div class="x-desc">"Our studio, our cap table, our complexity."</div>
+          </div>
+        </div>
+        <div class="glass-card x-item">
+          <div class="x-mark">&times;</div>
+          <div class="x-content">
+            <div class="x-title">We're not asking for a nominee/kafala</div>
+            <div class="x-desc">"We build real partnerships, not paper arrangements."</div>
+          </div>
+        </div>
+        <div class="glass-card x-item">
+          <div class="x-mark">&times;</div>
+          <div class="x-content">
+            <div class="x-title">We're not asking for a favor</div>
+            <div class="x-desc">"We want to build something where you benefit more than we do."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 7: THREE PATHS ==================== -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <div class="slide-title stagger">Three Ways to Work Together</div>
+
+      <div class="paths-row stagger" style="margin-top: 1rem;">
+        <div class="glass-card path-card">
+          <div class="path-number" style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25); color: var(--blue);">1</div>
+          <div class="card-title">RE Tokenization JV</div>
+          <div class="card-text">A focused venture in a hot market</div>
+        </div>
+        <div class="glass-card path-card">
+          <div class="path-number" style="background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.25); color: var(--gold);">2</div>
+          <div class="card-title">Clean Portfolio</div>
+          <div class="card-text">A new vehicle for new opportunities</div>
+        </div>
+        <div class="glass-card path-card">
+          <div class="path-number" style="background: rgba(0,196,140,0.1); border: 1px solid rgba(0,196,140,0.25); color: var(--emerald);">3</div>
+          <div class="card-title">Sales Sidecar</div>
+          <div class="card-text">Quick wins through IJAD</div>
+        </div>
+      </div>
+
+      <div class="bottom-note stagger" style="color: var(--white-dim); font-size: 0.95rem; margin-top: 2rem;">
+        Let's walk through each.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 8: PATH 1 ==================== -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <div class="slide-title stagger" style="font-size: 2.25rem;">
+        <span style="-webkit-text-fill-color: var(--blue);">Path 1:</span> Build an Enabler Together
+      </div>
+      <div class="slide-subtitle stagger" style="margin-bottom: 1.75rem; font-size: 1rem;">
+        9 platforms need services. Nobody serves them.
+      </div>
+
+      <div class="pillars stagger">
+        <div class="glass-card pillar-card" style="border-color: rgba(255,215,0,0.12);">
+          <div class="pillar-icon" style="background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2);">
+            <svg width="22" height="22" fill="none" stroke="var(--gold)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="card-title">Abdullah</div>
+          <div class="card-text" style="font-size: 0.85rem;">Saudi entity, market access, REGA &amp; investor network</div>
+        </div>
+        <div class="glass-card pillar-card" style="border-color: rgba(0,212,255,0.12);">
+          <div class="pillar-icon" style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);">
+            <svg width="22" height="22" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="card-title" style="color: var(--orange);">One Studio</div>
+          <div class="card-text" style="font-size: 0.85rem;">Technology, AI, execution speed</div>
+        </div>
+        <div class="glass-card pillar-card" style="border-color: rgba(0,196,140,0.12);">
+          <div class="pillar-icon" style="background: rgba(0,196,140,0.1); border: 1px solid rgba(0,196,140,0.2);">
+            <svg width="22" height="22" fill="none" stroke="var(--emerald)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <div class="card-title">Domain Expert</div>
+          <div class="card-text" style="font-size: 0.85rem;">We find this person together</div>
+        </div>
+      </div>
+
+      <div class="candidates stagger">
+        <div class="candidate-pill">Dr. Abdulelah Alkhuraif &mdash; ex-Tadawul CEO</div>
+        <div class="candidate-pill">Waleed Albawardi &mdash; ex-Tadawul/SAMA</div>
+        <div class="candidate-pill">Ali Alshareef &mdash; RE lawyer</div>
+      </div>
+
+      <div class="timeline-bar stagger" style="margin-top: 2rem;">
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--gold);"></div>
+          <div class="timeline-date" style="color: var(--gold);">April 30</div>
+          <div class="timeline-label">REGA Sandbox<br>Deadline</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--blue);"></div>
+          <div class="timeline-date" style="color: var(--blue);">4-8 weeks</div>
+          <div class="timeline-label">Entity<br>Formation</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--emerald);"></div>
+          <div class="timeline-date" style="color: var(--emerald);">Application</div>
+          <div class="timeline-label">Sandbox<br>Ready</div>
+        </div>
+      </div>
+
+      <div class="entity-badge stagger">
+        <svg width="14" height="14" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        SJSC &mdash; Simplified Joint Stock Company (clean cap table, share classes, investor-ready)
+      </div>
+
+      <div class="bottom-note stagger" style="color: var(--white-dim); font-size: 0.88rem; margin-top: 1.25rem;">
+        This is not platform #10. This is the infrastructure that powers all of them.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 9: PATH 2 ==================== -->
+  <div class="slide" data-slide="9">
+    <div class="slide-inner">
+      <div class="slide-title stagger" style="font-size: 2.25rem;">
+        <span style="-webkit-text-fill-color: var(--gold);">Path 2:</span> A Fresh Vehicle Together
+      </div>
+      <div class="slide-subtitle stagger" style="margin-bottom: 2rem; font-size: 1rem;">
+        A new entity. Clean cap table. No baggage.
+      </div>
+
+      <div class="two-col stagger">
+        <div class="glass-card" style="border-color: rgba(255,215,0,0.12);">
+          <div class="card-label" style="color: var(--gold);">Your Role</div>
+          <ul class="check-list" style="margin-top: 0.75rem;">
+            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Deal flow from your network</li>
+            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Saudi presence and credibility</li>
+            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Sector expertise (construction, RE, infra)</li>
+            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Government / institutional access</li>
+          </ul>
+        </div>
+        <div class="glass-card" style="border-color: rgba(0,212,255,0.12);">
+          <div class="card-label" style="color: var(--blue);">Our Role</div>
+          <ul class="check-list" style="margin-top: 0.75rem;">
+            <li><span class="icon" style="color: var(--blue);">&#9670;</span> Venture building methodology</li>
+            <li><span class="icon" style="color: var(--blue);">&#9670;</span> Full product + engineering team</li>
+            <li><span class="icon" style="color: var(--blue);">&#9670;</span> AI-native operations</li>
+            <li><span class="icon" style="color: var(--blue);">&#9670;</span> Speed &mdash; from idea to MVP in weeks</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="entity-badge stagger" style="margin-top: 1.5rem;">
+        <svg width="14" height="14" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        SJSC co-founded together. One Studio provides execution via service agreement. You co-select ventures.
+      </div>
+
+      <div class="bottom-note stagger" style="color: var(--white-dim); font-size: 0.92rem; margin-top: 1.5rem; max-width: 600px;">
+        This IS the 2-3 year plan you asked for &mdash; but as a partnership, not a pitch deck.
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 10: PATH 3 ==================== -->
+  <div class="slide" data-slide="10">
+    <div class="slide-inner">
+      <div class="slide-title stagger" style="font-size: 2.25rem;">
+        <span style="-webkit-text-fill-color: var(--emerald);">Path 3:</span> Quick Wins via IJAD
+      </div>
+
+      <div class="glass-card light-card stagger" style="margin-top: 1rem;">
+        <div class="card-text" style="font-size: 1rem; line-height: 1.8;">
+          Your IJAD connection can immediately start BD/sales for our existing platforms in KSA.
+        </div>
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap;">
+          <span style="padding: 0.35rem 0.85rem; border-radius: 8px; font-size: 0.82rem; background: rgba(0,196,140,0.08); border: 1px solid rgba(0,196,140,0.15); color: var(--emerald);">Sentra</span>
+          <span style="padding: 0.35rem 0.85rem; border-radius: 8px; font-size: 0.82rem; background: rgba(0,196,140,0.08); border: 1px solid rgba(0,196,140,0.15); color: var(--emerald);">RevXAI</span>
+        </div>
+        <div class="card-text" style="margin-top: 1.25rem;">Commission-based. No equity. No entity needed.</div>
+        <div class="card-text">A warm-up while we explore the bigger plays.</div>
+        <div class="light-activate">Activate after Eid &rarr;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 11: WHAT YOU GET ==================== -->
+  <div class="slide" data-slide="11">
+    <div class="slide-inner">
+      <div class="slide-title stagger">Why This Works For You</div>
+
+      <div class="results-list stagger">
+        <div class="glass-card result-row">
+          <div class="result-badge" style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); color: var(--blue);">Path 1</div>
+          <div class="card-text" style="font-size: 0.95rem;">Co-own the infrastructure layer of a <strong style="color:var(--white);">$500B market</strong>. Your network feeds the platform. First-mover in Saudi RE enabler space.</div>
+        </div>
+        <div class="glass-card result-row">
+          <div class="result-badge" style="background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2); color: var(--gold);">Path 2</div>
+          <div class="card-text" style="font-size: 0.95rem;">Your own venture portfolio. Powered by a team that delivered a deep analysis in 24 hours. <strong style="color:var(--white);">Imagine that speed on every opportunity you see.</strong></div>
+        </div>
+        <div class="glass-card result-row">
+          <div class="result-badge" style="background: rgba(0,196,140,0.1); border: 1px solid rgba(0,196,140,0.2); color: var(--emerald);">Path 3</div>
+          <div class="card-text" style="font-size: 0.95rem;">Revenue from existing products. <strong style="color:var(--white);">Zero risk. Zero commitment.</strong></div>
+        </div>
+      </div>
+
+      <div class="gold-quote stagger">
+        "In every path, you bring the market. We bring the machine."
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 12: NEXT STEPS ==================== -->
+  <div class="slide" data-slide="12">
+    <div class="slide-inner">
+      <div class="slide-title stagger">Next Steps</div>
+
+      <div class="steps-list stagger">
+        <div class="glass-card step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">Choose a path (or combine)</div>
+          <div class="step-timeline">This week</div>
+        </div>
+        <div class="glass-card step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">If Path 1: Start entity formation + identify domain expert</div>
+          <div class="step-timeline">By April 1</div>
+        </div>
+        <div class="glass-card step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">If Path 2: Define first opportunity + draft shareholders agreement</div>
+          <div class="step-timeline">April</div>
+        </div>
+      </div>
+
+      <div class="close-footer stagger">
+        <img src="../logo.jpeg" alt="One Studio">
+        <div class="brand-name">One Studio</div>
+        <div class="brand-slogan">Fastest Value Delivery</div>
+        <div class="brand-credit">Prepared by Nala (&zwnj;نالا&zwnj;)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  // ===== State =====
+  const TOTAL = 12;
+  let current = 1;
+  let isAnimating = false;
+
+  const slides = document.querySelectorAll('.slide');
+  const progressBar = document.getElementById('progress-bar');
+  const counter = document.getElementById('slide-counter');
+
+  // ===== Init from hash =====
+  function initFromHash() {
+    const match = location.hash.match(/^#slide-(\d+)$/);
+    if (match) {
+      const n = parseInt(match[1]);
+      if (n >= 1 && n <= TOTAL) current = n;
+    }
+    showSlide(current, false);
+  }
+
+  // ===== Show Slide =====
+  function showSlide(n, animate) {
+    if (animate === undefined) animate = true;
+    if (n < 1 || n > TOTAL) return;
+
+    const prev = current;
+    current = n;
+    location.hash = 'slide-' + current;
+
+    slides.forEach((s, i) => {
+      const idx = i + 1;
+      s.classList.remove('active', 'exit-left');
+      if (idx === current) {
+        if (animate) {
+          s.style.transform = (current > prev) ? 'translateX(60px)' : 'translateX(-60px)';
+          s.offsetHeight; // force reflow
+        }
+        s.classList.add('active');
+        if (animate) s.style.transform = '';
+      } else if (animate && idx === prev) {
+        s.classList.add((current > prev) ? 'exit-left' : '');
+        if (current < prev) {
+          s.style.transform = 'translateX(60px)';
+        }
+      }
+    });
+
+    updateUI();
+  }
+
+  function updateUI() {
+    progressBar.style.width = ((current / TOTAL) * 100) + '%';
+    counter.textContent = current + ' / ' + TOTAL;
+  }
+
+  function next() {
+    if (isAnimating || current >= TOTAL) return;
+    isAnimating = true;
+    showSlide(current + 1);
+    setTimeout(function() { isAnimating = false; }, 500);
+  }
+
+  function prev() {
+    if (isAnimating || current <= 1) return;
+    isAnimating = true;
+    showSlide(current - 1);
+    setTimeout(function() { isAnimating = false; }, 500);
+  }
+
+  // ===== Keyboard =====
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      prev();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      showSlide(1);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      showSlide(TOTAL);
+    }
+  });
+
+  // ===== Touch / Swipe =====
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+
+  // ===== Hash change =====
+  window.addEventListener('hashchange', function() {
+    const match = location.hash.match(/^#slide-(\d+)$/);
+    if (match) {
+      const n = parseInt(match[1]);
+      if (n !== current && n >= 1 && n <= TOTAL) showSlide(n);
+    }
+  });
+
+  // ===== Copy link (mobile) =====
+  window.copyLink = function() {
+    var url = location.href.split('#')[0];
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() {
+        document.getElementById('mb-copied').style.opacity = '1';
+        setTimeout(function() {
+          document.getElementById('mb-copied').style.opacity = '0';
+        }, 2000);
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      document.getElementById('mb-copied').style.opacity = '1';
+      setTimeout(function() {
+        document.getElementById('mb-copied').style.opacity = '0';
+      }, 2000);
+    }
+  };
+
+  // ===== Init =====
+  initFromHash();
+})();
+</script>
+</body>
+</html>
