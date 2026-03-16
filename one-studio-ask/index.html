@@ -100,7 +100,7 @@ body {
 
 @media (max-width: 768px) {
   #mobile-block { display: flex !important; }
-  #presentation, #progress-bar, #slide-counter { display: none !important; }
+  #presentation, #progress-bar, #slide-counter, #nav-controls, #menu-btn, #slide-menu-overlay, #grid-overlay { display: none !important; }
 }
 
 /* ===== PRESENTATION ===== */
@@ -163,6 +163,274 @@ body {
   letter-spacing: 0.08em;
   z-index: 100;
   font-variant-numeric: tabular-nums;
+  display: none; /* hidden — counter now in nav controls */
+}
+
+/* ===== NAV CONTROLS ===== */
+#nav-controls {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 200;
+}
+.nav-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--white-dim);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  outline: none;
+}
+.nav-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--white);
+}
+.nav-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
+}
+#nav-counter {
+  font-size: 0.78rem;
+  color: var(--white-dim);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  min-width: 3.2rem;
+  text-align: center;
+  user-select: none;
+}
+
+/* ===== MENU BUTTON ===== */
+#menu-btn {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--white-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  z-index: 200;
+  outline: none;
+}
+#menu-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--white);
+}
+
+/* ===== SLIDE MENU (RIGHT PANEL) ===== */
+#slide-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#slide-menu-overlay.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+#slide-menu-overlay .menu-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+}
+#slide-menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100%;
+  background: rgba(16, 20, 50, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid rgba(255,255,255,0.08);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+#slide-menu-overlay.open #slide-menu-panel {
+  transform: translateX(0);
+}
+.menu-header {
+  padding: 0 1.25rem 1rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--white-dim);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 0.5rem;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  font-family: inherit;
+}
+.menu-item:hover {
+  background: rgba(255,255,255,0.06);
+}
+.menu-item.active {
+  background: rgba(0, 212, 255, 0.08);
+}
+.menu-item-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.06);
+  color: var(--white-dim);
+  flex-shrink: 0;
+}
+.menu-item.active .menu-item-num {
+  background: rgba(0, 212, 255, 0.15);
+  color: var(--blue);
+}
+.menu-item-title {
+  font-size: 0.85rem;
+  color: rgba(240,242,255,0.7);
+  line-height: 1.3;
+}
+.menu-item.active .menu-item-title {
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* ===== GRID OVERVIEW ===== */
+#grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(8, 11, 30, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: none;
+  flex-direction: column;
+  padding: 2.5rem 3rem;
+  overflow-y: auto;
+}
+#grid-overlay.open {
+  display: flex;
+}
+.grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.grid-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.grid-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--white-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  outline: none;
+}
+.grid-close-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--white);
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  flex: 1;
+}
+.grid-thumb {
+  aspect-ratio: 16/10;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.grid-thumb:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-3px);
+}
+.grid-thumb.active {
+  border-color: rgba(0, 212, 255, 0.4);
+  background: rgba(0, 212, 255, 0.06);
+}
+.grid-thumb-num {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: rgba(240,242,255,0.15);
+  margin-bottom: 0.5rem;
+}
+.grid-thumb.active .grid-thumb-num {
+  color: rgba(0, 212, 255, 0.3);
+}
+.grid-thumb-title {
+  font-size: 0.78rem;
+  color: var(--white-dim);
+  line-height: 1.3;
+  max-width: 90%;
+}
+.grid-thumb.active .grid-thumb-title {
+  color: var(--white);
 }
 
 /* ===== BACKGROUND ===== */
@@ -736,6 +1004,168 @@ body {
   opacity: 0.8;
 }
 
+/* ===== PATH 2 DIAGRAM ===== */
+.p2-diagram {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+.p2-side {
+  flex: 1;
+  max-width: 280px;
+}
+.p2-side .glass-card {
+  padding: 1rem 1.25rem;
+}
+.p2-side ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.p2-side ul li {
+  font-size: 0.78rem;
+  color: rgba(240,242,255,0.8);
+  padding: 0.2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.p2-side ul li .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.p2-center {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 1.25rem;
+  position: relative;
+}
+.p2-center-box {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.06);
+  border: 2px solid rgba(0, 212, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.p2-center-box .label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--white-dim);
+}
+.p2-center-box .value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+.p2-connector {
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+  flex-shrink: 0;
+}
+.p2-ventures {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+.p2-vent-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(0, 196, 140, 0.08);
+  border: 1px solid rgba(0, 196, 140, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+
+/* Path 2 precedent cards */
+.p2-precedents {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.p2-prec-card {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+}
+.p2-prec-card .prec-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.25rem;
+}
+.p2-prec-card .prec-desc {
+  font-size: 0.7rem;
+  color: var(--white-dim);
+  line-height: 1.4;
+}
+
+/* Path 2 economics row */
+.p2-econ {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.6rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.p2-econ-item {
+  text-align: center;
+  padding: 0.6rem 0.4rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.p2-econ-item .econ-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.15rem;
+}
+.p2-econ-item .econ-label {
+  font-size: 0.62rem;
+  color: var(--white-dim);
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Path 2 sector pills */
+.p2-sectors {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.sector-pill {
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(240,242,255,0.8);
+}
+
 /* ===== STAGGER ANIMATION ===== */
 .slide.active .stagger { animation: fadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both; }
 .slide.active .stagger:nth-child(1) { animation-delay: 0.1s; }
@@ -745,6 +1175,8 @@ body {
 .slide.active .stagger:nth-child(5) { animation-delay: 0.4s; }
 .slide.active .stagger:nth-child(6) { animation-delay: 0.45s; }
 .slide.active .stagger:nth-child(7) { animation-delay: 0.5s; }
+.slide.active .stagger:nth-child(8) { animation-delay: 0.55s; }
+.slide.active .stagger:nth-child(9) { animation-delay: 0.6s; }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
@@ -762,7 +1194,7 @@ body {
     page-break-after: always;
     height: 100vh;
   }
-  #progress-bar, #slide-counter, .bg-orbs, #mobile-block { display: none !important; }
+  #progress-bar, #slide-counter, .bg-orbs, #mobile-block, #nav-controls, #menu-btn, #slide-menu-overlay, #grid-overlay { display: none !important; }
 }
 </style>
 </head>
@@ -791,11 +1223,41 @@ body {
 <div id="progress-bar"></div>
 <div id="slide-counter"></div>
 
+<!-- Nav Controls (bottom-right) -->
+<div id="nav-controls">
+  <button class="nav-btn" id="btn-prev" title="Previous slide">&larr;</button>
+  <span id="nav-counter">1 / 12</span>
+  <button class="nav-btn" id="btn-next" title="Next slide">&rarr;</button>
+</div>
+
+<!-- Menu Button (top-right) -->
+<button id="menu-btn" title="Slide menu">&#9776;</button>
+
+<!-- Slide Menu Overlay -->
+<div id="slide-menu-overlay">
+  <div class="menu-backdrop"></div>
+  <div id="slide-menu-panel">
+    <div class="menu-header">Slides</div>
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- Grid Overview -->
+<div id="grid-overlay">
+  <div class="grid-header">
+    <h2>All Slides</h2>
+    <button class="grid-close-btn" id="grid-close-btn">&times;</button>
+  </div>
+  <div class="grid-container" id="grid-container">
+    <!-- populated by JS -->
+  </div>
+</div>
+
 <!-- Presentation -->
 <div id="presentation">
 
   <!-- ==================== SLIDE 1: COVER ==================== -->
-  <div class="slide active" data-slide="1">
+  <div class="slide active" data-slide="1" data-title="One Studio Ask">
     <div class="slide-inner" style="justify-content: center; text-align: center;">
       <div class="cover-title stagger">One Studio Ask</div>
       <div class="cover-subtitle stagger">A Partnership Conversation</div>
@@ -809,7 +1271,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 2: THE SPARK ==================== -->
-  <div class="slide" data-slide="2">
+  <div class="slide" data-slide="2" data-title="It Started With a File">
     <div class="slide-inner">
       <div class="slide-title stagger">It Started With a File</div>
       <div class="slide-subtitle stagger" style="margin-bottom: 2rem;">You shared 9 platforms. We saw something bigger.</div>
@@ -837,7 +1299,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 3: THREE INSIGHTS ==================== -->
-  <div class="slide" data-slide="3">
+  <div class="slide" data-slide="3" data-title="Three Insights That Matter">
     <div class="slide-inner">
       <div class="slide-title stagger">Three Insights That Matter</div>
 
@@ -864,7 +1326,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 4: WHO WE ARE ==================== -->
-  <div class="slide" data-slide="4">
+  <div class="slide" data-slide="4" data-title="One Studio">
     <div class="slide-inner">
       <div class="slide-title stagger"><span style="-webkit-text-fill-color: var(--orange);">One Studio</span><span style="-webkit-text-fill-color: var(--white-dim); font-weight: 400;"> &mdash; Fastest Value Delivery</span></div>
 
@@ -890,7 +1352,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 5: WHERE WE STAND ==================== -->
-  <div class="slide" data-slide="5">
+  <div class="slide" data-slide="5" data-title="Where We Stand">
     <div class="slide-inner">
       <div class="slide-title stagger">Transparent About Where We Stand</div>
 
@@ -922,7 +1384,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 6: WHAT WE'RE NOT ASKING ==================== -->
-  <div class="slide" data-slide="6">
+  <div class="slide" data-slide="6" data-title="Let's Be Clear">
     <div class="slide-inner">
       <div class="slide-title stagger">Let's Be Clear</div>
 
@@ -953,7 +1415,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 7: THREE PATHS ==================== -->
-  <div class="slide" data-slide="7">
+  <div class="slide" data-slide="7" data-title="Three Ways to Work Together">
     <div class="slide-inner">
       <div class="slide-title stagger">Three Ways to Work Together</div>
 
@@ -982,7 +1444,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 8: PATH 1 ==================== -->
-  <div class="slide" data-slide="8">
+  <div class="slide" data-slide="8" data-title="Path 1: Build an Enabler">
     <div class="slide-inner">
       <div class="slide-title stagger" style="font-size: 2.25rem;">
         <span style="-webkit-text-fill-color: var(--blue);">Path 1:</span> Build an Enabler Together
@@ -1050,50 +1512,113 @@ body {
     </div>
   </div>
 
-  <!-- ==================== SLIDE 9: PATH 2 ==================== -->
-  <div class="slide" data-slide="9">
+  <!-- ==================== SLIDE 9: PATH 2 (ENRICHED) ==================== -->
+  <div class="slide" data-slide="9" data-title="Path 2: A Fresh Vehicle Together">
     <div class="slide-inner">
-      <div class="slide-title stagger" style="font-size: 2.25rem;">
+      <div class="slide-title stagger" style="font-size: 2.1rem; margin-bottom: 1.25rem;">
         <span style="-webkit-text-fill-color: var(--gold);">Path 2:</span> A Fresh Vehicle Together
       </div>
-      <div class="slide-subtitle stagger" style="margin-bottom: 2rem; font-size: 1rem;">
-        A new entity. Clean cap table. No baggage.
-      </div>
 
-      <div class="two-col stagger">
-        <div class="glass-card" style="border-color: rgba(255,215,0,0.12);">
-          <div class="card-label" style="color: var(--gold);">Your Role</div>
-          <ul class="check-list" style="margin-top: 0.75rem;">
-            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Deal flow from your network</li>
-            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Saudi presence and credibility</li>
-            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Sector expertise (construction, RE, infra)</li>
-            <li><span class="icon" style="color: var(--gold);">&#9670;</span> Government / institutional access</li>
-          </ul>
+      <!-- Section A: The Model Diagram -->
+      <div class="p2-diagram stagger">
+        <div class="p2-side">
+          <div class="glass-card" style="border-color: rgba(255,215,0,0.12); padding: 1rem 1.1rem;">
+            <div class="card-label" style="color: var(--gold); font-size: 0.68rem; margin-bottom: 0.4rem;">Abdullah</div>
+            <ul>
+              <li><span class="dot" style="background: var(--gold);"></span> Deal flow &amp; network</li>
+              <li><span class="dot" style="background: var(--gold);"></span> Saudi CR &amp; entity</li>
+              <li><span class="dot" style="background: var(--gold);"></span> Institutional access</li>
+              <li><span class="dot" style="background: var(--gold);"></span> Co-investment</li>
+            </ul>
+          </div>
         </div>
-        <div class="glass-card" style="border-color: rgba(0,212,255,0.12);">
-          <div class="card-label" style="color: var(--blue);">Our Role</div>
-          <ul class="check-list" style="margin-top: 0.75rem;">
-            <li><span class="icon" style="color: var(--blue);">&#9670;</span> Venture building methodology</li>
-            <li><span class="icon" style="color: var(--blue);">&#9670;</span> Full product + engineering team</li>
-            <li><span class="icon" style="color: var(--blue);">&#9670;</span> AI-native operations</li>
-            <li><span class="icon" style="color: var(--blue);">&#9670;</span> Speed &mdash; from idea to MVP in weeks</li>
-          </ul>
+        <div class="p2-connector"></div>
+        <div class="p2-center">
+          <div class="p2-center-box">
+            <div class="label">Joint Entity</div>
+            <div class="value">SJSC</div>
+          </div>
+          <div class="p2-ventures">
+            <div class="p2-vent-box">V1</div>
+            <div class="p2-vent-box">V2</div>
+            <div class="p2-vent-box">V3</div>
+            <div class="p2-vent-box">V4</div>
+          </div>
+        </div>
+        <div class="p2-connector"></div>
+        <div class="p2-side">
+          <div class="glass-card" style="border-color: rgba(0,212,255,0.12); padding: 1rem 1.1rem;">
+            <div class="card-label" style="color: var(--orange); font-size: 0.68rem; margin-bottom: 0.4rem;">One Studio</div>
+            <ul>
+              <li><span class="dot" style="background: var(--blue);"></span> Tech + product team</li>
+              <li><span class="dot" style="background: var(--blue);"></span> Venture building methodology</li>
+              <li><span class="dot" style="background: var(--blue);"></span> AI-native operations</li>
+              <li><span class="dot" style="background: var(--blue);"></span> Service agreement (cost-plus)</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div class="entity-badge stagger" style="margin-top: 1.5rem;">
-        <svg width="14" height="14" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        SJSC co-founded together. One Studio provides execution via service agreement. You co-select ventures.
+      <!-- Section B: Proven Playbook -->
+      <div class="card-label stagger" style="color: var(--white-dim); text-align: center; margin-bottom: 0.5rem; font-size: 0.65rem;">Proven Playbook</div>
+      <div class="p2-precedents stagger">
+        <div class="glass-card p2-prec-card" style="border-color: rgba(0,212,255,0.1);">
+          <div class="prec-name" style="color: var(--blue);">Redesign Health + Sanabil</div>
+          <div class="prec-desc">US healthcare studio + PIF subsidiary &rarr; building 20+ Saudi healthcare ventures</div>
+        </div>
+        <div class="glass-card p2-prec-card" style="border-color: rgba(255,215,0,0.1);">
+          <div class="prec-name" style="color: var(--gold);">Rocket Internet</div>
+          <div class="prec-desc">Berlin studio + local JVs &rarr; 110 countries, Namshi ($151M exit), Wadi &rarr; noon.com</div>
+        </div>
+        <div class="glass-card p2-prec-card" style="border-color: rgba(0,196,140,0.1);">
+          <div class="prec-name" style="color: var(--emerald);">Flat6Labs Riyadh</div>
+          <div class="prec-desc">Regional accelerator + Saudi institutional partner &rarr; active seed program</div>
+        </div>
       </div>
 
-      <div class="bottom-note stagger" style="color: var(--white-dim); font-size: 0.92rem; margin-top: 1.5rem; max-width: 600px;">
-        This IS the 2-3 year plan you asked for &mdash; but as a partnership, not a pitch deck.
+      <!-- Section C: The Economics -->
+      <div class="p2-econ stagger">
+        <div class="p2-econ-item">
+          <div class="econ-val" style="color: var(--blue);">4-5</div>
+          <div class="econ-label">Ventures<br>Year 1</div>
+        </div>
+        <div class="p2-econ-item">
+          <div class="econ-val" style="color: var(--gold);">$1-2M</div>
+          <div class="econ-label">Year 1<br>Budget</div>
+        </div>
+        <div class="p2-econ-item">
+          <div class="econ-val" style="color: var(--emerald);">Mo 6-8</div>
+          <div class="econ-label">First<br>Revenue</div>
+        </div>
+        <div class="p2-econ-item">
+          <div class="econ-val" style="color: var(--orange);">25-30%</div>
+          <div class="econ-label">Studio Equity<br>Per Venture</div>
+        </div>
+        <div class="p2-econ-item">
+          <div class="econ-val" style="color: var(--white);">+20%</div>
+          <div class="econ-label">Service Fee<br>Cost-Plus</div>
+        </div>
+      </div>
+
+      <!-- Section D: Hot Sectors -->
+      <div class="card-label stagger" style="color: var(--white-dim); text-align: center; margin-bottom: 0.4rem; font-size: 0.65rem;">Hot Sectors &mdash; Vision 2030</div>
+      <div class="p2-sectors stagger">
+        <span class="sector-pill" style="border-color: rgba(0,212,255,0.15); color: var(--blue);">&#127959; GovTech <span style="opacity:0.5;font-size:0.6rem;">underfunded</span></span>
+        <span class="sector-pill" style="border-color: rgba(255,77,106,0.15); color: var(--red-muted);">&#127973; HealthTech <span style="opacity:0.5;font-size:0.6rem;">underfunded</span></span>
+        <span class="sector-pill" style="border-color: rgba(0,196,140,0.15); color: var(--emerald);">&#127968; PropTech <span style="opacity:0.5;font-size:0.6rem;">growing</span></span>
+        <span class="sector-pill" style="border-color: rgba(255,215,0,0.15); color: var(--gold);">&#129302; AI/Automation <span style="opacity:0.5;font-size:0.6rem;">hot</span></span>
+        <span class="sector-pill" style="border-color: rgba(255,86,25,0.15); color: var(--orange);">&#9992;&#65039; Tourism Tech <span style="opacity:0.5;font-size:0.6rem;">underfunded</span></span>
+      </div>
+
+      <!-- Key line -->
+      <div class="gold-quote stagger" style="margin-top: 1rem; font-size: 0.95rem; padding: 0.75rem 1.5rem;">
+        "This IS the 2-3 year plan you asked for &mdash; but as a partnership, not a pitch deck."
       </div>
     </div>
   </div>
 
   <!-- ==================== SLIDE 10: PATH 3 ==================== -->
-  <div class="slide" data-slide="10">
+  <div class="slide" data-slide="10" data-title="Path 3: Quick Wins via IJAD">
     <div class="slide-inner">
       <div class="slide-title stagger" style="font-size: 2.25rem;">
         <span style="-webkit-text-fill-color: var(--emerald);">Path 3:</span> Quick Wins via IJAD
@@ -1115,7 +1640,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 11: WHAT YOU GET ==================== -->
-  <div class="slide" data-slide="11">
+  <div class="slide" data-slide="11" data-title="Why This Works For You">
     <div class="slide-inner">
       <div class="slide-title stagger">Why This Works For You</div>
 
@@ -1141,7 +1666,7 @@ body {
   </div>
 
   <!-- ==================== SLIDE 12: NEXT STEPS ==================== -->
-  <div class="slide" data-slide="12">
+  <div class="slide" data-slide="12" data-title="Next Steps">
     <div class="slide-inner">
       <div class="slide-title stagger">Next Steps</div>
 
@@ -1180,16 +1705,101 @@ body {
   const TOTAL = 12;
   let current = 1;
   let isAnimating = false;
+  let menuOpen = false;
+  let gridOpen = false;
 
   const slides = document.querySelectorAll('.slide');
   const progressBar = document.getElementById('progress-bar');
   const counter = document.getElementById('slide-counter');
+  const navCounter = document.getElementById('nav-counter');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const menuBtn = document.getElementById('menu-btn');
+  const menuOverlay = document.getElementById('slide-menu-overlay');
+  const menuPanel = document.getElementById('slide-menu-panel');
+  const gridOverlay = document.getElementById('grid-overlay');
+  const gridContainer = document.getElementById('grid-container');
+  const gridCloseBtn = document.getElementById('grid-close-btn');
+
+  // ===== Extract slide titles =====
+  var slideTitles = [];
+  slides.forEach(function(s) {
+    slideTitles.push(s.getAttribute('data-title') || 'Slide ' + s.getAttribute('data-slide'));
+  });
+
+  // ===== Build menu items =====
+  function buildMenu() {
+    // Remove old items (keep header)
+    var items = menuPanel.querySelectorAll('.menu-item');
+    items.forEach(function(el) { el.remove(); });
+
+    slideTitles.forEach(function(title, i) {
+      var btn = document.createElement('button');
+      btn.className = 'menu-item' + (i + 1 === current ? ' active' : '');
+      btn.innerHTML = '<span class="menu-item-num">' + (i + 1) + '</span><span class="menu-item-title">' + title + '</span>';
+      btn.addEventListener('click', function() {
+        showSlide(i + 1);
+        closeMenu();
+      });
+      menuPanel.appendChild(btn);
+    });
+  }
+
+  // ===== Build grid thumbs =====
+  function buildGrid() {
+    gridContainer.innerHTML = '';
+    slideTitles.forEach(function(title, i) {
+      var div = document.createElement('div');
+      div.className = 'grid-thumb' + (i + 1 === current ? ' active' : '');
+      div.innerHTML = '<div class="grid-thumb-num">' + (i + 1) + '</div><div class="grid-thumb-title">' + title + '</div>';
+      div.addEventListener('click', function() {
+        showSlide(i + 1);
+        closeGrid();
+      });
+      gridContainer.appendChild(div);
+    });
+  }
+
+  // ===== Menu open/close =====
+  function openMenu() {
+    buildMenu();
+    menuOverlay.classList.add('open');
+    menuOpen = true;
+  }
+  function closeMenu() {
+    menuOverlay.classList.remove('open');
+    menuOpen = false;
+  }
+  function toggleMenu() {
+    if (menuOpen) closeMenu();
+    else openMenu();
+  }
+
+  menuBtn.addEventListener('click', toggleMenu);
+  menuOverlay.querySelector('.menu-backdrop').addEventListener('click', closeMenu);
+
+  // ===== Grid open/close =====
+  function openGrid() {
+    buildGrid();
+    gridOverlay.classList.add('open');
+    gridOpen = true;
+  }
+  function closeGrid() {
+    gridOverlay.classList.remove('open');
+    gridOpen = false;
+  }
+
+  gridCloseBtn.addEventListener('click', closeGrid);
+
+  // ===== Nav buttons =====
+  btnPrev.addEventListener('click', function() { prev(); });
+  btnNext.addEventListener('click', function() { next(); });
 
   // ===== Init from hash =====
   function initFromHash() {
-    const match = location.hash.match(/^#slide-(\d+)$/);
+    var match = location.hash.match(/^#slide-(\d+)$/);
     if (match) {
-      const n = parseInt(match[1]);
+      var n = parseInt(match[1]);
       if (n >= 1 && n <= TOTAL) current = n;
     }
     showSlide(current, false);
@@ -1200,12 +1810,12 @@ body {
     if (animate === undefined) animate = true;
     if (n < 1 || n > TOTAL) return;
 
-    const prev = current;
+    var prev = current;
     current = n;
     location.hash = 'slide-' + current;
 
-    slides.forEach((s, i) => {
-      const idx = i + 1;
+    slides.forEach(function(s, i) {
+      var idx = i + 1;
       s.classList.remove('active', 'exit-left');
       if (idx === current) {
         if (animate) {
@@ -1228,6 +1838,9 @@ body {
   function updateUI() {
     progressBar.style.width = ((current / TOTAL) * 100) + '%';
     counter.textContent = current + ' / ' + TOTAL;
+    navCounter.textContent = current + ' / ' + TOTAL;
+    btnPrev.disabled = (current <= 1);
+    btnNext.disabled = (current >= TOTAL);
   }
 
   function next() {
@@ -1246,6 +1859,25 @@ body {
 
   // ===== Keyboard =====
   document.addEventListener('keydown', function(e) {
+    // ESC handling
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      if (menuOpen) {
+        closeMenu();
+        return;
+      }
+      if (gridOpen) {
+        closeGrid();
+        return;
+      }
+      // Open grid overview
+      openGrid();
+      return;
+    }
+
+    // Don't process nav keys when overlays are open
+    if (menuOpen || gridOpen) return;
+
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
       e.preventDefault();
       next();
@@ -1262,8 +1894,8 @@ body {
   });
 
   // ===== Touch / Swipe =====
-  let touchStartX = 0;
-  let touchStartY = 0;
+  var touchStartX = 0;
+  var touchStartY = 0;
 
   document.addEventListener('touchstart', function(e) {
     touchStartX = e.touches[0].clientX;
@@ -1271,8 +1903,8 @@ body {
   }, { passive: true });
 
   document.addEventListener('touchend', function(e) {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
       if (dx < 0) next();
       else prev();
@@ -1281,9 +1913,9 @@ body {
 
   // ===== Hash change =====
   window.addEventListener('hashchange', function() {
-    const match = location.hash.match(/^#slide-(\d+)$/);
+    var match = location.hash.match(/^#slide-(\d+)$/);
     if (match) {
-      const n = parseInt(match[1]);
+      var n = parseInt(match[1]);
       if (n !== current && n >= 1 && n <= TOTAL) showSlide(n);
     }
   });
