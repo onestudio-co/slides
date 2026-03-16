@@ -515,168 +515,126 @@ body {
     opacity: 0.4 !important;
   }
 
-  /* --- MOBILE NAV BAR (bottom) --- */
-  #mobile-nav-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 10px 20px;
-    padding-bottom: max(10px, env(safe-area-inset-bottom));
-    background: rgba(10, 14, 39, 0.75);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(0, 212, 255, 0.12);
-    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
-  }
-  #mobile-nav-bar button {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-secondary);
-    font-size: 20px;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  #mobile-nav-bar button:active {
-    background: rgba(0, 212, 255, 0.15);
-    border-color: rgba(0, 212, 255, 0.3);
-    color: var(--accent-blue);
-    transform: scale(0.95);
-  }
-  #mobile-nav-bar .mobile-slide-counter {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text-secondary);
-    letter-spacing: 0.05em;
-    min-width: 60px;
-    text-align: center;
-    user-select: none;
-  }
-  #mobile-nav-bar .mobile-slide-counter .mob-current {
-    color: var(--accent-blue);
-    font-weight: 600;
-  }
-
-  /* --- LANDSCAPE ORIENTATION PROMPT --- */
-  #landscape-prompt {
+  /* --- MOBILE BLOCK SCREEN --- */
+  #mobile-block {
     position: fixed;
     inset: 0;
-    z-index: 10000;
+    z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 14, 39, 0.95);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: var(--bg-primary);
     opacity: 0;
-    animation: promptFadeIn 0.5s ease forwards;
+    animation: blockFadeIn 0.5s ease forwards;
   }
-  @keyframes promptFadeIn {
+  @keyframes blockFadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
-  #landscape-prompt .prompt-card {
+  #mobile-block .block-card {
     background: rgba(15, 21, 56, 0.9);
     border: 1px solid rgba(0, 212, 255, 0.15);
     border-radius: 24px;
-    padding: 40px 32px;
+    padding: 48px 32px;
     max-width: 380px;
     width: 90%;
     text-align: center;
     transform: translateY(30px);
     opacity: 0;
-    animation: promptSlideUp 0.5s ease 0.15s forwards;
+    animation: blockSlideUp 0.5s ease 0.15s forwards;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(0, 212, 255, 0.08);
   }
-  @keyframes promptSlideUp {
+  @keyframes blockSlideUp {
     0% { transform: translateY(30px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
-  #landscape-prompt .rotate-icon {
-    width: 80px;
-    height: 50px;
-    margin: 0 auto 24px;
-    position: relative;
-  }
-  #landscape-prompt .rotate-icon .phone-shape {
-    width: 32px;
-    height: 50px;
+  #mobile-block .block-icon {
+    width: 72px;
+    height: 52px;
+    margin: 0 auto 28px;
     border: 2.5px solid var(--accent-blue);
     border-radius: 6px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    animation: rotatePhone 2.5s ease-in-out infinite;
-    box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+    position: relative;
+    box-shadow: 0 0 16px rgba(0, 212, 255, 0.3);
   }
-  #landscape-prompt .rotate-icon .phone-shape::after {
+  #mobile-block .block-icon::after {
     content: '';
     position: absolute;
-    bottom: 4px;
+    bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 8px;
-    height: 2px;
-    border-radius: 1px;
-    background: var(--accent-blue);
-    opacity: 0.5;
+    width: 24px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(0, 212, 255, 0.4);
   }
-  @keyframes rotatePhone {
-    0%, 20% { transform: translate(-50%, -50%) rotate(0deg); }
-    40%, 60% { transform: translate(-50%, -50%) rotate(90deg); }
-    80%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  #mobile-block .block-icon::before {
+    content: '▶';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--accent-blue);
+    font-size: 16px;
+    opacity: 0.6;
   }
-  #landscape-prompt h2 {
-    font-size: 1.3rem;
+  #mobile-block h2 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 8px;
     letter-spacing: -0.02em;
   }
-  #landscape-prompt .arabic-sub {
-    font-size: 0.95rem;
+  #mobile-block .arabic-sub {
+    font-size: 1rem;
     color: rgba(255, 215, 0, 0.7);
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     direction: rtl;
   }
-  #landscape-prompt .desc {
-    font-size: 0.82rem;
+  #mobile-block .desc {
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    line-height: 1.55;
-    margin-bottom: 28px;
+    line-height: 1.6;
+    margin-bottom: 32px;
   }
-  #landscape-prompt .btn-continue {
+  #mobile-block .btn-copy {
     display: block;
     width: 100%;
-    padding: 14px 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 24px;
+    border: 1px solid rgba(0, 212, 255, 0.25);
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-secondary);
+    background: rgba(0, 212, 255, 0.08);
+    color: var(--accent-blue);
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
     -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.02em;
   }
-  #landscape-prompt .btn-continue:active {
-    background: rgba(0, 212, 255, 0.1);
-    border-color: rgba(0, 212, 255, 0.3);
+  #mobile-block .btn-copy:active {
+    background: rgba(0, 212, 255, 0.18);
+    transform: scale(0.97);
+  }
+  #mobile-block .btn-copy.copied {
+    border-color: rgba(0, 196, 140, 0.4);
+    background: rgba(0, 196, 140, 0.1);
+    color: var(--accent-emerald);
+  }
+  #mobile-block .footer-note {
+    margin-top: 28px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
   }
 
-  /* Inline style overrides for slide-specific inline layouts */
+  /* Hide everything behind the block on mobile */
+  #slideshow, #progress-bar, #slide-counter, #nav-hint {
+    display: none !important;
+  }
+
+  /* Inline style overrides (keep for any future mobile mode) */
   .exec-stats-row {
     gap: 16px !important;
   }
@@ -753,10 +711,9 @@ body {
   }
 }
 
-/* Non-mobile: hide mobile-only elements */
+/* Non-mobile: hide mobile block */
 @media (min-width: 769px) {
-  #mobile-nav-bar { display: none !important; }
-  #landscape-prompt { display: none !important; }
+  #mobile-block { display: none !important; }
 }
 
 /* ============================================================
@@ -3111,125 +3068,50 @@ body {
 </script>
 
 <!-- ============================================================
-     LANDSCAPE ORIENTATION PROMPT (mobile portrait only)
+     MOBILE BLOCK SCREEN — Desktop only presentation
      ============================================================ -->
-<div id="landscape-prompt" style="display:none;">
-  <div class="prompt-card">
-    <div class="rotate-icon">
-      <div class="phone-shape"></div>
-    </div>
-    <h2>Rotate Your Device</h2>
-    <div class="arabic-sub">&#x0642;&#x0645; &#x0628;&#x062A;&#x062F;&#x0648;&#x064A;&#x0631; &#x062C;&#x0647;&#x0627;&#x0632;&#x0643; &#x0644;&#x0644;&#x0639;&#x0631;&#x0636; &#x0627;&#x0644;&#x0623;&#x0641;&#x0636;&#x0644;</div>
-    <p class="desc">This presentation is optimized for landscape viewing</p>
-    <button class="btn-continue" id="landscape-continue-btn">Continue in Portrait &rarr;</button>
+<div id="mobile-block">
+  <div class="block-card">
+    <div class="block-icon"></div>
+    <h2>Desktop Only</h2>
+    <div class="arabic-sub">هذا العرض مصمم للعرض على شاشة كبيرة</div>
+    <p class="desc">This interactive presentation contains detailed charts, data visualizations, and multi-column layouts that require a desktop or laptop screen for the best experience.</p>
+    <button class="btn-copy" id="copy-link-btn">Copy Link to Open on Desktop</button>
+    <div class="footer-note">One Studio &middot; Powered by Nala (نالا)</div>
   </div>
 </div>
 
-<!-- ============================================================
-     MOBILE NAV BAR (bottom, slide-by-slide navigation)
-     ============================================================ -->
-<div id="mobile-nav-bar" style="display:none;">
-  <button id="mob-prev-btn" aria-label="Previous slide">&#8592;</button>
-  <div class="mobile-slide-counter">
-    <span class="mob-current">1</span> / <span class="mob-total">18</span>
-  </div>
-  <button id="mob-next-btn" aria-label="Next slide">&#8594;</button>
-</div>
-
-<!-- ============================================================
-     MOBILE JAVASCRIPT — slide navigation + landscape prompt
-     ============================================================ -->
 <script>
 (function() {
   'use strict';
-
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
   if (!isMobile) return;
-
-  // --- LANDSCAPE ORIENTATION PROMPT ---
-  var prompt = document.getElementById('landscape-prompt');
-  var continueBtn = document.getElementById('landscape-continue-btn');
-  var navBar = document.getElementById('mobile-nav-bar');
-  var mobCurrentEl = document.querySelector('#mobile-nav-bar .mob-current');
-  var mobTotalEl = document.querySelector('#mobile-nav-bar .mob-total');
-  var mobPrevBtn = document.getElementById('mob-prev-btn');
-  var mobNextBtn = document.getElementById('mob-next-btn');
-
-  // Set total count in mobile nav bar
-  if (window.slideshow && mobTotalEl) {
-    mobTotalEl.textContent = window.slideshow.total;
-  }
-
-  // Check if portrait and not previously dismissed
-  var isPortrait = window.matchMedia('(orientation: portrait)').matches;
-  var promptDismissed = sessionStorage.getItem('landscape-prompt-dismissed');
-
-  function showNavBar() {
-    navBar.style.display = 'flex';
-    updateMobileCounter();
-  }
-
-  function hidePrompt() {
-    prompt.style.display = 'none';
-    showNavBar();
-  }
-
-  if (isPortrait && !promptDismissed) {
-    prompt.style.display = 'flex';
-  } else {
-    hidePrompt();
-  }
-
-  // Continue button dismisses prompt
-  continueBtn.addEventListener('click', function() {
-    sessionStorage.setItem('landscape-prompt-dismissed', '1');
-    hidePrompt();
+  var btn = document.getElementById('copy-link-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        btn.textContent = 'Link Copied!';
+        btn.classList.add('copied');
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = 'Link Copied!';
+      btn.classList.add('copied');
+    }
+    setTimeout(function() {
+      btn.textContent = 'Copy Link to Open on Desktop';
+      btn.classList.remove('copied');
+    }, 3000);
   });
-
-  // Auto-dismiss when rotated to landscape
-  var orientationMq = window.matchMedia('(orientation: portrait)');
-  function onOrientationChange(e) {
-    if (!e.matches && prompt.style.display !== 'none') {
-      // Now in landscape
-      sessionStorage.setItem('landscape-prompt-dismissed', '1');
-      hidePrompt();
-    }
-  }
-  if (orientationMq.addEventListener) {
-    orientationMq.addEventListener('change', onOrientationChange);
-  } else if (orientationMq.addListener) {
-    orientationMq.addListener(onOrientationChange);
-  }
-
-  // --- MOBILE NAV BAR ---
-  function updateMobileCounter() {
-    if (window.slideshow && mobCurrentEl) {
-      mobCurrentEl.textContent = window.slideshow.current + 1;
-    }
-  }
-
-  mobPrevBtn.addEventListener('click', function() {
-    if (window.slideshow) {
-      window.slideshow.prev();
-      updateMobileCounter();
-    }
-  });
-
-  mobNextBtn.addEventListener('click', function() {
-    if (window.slideshow) {
-      window.slideshow.next();
-      updateMobileCounter();
-    }
-  });
-
-  // Patch slideshow's updateUI to also update mobile counter
-  if (window.slideshow) {
-    var origUpdateUI = window.slideshow.updateUI.bind(window.slideshow);
-    window.slideshow.updateUI = function() {
-      origUpdateUI();
-      updateMobileCounter();
-    };
-  }
 })();
 </script>
 </body>
