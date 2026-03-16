@@ -3,39 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>One Studio — Interactive Presentations</title>
-<meta name="description" content="Interactive presentations by One Studio. Deep-dive decks on strategy, markets, and ventures.">
+<title>One Studio — Presentations</title>
+<meta name="description" content="Private presentations and interactive decks by One Studio.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
     --bg-deep: #060a1f;
     --bg-primary: #0a0e27;
-    --bg-card: #0f1535;
-    --bg-card-hover: #141a3d;
     --border: rgba(255,255,255,0.06);
-    --border-hover: rgba(0,212,255,0.25);
     --text-primary: #e8eaf0;
     --text-secondary: #8a8fa8;
     --text-muted: #4a4f6a;
     --cyan: #00d4ff;
     --gold: #ffd700;
     --emerald: #00c48c;
-    --cyan-glow: rgba(0,212,255,0.15);
-    --gold-glow: rgba(255,215,0,0.1);
   }
 
-  html { scroll-behavior: smooth; }
+  html, body {
+    height: 100%;
+  }
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg-deep);
     color: var(--text-primary);
-    min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
   }
 
   /* ── Animated Background ── */
@@ -51,88 +51,93 @@
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
     background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 20%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 20%, transparent 70%);
+    mask-image: radial-gradient(ellipse 70% 50% at 50% 40%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 50% at 50% 40%, black 20%, transparent 70%);
   }
 
   .bg-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
-    animation: orb-drift 20s ease-in-out infinite alternate;
+    filter: blur(120px);
+    animation: orb-drift 25s ease-in-out infinite alternate;
   }
   .bg-orb--cyan {
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%);
-    top: -10%; right: -5%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.07), transparent 70%);
+    top: -15%; right: -10%;
     animation-delay: 0s;
   }
   .bg-orb--gold {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(255,215,0,0.05), transparent 70%);
-    bottom: 10%; left: -8%;
-    animation-delay: -7s;
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(255,215,0,0.04), transparent 70%);
+    bottom: -5%; left: -12%;
+    animation-delay: -8s;
   }
   .bg-orb--emerald {
-    width: 350px; height: 350px;
-    background: radial-gradient(circle, rgba(0,196,140,0.05), transparent 70%);
-    top: 50%; right: 20%;
-    animation-delay: -13s;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,196,140,0.04), transparent 70%);
+    top: 55%; left: 50%;
+    animation-delay: -16s;
   }
 
   @keyframes orb-drift {
     0%   { transform: translate(0, 0) scale(1); }
-    33%  { transform: translate(30px, -20px) scale(1.05); }
-    66%  { transform: translate(-20px, 15px) scale(0.95); }
-    100% { transform: translate(10px, -10px) scale(1.02); }
+    25%  { transform: translate(40px, -25px) scale(1.06); }
+    50%  { transform: translate(-15px, 20px) scale(0.94); }
+    75%  { transform: translate(25px, -10px) scale(1.03); }
+    100% { transform: translate(-10px, 15px) scale(0.98); }
   }
 
-  /* ── Layout ── */
-  .page { position: relative; z-index: 1; }
-
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 24px;
+  /* ── Page Layout ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    min-height: 100vh;
   }
 
-  /* ── Header ── */
-  .header {
-    padding: 60px 0 20px;
+  .content {
     text-align: center;
+    max-width: 560px;
   }
 
+  /* ── Logo ── */
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 14px;
+    margin-bottom: 48px;
   }
 
   .logo-mark {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border: 2px solid var(--cyan);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    box-shadow: 0 0 20px rgba(0,212,255,0.15);
+    box-shadow: 0 0 25px rgba(0,212,255,0.15), inset 0 0 12px rgba(0,212,255,0.05);
   }
   .logo-mark::before {
     content: '';
-    width: 12px; height: 12px;
+    width: 14px; height: 14px;
     background: var(--cyan);
-    border-radius: 2px;
-    box-shadow: 0 0 10px var(--cyan);
+    border-radius: 3px;
+    box-shadow: 0 0 12px var(--cyan);
   }
 
   .logo-text {
-    font-size: 1.6rem;
+    font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.03em;
     color: var(--text-primary);
@@ -141,293 +146,52 @@
     color: var(--cyan);
   }
 
+  /* ── Divider ── */
+  .divider {
+    width: 48px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    margin: 0 auto 40px;
+    opacity: 0.4;
+  }
+
+  /* ── Tagline ── */
   .tagline {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-muted);
     border: 1px solid var(--border);
     display: inline-block;
-    padding: 6px 16px;
+    padding: 8px 20px;
     border-radius: 4px;
     background: rgba(255,255,255,0.02);
+    margin-bottom: 56px;
   }
 
-  .divider {
-    width: 60px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    margin: 40px auto;
-    opacity: 0.5;
-  }
-
-  /* ── Section ── */
-  .section-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 32px;
-  }
-
-  /* ── Gallery Grid ── */
-  .gallery {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-    padding-bottom: 80px;
-  }
-
-  @media (min-width: 640px) {
-    .gallery { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  /* ── Card ── */
-  .card {
-    position: relative;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card--active:hover {
-    transform: translateY(-4px);
-    border-color: var(--border-hover);
-    box-shadow:
-      0 8px 40px rgba(0,0,0,0.4),
-      0 0 60px var(--cyan-glow);
-    background: var(--bg-card-hover);
-  }
-
-  .card-link {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    text-decoration: none;
-  }
-
-  /* Card Preview Visual */
-  .card-preview {
-    position: relative;
-    height: 180px;
-    background: linear-gradient(135deg, rgba(0,212,255,0.04), rgba(255,215,0,0.03));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .card--placeholder .card-preview {
-    background: linear-gradient(135deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
-  }
-
-  /* Mini slide mockups */
-  .slides-mock {
-    position: relative;
-    width: 140px;
-    height: 90px;
-  }
-
-  .slide-rect {
-    position: absolute;
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: var(--bg-primary);
-    transition: transform 0.35s ease;
-  }
-  .slide-rect--back {
-    width: 110px; height: 72px;
-    top: 0; left: 0;
-    opacity: 0.5;
-  }
-  .slide-rect--mid {
-    width: 115px; height: 75px;
-    top: 6px; left: 10px;
-    opacity: 0.7;
-  }
-  .slide-rect--front {
-    width: 120px; height: 78px;
-    top: 12px; left: 20px;
-    background: linear-gradient(135deg, #0f1535, #141a3d);
-    border-color: rgba(0,212,255,0.15);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  }
-
-  .card--active:hover .slide-rect--back  { transform: translate(-6px, -4px) rotate(-2deg); }
-  .card--active:hover .slide-rect--mid   { transform: translate(-2px, -2px) rotate(-0.5deg); }
-  .card--active:hover .slide-rect--front { transform: translate(2px, 0) rotate(0.5deg); }
-
-  /* Content lines inside front slide */
-  .slide-lines {
-    position: absolute;
-    top: 14px; left: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .slide-line {
-    height: 3px;
-    border-radius: 2px;
-    background: rgba(255,255,255,0.1);
-  }
-  .slide-line--title { width: 55px; background: rgba(0,212,255,0.25); height: 4px; }
-  .slide-line--a { width: 80px; }
-  .slide-line--b { width: 65px; }
-  .slide-line--c { width: 45px; }
-
-  .slide-dot {
-    position: absolute;
-    bottom: 12px; right: 12px;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(255,215,0,0.3);
-    background: rgba(255,215,0,0.05);
-  }
-
-  /* Placeholder icon */
-  .placeholder-icon {
-    width: 48px; height: 48px;
-    border: 2px dashed var(--text-muted);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.4;
-  }
-  .placeholder-icon::before {
-    content: '+';
-    font-size: 1.4rem;
-    color: var(--text-muted);
-    font-weight: 300;
-  }
-
-  /* Slide count badge */
-  .badge-slides {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    padding: 4px 10px;
-    border-radius: 20px;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.08);
+  /* ── Message ── */
+  .message {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.7;
     color: var(--text-secondary);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    margin-bottom: 12px;
   }
 
-  /* Card Body */
-  .card-body {
-    padding: 24px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card-date {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
+  .message-hint {
+    font-size: 0.85rem;
     color: var(--text-muted);
-    letter-spacing: 0.08em;
-    margin-bottom: 8px;
-  }
-
-  .card-title {
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.35;
-    margin-bottom: 6px;
-    color: var(--text-primary);
-  }
-
-  .card--placeholder .card-title {
-    color: var(--text-muted);
-  }
-
-  .card-subtitle {
-    font-size: 0.82rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    margin-bottom: 16px;
-  }
-
-  .card--placeholder .card-subtitle {
-    color: var(--text-muted);
-    font-style: italic;
-  }
-
-  /* Tags */
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: auto;
-  }
-
-  .tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.06);
-    background: rgba(255,255,255,0.03);
-    color: var(--text-secondary);
-  }
-  .tag--cyan  { border-color: rgba(0,212,255,0.15); color: var(--cyan); background: rgba(0,212,255,0.05); }
-  .tag--gold  { border-color: rgba(255,215,0,0.15); color: var(--gold); background: rgba(255,215,0,0.05); }
-  .tag--emerald { border-color: rgba(0,196,140,0.15); color: var(--emerald); background: rgba(0,196,140,0.05); }
-
-  /* Hover overlay */
-  .card-hover-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(6,10,31,0.75);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  .card--active:hover .card-hover-overlay {
-    opacity: 1;
-  }
-
-  .hover-cta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--cyan);
-    padding: 10px 24px;
-    border: 1px solid rgba(0,212,255,0.3);
-    border-radius: 6px;
-    background: rgba(0,212,255,0.08);
-    box-shadow: 0 0 30px rgba(0,212,255,0.1);
+    line-height: 1.6;
   }
 
   /* ── Footer ── */
   .footer {
+    position: relative;
+    z-index: 1;
     border-top: 1px solid var(--border);
-    padding: 32px 0;
+    padding: 28px 24px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -449,18 +213,20 @@
 
   .footer-nala {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
-    opacity: 0.6;
+    opacity: 0.5;
   }
 
-  /* ── Utilities ── */
-  @media (max-width: 639px) {
-    .header { padding: 40px 0 16px; }
-    .logo-text { font-size: 1.35rem; }
-    .card-preview { height: 150px; }
-    .card-body { padding: 20px; }
-    .card-title { font-size: 1.05rem; }
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    .logo-text { font-size: 1.6rem; }
+    .logo-mark { width: 40px; height: 40px; }
+    .logo-mark::before { width: 12px; height: 12px; }
+    .logo { gap: 10px; margin-bottom: 36px; }
+    .tagline { font-size: 0.68rem; padding: 6px 16px; margin-bottom: 44px; }
+    .message { font-size: 0.95rem; }
+    .divider { margin-bottom: 32px; }
   }
 </style>
 </head>
@@ -473,86 +239,27 @@
   <div class="bg-orb bg-orb--emerald"></div>
 </div>
 
-<div class="page">
-  <div class="container">
-
-    <!-- Header -->
-    <header class="header">
-      <div class="logo">
-        <div class="logo-mark"></div>
-        <div class="logo-text">One <span>Studio</span></div>
-      </div>
-      <br>
-      <div class="tagline">Interactive Presentations</div>
-    </header>
+<main class="page">
+  <div class="content">
+    <div class="logo">
+      <div class="logo-mark"></div>
+      <div class="logo-text">One <span>Studio</span></div>
+    </div>
 
     <div class="divider"></div>
 
-    <!-- Gallery -->
-    <main>
-      <div class="section-label">Presentations</div>
+    <div class="tagline">Presentations &amp; Interactive Decks</div>
 
-      <div class="gallery">
-
-        <!-- Card 1: Saudi Real Estate Tokenization -->
-        <article class="card card--active">
-          <a href="./re-tokenization/" class="card-link" aria-label="View Saudi Real Estate Tokenization presentation"></a>
-          <div class="card-hover-overlay">
-            <div class="hover-cta">View Presentation &rarr;</div>
-          </div>
-          <div class="card-preview">
-            <span class="badge-slides">18 Slides</span>
-            <div class="slides-mock">
-              <div class="slide-rect slide-rect--back"></div>
-              <div class="slide-rect slide-rect--mid"></div>
-              <div class="slide-rect slide-rect--front">
-                <div class="slide-lines">
-                  <div class="slide-line slide-line--title"></div>
-                  <div class="slide-line slide-line--a"></div>
-                  <div class="slide-line slide-line--b"></div>
-                  <div class="slide-line slide-line--c"></div>
-                </div>
-                <div class="slide-dot"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-date">March 2026</div>
-            <h2 class="card-title">Saudi Real Estate Tokenization</h2>
-            <p class="card-subtitle">Deep Market Analysis &amp; Opportunity Map</p>
-            <div class="tags">
-              <span class="tag tag--cyan">Tokenization</span>
-              <span class="tag tag--gold">REGA</span>
-              <span class="tag tag--emerald">PropTech</span>
-              <span class="tag">Market Analysis</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 2: Coming Soon -->
-        <article class="card card--placeholder">
-          <div class="card-preview">
-            <div class="placeholder-icon"></div>
-          </div>
-          <div class="card-body">
-            <div class="card-date">&mdash;</div>
-            <h2 class="card-title">Coming Soon</h2>
-            <p class="card-subtitle">More presentations in development</p>
-          </div>
-        </article>
-
-      </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-line">Powered by <a href="https://one-studio.co">One Studio</a></div>
-      <div class="footer-nala">Built with Nala &#x0028;&#x0646;&#x0627;&#x0644;&#x0627;&#x0029;</div>
-      <div class="footer-line">&copy; 2026</div>
-    </footer>
-
+    <p class="message">Looking for a specific presentation?<br>Check the link shared with you.</p>
+    <p class="message-hint">Each deck has its own private URL.</p>
   </div>
-</div>
+</main>
+
+<footer class="footer">
+  <div class="footer-line"><a href="#">one-studio.co</a></div>
+  <div class="footer-nala">Powered by Nala (&#x0646;&#x0627;&#x0644;&#x0627;)</div>
+  <div class="footer-line">&copy; 2026</div>
+</footer>
 
 </body>
 </html>

@@ -467,40 +467,8 @@ body {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 768px) {
-  /* --- MOBILE SCROLL MODE --- */
-  body.mobile-mode {
-    overflow: auto !important;
-    overflow-x: hidden !important;
-  }
-  body.mobile-mode #slideshow {
-    position: relative;
-    width: 100%;
-    height: auto !important;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-  }
-  body.mobile-mode .slide {
-    position: relative !important;
-    inset: auto !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 100vh;
-    opacity: 1 !important;
-    transform: none !important;
-    pointer-events: auto !important;
-    z-index: 1 !important;
-    transition: none !important;
-  }
-  body.mobile-mode .slide.exit-left,
-  body.mobile-mode .slide.exit-right {
-    opacity: 1 !important;
-    transform: none !important;
-    pointer-events: auto !important;
-  }
-
   /* Slide padding */
-  .slide { padding: 32px 20px; }
+  .slide { padding: 32px 20px 80px 20px; }
 
   /* Grid overrides */
   .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
@@ -516,8 +484,11 @@ body {
   .timeline-track { flex-direction: column; gap: 20px; align-items: flex-start; }
   .timeline-track::before { display: none; }
 
-  /* Nav arrows: hide */
-  #nav-hint { display: none; }
+  /* Hide desktop nav arrows on mobile */
+  #nav-hint { display: none !important; }
+
+  /* Hide desktop slide counter on mobile (mobile nav bar has its own) */
+  #slide-counter { display: none !important; }
 
   /* Stack layout */
   .stack { max-width: 100%; }
@@ -535,77 +506,87 @@ body {
   }
 
   /* Cover slide: reduce animation intensity */
-  body.mobile-mode #cover .orb {
+  #cover .orb {
     animation-duration: 20s !important;
     filter: blur(100px) !important;
   }
-  body.mobile-mode #cover::before {
+  #cover::before {
     animation: none !important;
     opacity: 0.4 !important;
   }
 
-  /* --- SLIDE COUNTER: sticky badge at top-right --- */
-  body.mobile-mode #slide-counter {
+  /* --- MOBILE NAV BAR (bottom) --- */
+  #mobile-nav-bar {
     position: fixed;
-    top: 12px;
-    right: 12px;
-    bottom: auto;
-    left: auto;
-    font-size: 11px;
-    background: rgba(10, 14, 39, 0.85);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 4px 10px;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 212, 255, 0.15);
+    bottom: 0;
+    left: 0;
+    right: 0;
     z-index: 1000;
-  }
-
-  /* --- BACK TO TOP BUTTON --- */
-  #mobile-back-to-top {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(10, 14, 39, 0.9);
-    border: 1px solid rgba(0, 212, 255, 0.25);
-    color: var(--accent-blue);
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 999;
+    display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    transition: opacity 0.3s, transform 0.3s;
+    gap: 16px;
+    padding: 10px 20px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    background: rgba(10, 14, 39, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(0, 212, 255, 0.12);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
   }
-  body.mobile-mode #mobile-back-to-top.visible {
-    display: flex;
+  #mobile-nav-bar button {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #mobile-nav-bar button:active {
+    background: rgba(0, 212, 255, 0.15);
+    border-color: rgba(0, 212, 255, 0.3);
+    color: var(--accent-blue);
+    transform: scale(0.95);
+  }
+  #mobile-nav-bar .mobile-slide-counter {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    min-width: 60px;
+    text-align: center;
+    user-select: none;
+  }
+  #mobile-nav-bar .mobile-slide-counter .mob-current {
+    color: var(--accent-blue);
+    font-weight: 600;
   }
 
-  /* --- MOBILE DISCLAIMER MODAL --- */
-  #mobile-disclaimer {
+  /* --- LANDSCAPE ORIENTATION PROMPT --- */
+  #landscape-prompt {
     position: fixed;
     inset: 0;
     z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 14, 39, 0.92);
+    background: rgba(10, 14, 39, 0.95);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     opacity: 0;
-    animation: mobileModalFadeIn 0.5s ease forwards;
+    animation: promptFadeIn 0.5s ease forwards;
   }
-  @keyframes mobileModalFadeIn {
+  @keyframes promptFadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
-  #mobile-disclaimer .modal-card {
+  #landscape-prompt .prompt-card {
     background: rgba(15, 21, 56, 0.9);
     border: 1px solid rgba(0, 212, 255, 0.15);
     border-radius: 24px;
@@ -615,179 +596,167 @@ body {
     text-align: center;
     transform: translateY(30px);
     opacity: 0;
-    animation: mobileModalSlideUp 0.5s ease 0.15s forwards;
+    animation: promptSlideUp 0.5s ease 0.15s forwards;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(0, 212, 255, 0.08);
   }
-  @keyframes mobileModalSlideUp {
+  @keyframes promptSlideUp {
     0% { transform: translateY(30px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
-  #mobile-disclaimer .modal-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-    display: block;
-    opacity: 0.85;
+  #landscape-prompt .rotate-icon {
+    width: 80px;
+    height: 50px;
+    margin: 0 auto 24px;
+    position: relative;
   }
-  #mobile-disclaimer h2 {
+  #landscape-prompt .rotate-icon .phone-shape {
+    width: 32px;
+    height: 50px;
+    border: 2.5px solid var(--accent-blue);
+    border-radius: 6px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotatePhone 2.5s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+  }
+  #landscape-prompt .rotate-icon .phone-shape::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--accent-blue);
+    opacity: 0.5;
+  }
+  @keyframes rotatePhone {
+    0%, 20% { transform: translate(-50%, -50%) rotate(0deg); }
+    40%, 60% { transform: translate(-50%, -50%) rotate(90deg); }
+    80%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  }
+  #landscape-prompt h2 {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 8px;
     letter-spacing: -0.02em;
   }
-  #mobile-disclaimer .arabic-sub {
-    font-size: 0.9rem;
+  #landscape-prompt .arabic-sub {
+    font-size: 0.95rem;
     color: rgba(255, 215, 0, 0.7);
     margin-bottom: 16px;
     direction: rtl;
   }
-  #mobile-disclaimer .desc {
+  #landscape-prompt .desc {
     font-size: 0.82rem;
     color: var(--text-secondary);
     line-height: 1.55;
     margin-bottom: 28px;
   }
-  #mobile-disclaimer .btn-primary {
+  #landscape-prompt .btn-continue {
     display: block;
     width: 100%;
     padding: 14px 24px;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--accent-blue), #0098cc);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
   }
-  #mobile-disclaimer .btn-primary:active {
-    transform: scale(0.97);
-  }
-  #mobile-disclaimer .btn-secondary {
-    display: block;
-    width: 100%;
-    padding: 12px 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  #mobile-disclaimer .btn-secondary:active {
-    border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  /* Toast notification */
-  #copy-toast {
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: rgba(0, 196, 140, 0.9);
-    color: #fff;
-    padding: 10px 24px;
-    border-radius: 10px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    z-index: 10001;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s, transform 0.3s;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  }
-  #copy-toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+  #landscape-prompt .btn-continue:active {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.3);
   }
 
   /* Inline style overrides for slide-specific inline layouts */
-  body.mobile-mode [style*="display:flex"][style*="gap:32px"],
-  body.mobile-mode .exec-stats-row {
+  .exec-stats-row {
     gap: 16px !important;
   }
-  body.mobile-mode .exec-stat-card {
+  .exec-stat-card {
     min-width: unset !important;
     max-width: 100% !important;
     padding: 28px 20px !important;
   }
-  body.mobile-mode .exec-big-number {
+  .exec-big-number {
     font-size: 42px !important;
   }
-  body.mobile-mode .mktsize-hero-number {
+  .mktsize-hero-number {
     font-size: 48px !important;
   }
-  body.mobile-mode .global-big {
+  .global-big {
     font-size: 36px !important;
   }
-  body.mobile-mode .global-arrow-glow {
+  .global-arrow-glow {
     font-size: 28px !important;
   }
 
   /* Dual regulation: stack the pillars vertically */
-  body.mobile-mode #dual-regulation [style*="display:flex"][style*="align-items:stretch"] {
+  #dual-regulation [style*="display:flex"][style*="align-items:stretch"] {
     flex-direction: column !important;
     gap: 0 !important;
   }
-  body.mobile-mode #dual-regulation [style*="flex:0 0 200px"] {
+  #dual-regulation [style*="flex:0 0 200px"] {
     flex: none !important;
     width: 100% !important;
   }
-  body.mobile-mode #dual-regulation [style*="flex:1;max-width:280px"] {
+  #dual-regulation [style*="flex:1;max-width:280px"] {
     max-width: 100% !important;
   }
-  body.mobile-mode #dual-regulation [style*="border-radius:16px 0 0 16px"] {
+  #dual-regulation [style*="border-radius:16px 0 0 16px"] {
     border-radius: 16px 16px 0 0 !important;
   }
-  body.mobile-mode #dual-regulation [style*="border-radius:0 16px 16px 0"] {
+  #dual-regulation [style*="border-radius:0 16px 16px 0"] {
     border-radius: 0 0 16px 16px !important;
   }
 
   /* Roadmap: stack phases vertically */
-  body.mobile-mode #roadmap [style*="display:flex"][style*="align-items:stretch"] {
+  #roadmap [style*="display:flex"][style*="align-items:stretch"] {
     flex-direction: column !important;
     gap: 12px !important;
   }
-  body.mobile-mode #roadmap [style*="font-size:1.5rem"][style*="padding:0 4px"] {
+  #roadmap [style*="font-size:1.5rem"][style*="padding:0 4px"] {
     display: none !important;
   }
 
   /* Registry truth diagram: make responsive */
-  body.mobile-mode #registry-truth [style*="height:420px"] {
+  #registry-truth [style*="height:420px"] {
     height: auto !important;
     min-height: 350px;
   }
 
   /* Enabler thesis: fix grid */
-  body.mobile-mode #enabler-thesis [style*="grid-template-columns:1fr 1fr"] {
+  #enabler-thesis [style*="grid-template-columns:1fr 1fr"] {
     grid-template-columns: 1fr !important;
   }
 
   /* Consumer platforms grid */
-  body.mobile-mode #consumer-platforms [style*="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"] {
+  #consumer-platforms [style*="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"] {
     grid-template-columns: 1fr !important;
   }
 
   /* Multi-asset grid */
-  body.mobile-mode #multi-asset [style*="grid-template-columns:repeat(auto-fit,minmax(360px,1fr))"] {
+  #multi-asset [style*="grid-template-columns:repeat(auto-fit,minmax(360px,1fr))"] {
     grid-template-columns: 1fr !important;
   }
 
   /* Opportunity map grid */
-  body.mobile-mode #opportunity-map [style*="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"] {
+  #opportunity-map [style*="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"] {
     grid-template-columns: 1fr !important;
   }
 }
 
 /* Non-mobile: hide mobile-only elements */
 @media (min-width: 769px) {
-  #mobile-disclaimer { display: none !important; }
-  #mobile-back-to-top { display: none !important; }
-  #copy-toast { display: none !important; }
+  #mobile-nav-bar { display: none !important; }
+  #landscape-prompt { display: none !important; }
 }
 
 /* ============================================================
@@ -3142,27 +3111,33 @@ body {
 </script>
 
 <!-- ============================================================
-     MOBILE DISCLAIMER MODAL
+     LANDSCAPE ORIENTATION PROMPT (mobile portrait only)
      ============================================================ -->
-<div id="mobile-disclaimer" style="display:none;">
-  <div class="modal-card">
-    <span class="modal-icon">&#x1F5A5;</span>
-    <h2>Best Viewed on Desktop</h2>
-    <div class="arabic-sub">&#x064A;&#x064F;&#x0646;&#x0635;&#x062D; &#x0628;&#x0645;&#x0634;&#x0627;&#x0647;&#x062F;&#x0629; &#x0627;&#x0644;&#x0639;&#x0631;&#x0636; &#x0639;&#x0644;&#x0649; &#x0634;&#x0627;&#x0634;&#x0629; &#x0623;&#x0643;&#x0628;&#x0631;</div>
-    <p class="desc">This presentation contains interactive charts and detailed data visualizations optimized for larger screens.</p>
-    <button class="btn-primary" id="mobile-continue-btn">Continue Anyway &rarr;</button>
-    <button class="btn-secondary" id="mobile-share-btn">Share to Desktop</button>
+<div id="landscape-prompt" style="display:none;">
+  <div class="prompt-card">
+    <div class="rotate-icon">
+      <div class="phone-shape"></div>
+    </div>
+    <h2>Rotate Your Device</h2>
+    <div class="arabic-sub">&#x0642;&#x0645; &#x0628;&#x062A;&#x062F;&#x0648;&#x064A;&#x0631; &#x062C;&#x0647;&#x0627;&#x0632;&#x0643; &#x0644;&#x0644;&#x0639;&#x0631;&#x0636; &#x0627;&#x0644;&#x0623;&#x0641;&#x0636;&#x0644;</div>
+    <p class="desc">This presentation is optimized for landscape viewing</p>
+    <button class="btn-continue" id="landscape-continue-btn">Continue in Portrait &rarr;</button>
   </div>
 </div>
 
-<!-- BACK TO TOP BUTTON -->
-<button id="mobile-back-to-top" aria-label="Back to top">&#8593;</button>
-
-<!-- COPY TOAST -->
-<div id="copy-toast">Link copied to clipboard</div>
+<!-- ============================================================
+     MOBILE NAV BAR (bottom, slide-by-slide navigation)
+     ============================================================ -->
+<div id="mobile-nav-bar" style="display:none;">
+  <button id="mob-prev-btn" aria-label="Previous slide">&#8592;</button>
+  <div class="mobile-slide-counter">
+    <span class="mob-current">1</span> / <span class="mob-total">18</span>
+  </div>
+  <button id="mob-next-btn" aria-label="Next slide">&#8594;</button>
+</div>
 
 <!-- ============================================================
-     MOBILE MODE JAVASCRIPT
+     MOBILE JAVASCRIPT — slide navigation + landscape prompt
      ============================================================ -->
 <script>
 (function() {
@@ -3171,206 +3146,89 @@ body {
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
   if (!isMobile) return;
 
-  var disclaimer = document.getElementById('mobile-disclaimer');
-  var continueBtn = document.getElementById('mobile-continue-btn');
-  var shareBtn = document.getElementById('mobile-share-btn');
-  var backToTop = document.getElementById('mobile-back-to-top');
-  var copyToast = document.getElementById('copy-toast');
-  var slideCounter = document.getElementById('slide-counter');
-  var slides = document.querySelectorAll('.slide');
+  // --- LANDSCAPE ORIENTATION PROMPT ---
+  var prompt = document.getElementById('landscape-prompt');
+  var continueBtn = document.getElementById('landscape-continue-btn');
+  var navBar = document.getElementById('mobile-nav-bar');
+  var mobCurrentEl = document.querySelector('#mobile-nav-bar .mob-current');
+  var mobTotalEl = document.querySelector('#mobile-nav-bar .mob-total');
+  var mobPrevBtn = document.getElementById('mob-prev-btn');
+  var mobNextBtn = document.getElementById('mob-next-btn');
 
-  // Check sessionStorage for dismissal
-  var dismissed = sessionStorage.getItem('mobile-disclaimer-dismissed');
+  // Set total count in mobile nav bar
+  if (window.slideshow && mobTotalEl) {
+    mobTotalEl.textContent = window.slideshow.total;
+  }
 
-  if (!dismissed) {
-    disclaimer.style.display = 'flex';
+  // Check if portrait and not previously dismissed
+  var isPortrait = window.matchMedia('(orientation: portrait)').matches;
+  var promptDismissed = sessionStorage.getItem('landscape-prompt-dismissed');
+
+  function showNavBar() {
+    navBar.style.display = 'flex';
+    updateMobileCounter();
+  }
+
+  function hidePrompt() {
+    prompt.style.display = 'none';
+    showNavBar();
+  }
+
+  if (isPortrait && !promptDismissed) {
+    prompt.style.display = 'flex';
   } else {
-    enterMobileMode();
+    hidePrompt();
   }
 
-  // Continue button
+  // Continue button dismisses prompt
   continueBtn.addEventListener('click', function() {
-    sessionStorage.setItem('mobile-disclaimer-dismissed', '1');
-    disclaimer.style.display = 'none';
-    enterMobileMode();
+    sessionStorage.setItem('landscape-prompt-dismissed', '1');
+    hidePrompt();
   });
 
-  // Share to desktop button
-  shareBtn.addEventListener('click', function() {
-    var url = window.location.href;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(function() {
-        showToast();
-      }).catch(function() {
-        fallbackCopy(url);
-      });
-    } else {
-      fallbackCopy(url);
+  // Auto-dismiss when rotated to landscape
+  var orientationMq = window.matchMedia('(orientation: portrait)');
+  function onOrientationChange(e) {
+    if (!e.matches && prompt.style.display !== 'none') {
+      // Now in landscape
+      sessionStorage.setItem('landscape-prompt-dismissed', '1');
+      hidePrompt();
     }
-  });
-
-  function fallbackCopy(text) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); showToast(); }
-    catch(e) {}
-    document.body.removeChild(ta);
+  }
+  if (orientationMq.addEventListener) {
+    orientationMq.addEventListener('change', onOrientationChange);
+  } else if (orientationMq.addListener) {
+    orientationMq.addListener(onOrientationChange);
   }
 
-  function showToast() {
-    copyToast.classList.add('show');
-    setTimeout(function() { copyToast.classList.remove('show'); }, 2200);
+  // --- MOBILE NAV BAR ---
+  function updateMobileCounter() {
+    if (window.slideshow && mobCurrentEl) {
+      mobCurrentEl.textContent = window.slideshow.current + 1;
+    }
   }
 
-  function enterMobileMode() {
-    document.body.classList.add('mobile-mode');
-
-    // Remove all slide transition classes and make all visible
-    slides.forEach(function(s) {
-      s.classList.remove('exit-left', 'exit-right');
-      s.classList.add('active');
-    });
-
-    // Disable the slideshow's touch/swipe handler on mobile
-    // We do this by overriding the slideshow methods
+  mobPrevBtn.addEventListener('click', function() {
     if (window.slideshow) {
-      window.slideshow.next = function() {};
-      window.slideshow.prev = function() {};
-      window.slideshow.goTo = function() {};
-      window.slideshow.bindTouch = function() {};
+      window.slideshow.prev();
+      updateMobileCounter();
     }
+  });
 
-    // Trigger all animations immediately
-    slides.forEach(function(s) {
-      s.querySelectorAll('.anim-fade').forEach(function(el) {
-        el.classList.add('visible');
-      });
-    });
+  mobNextBtn.addEventListener('click', function() {
+    if (window.slideshow) {
+      window.slideshow.next();
+      updateMobileCounter();
+    }
+  });
 
-    // Trigger count-up animations when visible via IntersectionObserver
-    var countObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          // data-count elements
-          entry.target.querySelectorAll('[data-count]').forEach(function(el) {
-            var target = parseFloat(el.dataset.count);
-            if (isNaN(target) || target === 0) return;
-            var prefix = el.dataset.prefix || '';
-            var suffix = el.dataset.suffix || '';
-            var decimals = parseInt(el.dataset.decimals) || 0;
-            var duration = 1200;
-            var startTime = performance.now();
-            function update(now) {
-              var elapsed = now - startTime;
-              var progress = Math.min(elapsed / duration, 1);
-              var ease = 1 - Math.pow(1 - progress, 3);
-              el.textContent = prefix + (target * ease).toFixed(decimals) + suffix;
-              if (progress < 1) requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
-          });
-          // data-countup elements
-          entry.target.querySelectorAll('[data-countup]').forEach(function(el) {
-            var target = parseFloat(el.dataset.countup);
-            if (isNaN(target) || target === 0) return;
-            var prefix = el.dataset.prefix || '';
-            var suffix = el.dataset.suffix || '';
-            var decimals = parseInt(el.dataset.decimals) || 0;
-            var duration = 2000;
-            var startTime = performance.now();
-            function update(now) {
-              var elapsed = now - startTime;
-              var progress = Math.min(elapsed / duration, 1);
-              var ease = 1 - Math.pow(1 - progress, 3);
-              el.textContent = prefix + (target * ease).toFixed(decimals) + suffix;
-              if (progress < 1) requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
-          });
-          countObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    slides.forEach(function(s) { countObserver.observe(s); });
-
-    // Trigger market-size bars when visible
-    var barObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          var b25 = document.getElementById('bar2025');
-          var b34 = document.getElementById('bar2034');
-          if (b25) b25.classList.add('animate');
-          if (b34) b34.classList.add('animate');
-          barObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-    var mktSlide = document.getElementById('market-size');
-    if (mktSlide) barObserver.observe(mktSlide);
-
-    // Trigger donut chart when visible
-    var donutObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.querySelectorAll('.global-donut-seg').forEach(function(seg) {
-            var t = seg.dataset.target;
-            if (t) seg.style.strokeDasharray = t;
-          });
-          donutObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-    var globalSlide = document.getElementById('global-context');
-    if (globalSlide) donutObserver.observe(globalSlide);
-
-    // Update slide counter on scroll
-    var updateCounter = function() {
-      var scrollTop = window.scrollY || document.documentElement.scrollTop;
-      var vh = window.innerHeight;
-      var currentIdx = 0;
-      slides.forEach(function(s, i) {
-        var rect = s.getBoundingClientRect();
-        if (rect.top < vh * 0.5) currentIdx = i;
-      });
-      var counterCurrent = document.querySelector('#slide-counter .current');
-      if (counterCurrent) counterCurrent.textContent = currentIdx + 1;
-
-      // Update progress bar
-      var pct = ((currentIdx + 1) / slides.length) * 100;
-      var progressBar = document.getElementById('progress-bar');
-      if (progressBar) progressBar.style.width = pct + '%';
-
-      // Back to top button
-      if (scrollTop > vh) {
-        backToTop.classList.add('visible');
-      } else {
-        backToTop.classList.remove('visible');
-      }
+  // Patch slideshow's updateUI to also update mobile counter
+  if (window.slideshow) {
+    var origUpdateUI = window.slideshow.updateUI.bind(window.slideshow);
+    window.slideshow.updateUI = function() {
+      origUpdateUI();
+      updateMobileCounter();
     };
-
-    var scrollTick = false;
-    window.addEventListener('scroll', function() {
-      if (!scrollTick) {
-        requestAnimationFrame(function() {
-          updateCounter();
-          scrollTick = false;
-        });
-        scrollTick = true;
-      }
-    }, { passive: true });
-
-    // Back to top
-    backToTop.addEventListener('click', function() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Initial counter update
-    updateCounter();
   }
 })();
 </script>
