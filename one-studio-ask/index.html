@@ -1825,8 +1825,9 @@ body {
         s.classList.add('active');
         if (animate) s.style.transform = '';
       } else if (animate && idx === prev) {
-        s.classList.add((current > prev) ? 'exit-left' : '');
-        if (current < prev) {
+        if (current > prev) {
+          s.classList.add('exit-left');
+        } else {
           s.style.transform = 'translateX(60px)';
         }
       }
