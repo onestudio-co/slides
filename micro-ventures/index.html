@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro Ventures — AI-Native Venture Building in Saudi Arabia</title>
+<link rel="icon" type="image/jpeg" href="../logo.jpeg">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — CSS Variables
+   ═══════════════════════════════════════════ */
+:root {
+  --bg-primary: #0a0e27;
+  --bg-secondary: #0f1538;
+  --bg-card: rgba(15, 21, 56, 0.65);
+  --border-card: rgba(0, 212, 255, 0.12);
+  --accent-blue: #00d4ff;
+  --accent-gold: #ffd700;
+  --accent-emerald: #00c48c;
+  --accent-red: #ff4d6a;
+  --text-primary: #edf2ff;
+  --text-secondary: rgba(237, 242, 255, 0.6);
+  --text-muted: rgba(237, 242, 255, 0.35);
+  --glass-bg: rgba(15, 21, 56, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 24px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition-slide: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  --font-heading: -apple-system, 'SF Pro Display', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-body: -apple-system, 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════ */
+#progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+  box-shadow: 0 0 12px var(--accent-blue), 0 0 24px rgba(0, 212, 255, 0.3);
+  z-index: 1000;
+  transition: width 0.4s ease;
+}
+
+/* ═══════════════════════════════════════════
+   SLIDE CONTAINER
+   ═══════════════════════════════════════════ */
+#slides-container {
+  position: relative;
+  width: 100%; height: 100%;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 80px;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity var(--transition-slide), transform var(--transition-slide);
+  pointer-events: none;
+  overflow-y: auto;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.slide.exit-left {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+.slide.exit-right {
+  opacity: 0;
+  transform: translateX(60px);
+}
+
+.slide-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════ */
+h1 {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 40px;
+}
+
+h3.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-blue);
+  margin-bottom: 12px;
+}
+
+h3.label.gold { color: var(--accent-gold); }
+h3.label.emerald { color: var(--accent-emerald); }
+h3.label.red { color: var(--accent-red); }
+
+p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+
+/* ═══════════════════════════════════════════
+   GLASS CARDS
+   ═══════════════════════════════════════════ */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+
+.glass-sm {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+}
+
+.glass:hover, .glass-sm:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+  transition: border-color var(--transition-fast);
+}
+
+.card-blue { border-color: rgba(0, 212, 255, 0.25); }
+.card-gold { border-color: rgba(255, 215, 0, 0.25); }
+.card-emerald { border-color: rgba(0, 196, 140, 0.25); }
+.card-red { border-color: rgba(255, 77, 106, 0.25); }
+
+/* ═══════════════════════════════════════════
+   STAT NUMBERS
+   ═══════════════════════════════════════════ */
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stat-number.blue { color: var(--accent-blue); }
+.stat-number.gold { color: var(--accent-gold); }
+.stat-number.emerald { color: var(--accent-emerald); }
+.stat-number.red { color: var(--accent-red); }
+
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 8px;
+}
+
+.stat-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   GRIDS & LAYOUTS
+   ═══════════════════════════════════════════ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.grid-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.flex-center { display: flex; justify-content: center; align-items: center; }
+.flex-col { display: flex; flex-direction: column; }
+
+.gap-16 { gap: 16px; }
+.gap-24 { gap: 24px; }
+.gap-32 { gap: 32px; }
+.gap-40 { gap: 40px; }
+
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mt-40 { margin-top: 40px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+
+.w-full { width: 100%; }
+.text-center { text-align: center; }
+
+/* ═══════════════════════════════════════════
+   STACK (Token Stack style)
+   ═══════════════════════════════════════════ */
+.stack { display: flex; flex-direction: column; gap: 12px; }
+
+.stack-layer {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.stack-layer:hover {
+  transform: translateX(6px);
+}
+
+.stack-layer.blue { border-left: 3px solid var(--accent-blue); }
+.stack-layer.gold { border-left: 3px solid var(--accent-gold); }
+.stack-layer.emerald { border-left: 3px solid var(--accent-emerald); }
+
+.stack-layer .layer-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.stack-layer .layer-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════════
+   COMPARISON TABLE
+   ═══════════════════════════════════════════ */
+.compare-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.compare-row:last-child { border-bottom: none; }
+
+.compare-label {
+  padding: 16px 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+}
+
+.compare-cell {
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.compare-cell.highlight {
+  color: var(--accent-emerald);
+  font-weight: 600;
+}
+
+.compare-header {
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ═══════════════════════════════════════════
+   ICON CIRCLES
+   ═══════════════════════════════════════════ */
+.icon-circle {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.icon-circle.blue { background: rgba(0, 212, 255, 0.12); }
+.icon-circle.gold { background: rgba(255, 215, 0, 0.12); }
+.icon-circle.emerald { background: rgba(0, 196, 140, 0.12); }
+.icon-circle.red { background: rgba(255, 77, 106, 0.12); }
+
+/* ═══════════════════════════════════════════
+   BADGE
+   ═══════════════════════════════════════════ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.badge.blue {
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--accent-blue);
+}
+
+.badge.gold {
+  background: rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: var(--accent-gold);
+}
+
+/* ═══════════════════════════════════════════
+   BOTTOM QUOTE
+   ═══════════════════════════════════════════ */
+.bottom-quote {
+  margin-top: 32px;
+  padding: 20px 28px;
+  border-left: 3px solid var(--accent-blue);
+  background: rgba(0, 212, 255, 0.04);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════
+   COVER SLIDE
+   ═══════════════════════════════════════════ */
+.cover-bg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.cover-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 50%, rgba(255, 215, 0, 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 100%, rgba(0, 196, 140, 0.05) 0%, transparent 40%);
+  animation: coverPulse 12s ease-in-out infinite alternate;
+}
+
+@keyframes coverPulse {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-2%, 1%) scale(1.02); }
+  100% { transform: translate(1%, -1%) scale(1); }
+}
+
+.cover-title {
+  font-family: var(--font-heading);
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  background: linear-gradient(135deg, var(--text-primary) 0%, rgba(237, 242, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.cover-subtitle {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-bottom: 56px;
+  letter-spacing: 0.01em;
+}
+
+.cover-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 56px;
+}
+
+.cover-stat-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 28px 36px;
+  text-align: center;
+  min-width: 160px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cover-stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.cover-stat-card.blue { border-color: rgba(0, 212, 255, 0.25); }
+.cover-stat-card.blue .cover-stat-value { color: var(--accent-blue); }
+.cover-stat-card.gold { border-color: rgba(255, 215, 0, 0.25); }
+.cover-stat-card.gold .cover-stat-value { color: var(--accent-gold); }
+.cover-stat-card.emerald { border-color: rgba(0, 196, 140, 0.25); }
+.cover-stat-card.emerald .cover-stat-value { color: var(--accent-emerald); }
+
+.cover-stat-value {
+  font-family: var(--font-heading);
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.cover-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.cover-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cover-logo img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.cover-logo span {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ff5619;
+}
+
+/* ═══════════════════════════════════════════
+   CARD TITLE & DESC
+   ═══════════════════════════════════════════ */
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.card-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   COST COMPARISON CARDS
+   ═══════════════════════════════════════════ */
+.cost-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cost-card .cost-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.cost-card .cost-old {
+  font-size: 1.1rem;
+  color: var(--accent-red);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.cost-card .cost-new {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent-emerald);
+}
+
+/* ═══════════════════════════════════════════
+   PARTNERSHIP COLUMNS
+   ═══════════════════════════════════════════ */
+.partnership-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.partnership-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.partnership-col ul li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--glass-border);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.partnership-col ul li:last-child { border-bottom: none; }
+
+.jv-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 215, 0, 0.15));
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  align-self: center;
+}
+
+/* ═══════════════════════════════════════════
+   CLOSING SLIDE
+   ═══════════════════════════════════════════ */
+.closing-highlight {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+  letter-spacing: 0.04em;
+}
+
+.closing-metrics {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  margin-top: 12px;
+}
+
+.closing-contact {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════ */
+#nav-controls {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 100;
+}
+
+.nav-btn {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.nav-btn:hover {
+  border-color: var(--accent-blue);
+  background: rgba(0, 212, 255, 0.08);
+  transform: scale(1.08);
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  transform: none;
+}
+
+.nav-btn:disabled:hover {
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+}
+
+#slide-counter {
+  position: fixed;
+  bottom: 36px;
+  right: 40px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  z-index: 100;
+}
+
+/* Jump menu button */
+#jump-btn {
+  position: fixed;
+  bottom: 36px;
+  left: 40px;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  transition: all var(--transition-fast);
+}
+
+#jump-btn:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+
+/* Jump menu */
+#jump-menu {
+  position: fixed;
+  bottom: 84px;
+  left: 40px;
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  z-index: 200;
+  display: none;
+  padding: 8px;
+}
+
+#jump-menu.visible { display: block; }
+
+#jump-menu .jump-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+#jump-menu .jump-item:hover {
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--text-primary);
+}
+
+#jump-menu .jump-item.active {
+  background: rgba(0, 212, 255, 0.12);
+  color: var(--accent-blue);
+}
+
+#jump-menu .jump-item .jump-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  min-width: 20px;
+}
+
+/* ═══════════════════════════════════════════
+   OVERVIEW MODE
+   ═══════════════════════════════════════════ */
+#overview-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(5, 7, 20, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 500;
+  display: none;
+  overflow-y: auto;
+  padding: 60px 40px;
+}
+
+#overview-overlay.visible { display: block; }
+
+#overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.overview-thumb {
+  aspect-ratio: 16 / 10;
+  background: var(--bg-secondary);
+  border: 2px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.overview-thumb:hover {
+  border-color: var(--accent-blue);
+  transform: scale(1.03);
+}
+
+.overview-thumb.active {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+.overview-thumb .thumb-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.overview-thumb .thumb-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+#overview-title {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 40px;
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+.anim-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.anim-fade.d1 { transition-delay: 0.1s; }
+.anim-fade.d2 { transition-delay: 0.2s; }
+.anim-fade.d3 { transition-delay: 0.3s; }
+.anim-fade.d4 { transition-delay: 0.4s; }
+.anim-fade.d5 { transition-delay: 0.5s; }
+.anim-fade.d6 { transition-delay: 0.6s; }
+.anim-fade.d7 { transition-delay: 0.7s; }
+.anim-fade.d8 { transition-delay: 0.8s; }
+
+.anim-fade.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE BLOCK
+   ═══════════════════════════════════════════ */
+#mobile-block {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--bg-primary);
+  z-index: 9999;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+#mobile-block .mobile-icon {
+  font-size: 3rem;
+  margin-bottom: 24px;
+  opacity: 0.7;
+}
+
+#mobile-block h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+#mobile-block .mobile-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  direction: rtl;
+}
+
+#mobile-block .mobile-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  max-width: 300px;
+}
+
+#copy-link-btn {
+  padding: 14px 32px;
+  border-radius: 100px;
+  border: 1px solid var(--accent-blue);
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent-blue);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+#copy-link-btn:active {
+  background: rgba(0, 212, 255, 0.2);
+}
+
+#mobile-block .mobile-logo {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#mobile-block .mobile-logo img {
+  width: 24px; height: 24px;
+  border-radius: 4px;
+}
+
+#mobile-block .mobile-logo span {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #ff5619;
+}
+
+@media (max-width: 768px) {
+  #mobile-block { display: flex; }
+  #slides-container, #nav-controls, #slide-counter, #progress-bar, #jump-btn, #jump-menu { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+/* ═══════════════════════════════════════════
+   VS BOX
+   ═══════════════════════════════════════════ */
+.vs-box {
+  background: rgba(255, 77, 106, 0.06);
+  border: 1px solid rgba(255, 77, 106, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+}
+
+.vs-box .vs-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-red);
+  margin-bottom: 8px;
+}
+
+.vs-box .vs-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   SOURCE LINE
+   ═══════════════════════════════════════════ */
+.source-line {
+  margin-top: 32px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════
+   SECTOR CARD
+   ═══════════════════════════════════════════ */
+.sector-icon {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.sector-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.sector-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════
+   FEATURE CARD (2x2)
+   ═══════════════════════════════════════════ */
+.feature-title {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
+}
+
+.feature-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   BREAKDOWN TABLE
+   ═══════════════════════════════════════════ */
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--glass-border);
+  align-items: center;
+}
+
+.breakdown-row:last-child { border-bottom: none; }
+
+.breakdown-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.breakdown-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.breakdown-amount {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--accent-gold);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════
+   BOTTOM LINE
+   ═══════════════════════════════════════════ */
+.bottom-line {
+  margin-top: 32px;
+  padding: 16px 24px;
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     MOBILE BLOCK
+     ═══════════════════════════════════════════ -->
+<div id="mobile-block">
+  <div class="mobile-icon">💻</div>
+  <h2>Desktop Only</h2>
+  <div class="mobile-subtitle">هذا العرض مُصمم للعرض على سطح المكتب</div>
+  <div class="mobile-desc">This presentation requires a desktop screen for the best experience.</div>
+  <button id="copy-link-btn" onclick="copyLink()">Copy Link to Open on Desktop</button>
+  <div class="mobile-logo">
+    <img src="../logo.jpeg" alt="One Studio">
+    <span>One Studio</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PROGRESS BAR
+     ═══════════════════════════════════════════ -->
+<div id="progress-bar"></div>
+
+<!-- ═══════════════════════════════════════════
+     OVERVIEW MODE
+     ═══════════════════════════════════════════ -->
+<div id="overview-overlay">
+  <div id="overview-title">All Slides</div>
+  <div id="overview-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDES
+     ═══════════════════════════════════════════ -->
+<div id="slides-container">
+
+  <!-- ═════════════ SLIDE 1: COVER ═════════════ -->
+  <div class="slide" data-slide="1">
+    <div class="cover-bg"></div>
+    <div class="slide-inner text-center flex-col" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="anim-fade d1">
+        <div class="cover-title">Micro Ventures</div>
+      </div>
+      <div class="anim-fade d2">
+        <div class="cover-subtitle">AI-Native Venture Building in Saudi Arabia</div>
+      </div>
+      <div class="cover-stats anim-fade d3">
+        <div class="cover-stat-card blue">
+          <div class="cover-stat-value" data-count="10" data-suffix="x">10x</div>
+          <div class="cover-stat-label">Cost Reduction</div>
+        </div>
+        <div class="cover-stat-card gold">
+          <div class="cover-stat-value" data-count="20">20</div>
+          <div class="cover-stat-label">Ventures / Year</div>
+        </div>
+        <div class="cover-stat-card emerald">
+          <div class="cover-stat-value" data-count="50" data-prefix="$" data-suffix="K">$50K</div>
+          <div class="cover-stat-label">Per Venture</div>
+        </div>
+      </div>
+      <div class="cover-logo anim-fade d4">
+        <img src="../logo.jpeg" alt="One Studio">
+        <span>One Studio</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 2: THE THESIS ═════════════ -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">THE CONVERGENCE</h3>
+      <h1 class="anim-fade d2">Three Megatrends, One Window</h1>
+      <div class="grid-3 anim-fade d3">
+        <div class="glass card-blue">
+          <div class="card-icon">🤖</div>
+          <div class="card-title">AI Cost Collapse</div>
+          <div class="card-desc">10x reduction in venture building costs. What required $500K now takes $50K. Claude Code, Cursor, and agentic workflows compress development by 5-10x.</div>
+        </div>
+        <div class="glass card-gold">
+          <div class="card-icon">🇸🇦</div>
+          <div class="card-title">Saudi's $3.3T Bet</div>
+          <div class="card-desc">Vision 2030 is creating massive demand for technology solutions. 1.2M+ SMEs underserved. Government digitization mandates across all ministries.</div>
+        </div>
+        <div class="glass card-emerald">
+          <div class="card-icon">🏗️</div>
+          <div class="card-title">Studio Model Proven</div>
+          <div class="card-desc">53% IRR for studio startups vs 21.3% traditional. 72% reach Series A vs 42%. But fewer than 5 studios exist in KSA.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 3: WHAT IS MICRO VENTURE BUILDING? ═════════════ -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">THE MODEL</h3>
+      <h1 class="anim-fade d2">Small Bets at Institutional Scale</h1>
+      <div class="grid-2 anim-fade d3">
+        <div class="glass">
+          <div class="card-title" style="color:var(--text-muted);margin-bottom:20px;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;">Traditional Studio</div>
+          <div class="flex-col gap-16">
+            <div><span style="color:var(--accent-red);font-weight:700;font-size:1.3rem;">$500K–$2M</span><div class="stat-sub">per venture</div></div>
+            <div><span style="color:var(--text-primary);font-weight:700;font-size:1.1rem;">5–15 people</span><div class="stat-sub">per team</div></div>
+            <div><span style="color:var(--text-primary);font-weight:700;font-size:1.1rem;">12–24 months</span><div class="stat-sub">to market signal</div></div>
+            <div><span style="color:var(--text-primary);font-weight:700;font-size:1.1rem;">3–5 ventures</span><div class="stat-sub">per year</div></div>
+          </div>
+        </div>
+        <div class="glass card-emerald">
+          <div class="card-title" style="color:var(--accent-emerald);margin-bottom:20px;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;">Micro Venture Studio</div>
+          <div class="flex-col gap-16">
+            <div><span style="color:var(--accent-emerald);font-weight:700;font-size:1.3rem;">$50K–$80K</span><div class="stat-sub">per venture</div></div>
+            <div><span style="color:var(--text-primary);font-weight:700;font-size:1.1rem;">1–3 people</span><div class="stat-sub">per team</div></div>
+            <div><span style="color:var(--text-primary);font-weight:700;font-size:1.1rem;">8–14 weeks</span><div class="stat-sub">to market signal</div></div>
+            <div><span style="color:var(--text-primary);font-weight:700;font-size:1.1rem;">10–20 ventures</span><div class="stat-sub">per year</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-quote anim-fade d4">"Treat each venture as a hypothesis to test — not a company to nurture."</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 4: PORTFOLIO ECONOMICS ═════════════ -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <h3 class="label gold anim-fade d1">THE MATH</h3>
+      <h1 class="anim-fade d2">$1M → 20 Ventures</h1>
+      <div class="grid-4 anim-fade d3">
+        <div class="glass card-red text-center">
+          <div class="stat-number red" data-count="14">14</div>
+          <div class="stat-label">Killed Fast (70%)</div>
+          <div class="stat-sub">$700K invested, learnings captured</div>
+        </div>
+        <div class="glass card-gold text-center">
+          <div class="stat-number gold" data-count="3">3</div>
+          <div class="stat-label">Small Wins (15%)</div>
+          <div class="stat-sub">$5–20K MRR each</div>
+        </div>
+        <div class="glass card-emerald text-center">
+          <div class="stat-number emerald" data-count="2">2</div>
+          <div class="stat-label">Real Businesses (10%)</div>
+          <div class="stat-sub">$50–200K MRR each</div>
+        </div>
+        <div class="glass card-blue text-center">
+          <div class="stat-number blue" data-count="1">1</div>
+          <div class="stat-label">Breakout (5%)</div>
+          <div class="stat-sub">$500K+ MRR potential</div>
+        </div>
+      </div>
+      <div class="bottom-line anim-fade d4">Expected portfolio value: <strong style="color:var(--accent-gold);">3–15x</strong> on $1M deployed</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 5: THE COST COLLAPSE ═════════════ -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">AI CHANGES EVERYTHING</h3>
+      <h1 class="anim-fade d2">10x Cheaper, 10x Faster</h1>
+      <div class="grid-3 anim-fade d3">
+        <div class="glass-sm cost-card">
+          <div class="cost-label">MVP Web App</div>
+          <div class="cost-old">$500K</div>
+          <div class="cost-new">$30K</div>
+        </div>
+        <div class="glass-sm cost-card">
+          <div class="cost-label">Market Research</div>
+          <div class="cost-old">$50K</div>
+          <div class="cost-new">$5K</div>
+        </div>
+        <div class="glass-sm cost-card">
+          <div class="cost-label">Customer Support (yr 1)</div>
+          <div class="cost-old">$200K</div>
+          <div class="cost-new">$20K</div>
+        </div>
+        <div class="glass-sm cost-card">
+          <div class="cost-label">Content Marketing</div>
+          <div class="cost-old">$150K</div>
+          <div class="cost-new">$15K</div>
+        </div>
+        <div class="glass-sm cost-card">
+          <div class="cost-label">Mobile App</div>
+          <div class="cost-old">$600K</div>
+          <div class="cost-new">$50K</div>
+        </div>
+        <div class="glass-sm cost-card">
+          <div class="cost-label">Financial Model</div>
+          <div class="cost-old">$25K</div>
+          <div class="cost-new">$2K</div>
+        </div>
+      </div>
+      <div class="source-line anim-fade d4">Source: YC Garry Tan — "Cost dropped 10x to 100x thanks to AI"</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 6: THE NEW TEAM ═════════════ -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">TEAM STRUCTURE</h3>
+      <h1 class="anim-fade d2">3 People + AI Agents</h1>
+      <div class="grid-2 anim-fade d3" style="align-items:start;">
+        <div class="stack">
+          <div class="stack-layer blue">
+            <div class="icon-circle blue">👨‍💻</div>
+            <div>
+              <div class="layer-title">Technical Founder</div>
+              <div class="layer-desc">Orchestrates AI, builds product</div>
+            </div>
+          </div>
+          <div class="stack-layer gold">
+            <div class="icon-circle gold">📈</div>
+            <div>
+              <div class="layer-title">Business Founder</div>
+              <div class="layer-desc">Distribution, sales, partnerships</div>
+            </div>
+          </div>
+          <div class="stack-layer emerald">
+            <div class="icon-circle emerald">🤖</div>
+            <div>
+              <div class="layer-title">AI Agent Layer</div>
+              <div class="layer-desc">Support, analytics, content, ops</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:24px;">
+          <div class="vs-box">
+            <div class="vs-title">Traditional Approach</div>
+            <div class="vs-desc">6–8 people per venture<br>$500K–$1M/year burn rate<br>12+ months to first signal</div>
+          </div>
+          <div class="bottom-line" style="margin-top:0;">Same output. <strong style="color:var(--accent-emerald);">5x lower cost.</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 7: GLOBAL PROOF POINTS ═════════════ -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <h3 class="label gold anim-fade d1">CASE STUDIES</h3>
+      <h1 class="anim-fade d2">The Model Works</h1>
+      <div class="grid-2 anim-fade d3">
+        <div class="glass">
+          <div class="card-title" style="color:var(--accent-blue);font-size:1.2rem;">Idealab</div>
+          <div class="card-desc" style="margin-top:8px;">150+ companies built, 50+ IPOs and acquisitions, 70% success rate. The original venture studio — proving the model since 1996.</div>
+        </div>
+        <div class="glass">
+          <div class="card-title" style="color:var(--accent-gold);font-size:1.2rem;">Atomic</div>
+          <div class="card-desc" style="margin-top:8px;">Tests ideas at $25–100K each. Portfolio includes Hims & Hers ($2B+ market cap). Systematic venture creation with institutional backing.</div>
+        </div>
+        <div class="glass">
+          <div class="card-title" style="color:var(--accent-emerald);font-size:1.2rem;">Pieter Levels</div>
+          <div class="card-desc" style="margin-top:8px;">$3M+/year revenue, 40+ products launched, zero employees. Proof that one person + AI can build a venture portfolio.</div>
+        </div>
+        <div class="glass">
+          <div class="card-title" style="color:var(--accent-red);font-size:1.2rem;">Audos (2025)</div>
+          <div class="card-desc" style="margin-top:8px;">Goal: 100K companies/year. $11.5M seed round. 5 employees. The AI-native studio model taken to its logical extreme.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 8: THE SAUDI GAP ═════════════ -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <h3 class="label red anim-fade d1">MARKET OPPORTUNITY</h3>
+      <h1 class="anim-fade d2">Capital Rich, Builder Poor</h1>
+      <div class="grid-4 anim-fade d3">
+        <div class="glass text-center">
+          <div class="stat-number blue" data-count="1.5" data-prefix="$" data-suffix="B" data-decimals="1">$1.5B</div>
+          <div class="stat-label">Saudi startup funding (2024)</div>
+        </div>
+        <div class="glass text-center">
+          <div class="stat-number gold" data-count="1.2" data-suffix="M+" data-decimals="1">1.2M+</div>
+          <div class="stat-label">SMEs underserved by tech</div>
+        </div>
+        <div class="glass text-center">
+          <div class="stat-number red">&lt;5</div>
+          <div class="stat-label">Venture studios in KSA</div>
+        </div>
+        <div class="glass text-center">
+          <div class="stat-number emerald" data-count="3.3" data-prefix="$" data-suffix="T" data-decimals="1">$3.3T</div>
+          <div class="stat-label">Vision 2030 spending</div>
+        </div>
+      </div>
+      <div class="bottom-line anim-fade d4">The ecosystem has capital and demand. It lacks <strong style="color:var(--accent-blue);">systematic builders.</strong></div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 9: TARGET SECTORS ═════════════ -->
+  <div class="slide" data-slide="9">
+    <div class="slide-inner">
+      <h3 class="label emerald anim-fade d1">WHERE WE BUILD</h3>
+      <h1 class="anim-fade d2">6 Sectors, 15 Ventures</h1>
+      <div class="grid-3 anim-fade d3">
+        <div class="glass-sm">
+          <div class="sector-icon">🏠</div>
+          <div class="sector-title">PropTech</div>
+          <div class="sector-desc">REGA sandbox, Sakani demand, property management automation</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">🏢</div>
+          <div class="sector-title">SME SaaS</div>
+          <div class="sector-desc">Arabic-first invoicing, HR, inventory for 1.2M+ businesses</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">🏥</div>
+          <div class="sector-title">HealthTech</div>
+          <div class="sector-desc">NPHIES mandate, clinic management, digital health records</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">🕌</div>
+          <div class="sector-title">Hajj/Umrah</div>
+          <div class="sector-desc">30M visitors by 2030, crowd management, pilgrim services</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">🏛️</div>
+          <div class="sector-title">GovTech</div>
+          <div class="sector-desc">Ministry digitization budgets, compliance automation</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">💰</div>
+          <div class="sector-title">FinTech</div>
+          <div class="sector-desc">SAMA sandbox, embedded finance, payments infrastructure</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 10: ONE STUDIO EDGE ═════════════ -->
+  <div class="slide" data-slide="10">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">WHY US</h3>
+      <h1 class="anim-fade d2">Already Running AI-Natively</h1>
+      <div class="grid-2 anim-fade d3">
+        <div class="glass">
+          <div class="feature-title">16+ Ventures</div>
+          <div class="feature-desc">Active portfolio across MENA — Qatar, KSA, Iraq, Turkey. Battle-tested across markets and regulatory environments.</div>
+        </div>
+        <div class="glass">
+          <div class="feature-title" style="color:var(--accent-gold);">Nala (نالا)</div>
+          <div class="feature-desc">AI operations agent managing all ventures from one command center. Real-time monitoring, automated delegation, cross-venture intelligence.</div>
+        </div>
+        <div class="glass">
+          <div class="feature-title" style="color:var(--accent-emerald);">FLOW v3.0</div>
+          <div class="feature-desc">Proprietary rapid-cycle methodology — 1-3 day cycles, kill gates, systematic learning capture. Built for the speed of AI-native building.</div>
+        </div>
+        <div class="glass">
+          <div class="feature-title" style="color:var(--accent-red);">Distributed Team</div>
+          <div class="feature-desc">Palestine, Jordan, Egypt, Turkey — cost-effective, culturally aligned, timezone-compatible talent pool.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 11: PARTNERSHIP MODEL ═════════════ -->
+  <div class="slide" data-slide="11">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">THE PROPOSAL</h3>
+      <h1 class="anim-fade d2">The Saudi Micro Venture Engine</h1>
+      <div class="partnership-grid anim-fade d3">
+        <div class="glass partnership-col card-blue">
+          <div class="card-title" style="color:var(--accent-blue);margin-bottom:16px;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;">One Studio Brings</div>
+          <ul>
+            <li>Operating system & methodology</li>
+            <li>Technical team & AI infrastructure</li>
+            <li>FLOW rapid-cycle framework</li>
+            <li>16+ venture experience</li>
+            <li>Deal flow & idea pipeline</li>
+          </ul>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <div class="jv-badge">JV</div>
+        </div>
+        <div class="glass partnership-col card-gold">
+          <div class="card-title" style="color:var(--accent-gold);margin-bottom:16px;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;">Partner Brings</div>
+          <ul>
+            <li>Growth capital</li>
+            <li>Distribution network</li>
+            <li>Regulatory access & relationships</li>
+            <li>Brand credibility in KSA</li>
+            <li>Local market intelligence</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 12: THE NUMBERS ═════════════ -->
+  <div class="slide" data-slide="12">
+    <div class="slide-inner">
+      <h3 class="label gold anim-fade d1">YEAR 1 INVESTMENT</h3>
+      <h1 class="anim-fade d2">$1.6M–$2.5M</h1>
+      <div class="glass anim-fade d3" style="padding:0;overflow:hidden;">
+        <div class="breakdown-row">
+          <div>
+            <div class="breakdown-label">Studio Operations</div>
+            <div class="breakdown-detail">8–12 people + AI tools + infrastructure</div>
+          </div>
+          <div class="breakdown-amount">$600–800K</div>
+        </div>
+        <div class="breakdown-row">
+          <div>
+            <div class="breakdown-label">Venture Capital</div>
+            <div class="breakdown-detail">10–15 ventures × $50K average</div>
+          </div>
+          <div class="breakdown-amount">$500–750K</div>
+        </div>
+        <div class="breakdown-row">
+          <div>
+            <div class="breakdown-label">Follow-on Reserve</div>
+            <div class="breakdown-detail">Scaling 2–3 winners from pilot cohort</div>
+          </div>
+          <div class="breakdown-amount">$500K–$1M</div>
+        </div>
+      </div>
+      <div class="bottom-line anim-fade d4">= Cost of <strong style="color:var(--accent-red);">ONE</strong> traditional startup raise. Buys <strong style="color:var(--accent-emerald);">10–15</strong> real market experiments.</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 13: RISK COMPARISON ═════════════ -->
+  <div class="slide" data-slide="13">
+    <div class="slide-inner">
+      <h3 class="label emerald anim-fade d1">WHY THIS IS SAFER</h3>
+      <h1 class="anim-fade d2">Micro Ventures Reduce Risk</h1>
+      <div class="glass anim-fade d3" style="padding:0;overflow:hidden;">
+        <div class="compare-row" style="background:rgba(255,255,255,0.02);">
+          <div class="compare-label"></div>
+          <div class="compare-header" style="color:var(--text-muted);">Traditional VC</div>
+          <div class="compare-header" style="color:var(--accent-emerald);">Micro Studio</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-label">Concentration</div>
+          <div class="compare-cell">$2M in 1 startup</div>
+          <div class="compare-cell highlight">$2M across 15–20 ventures</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-label">Time to signal</div>
+          <div class="compare-cell">12–18 months</div>
+          <div class="compare-cell highlight">4–8 weeks</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-label">Cost of failure</div>
+          <div class="compare-cell">$2–5M</div>
+          <div class="compare-cell highlight">$50K</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-label">Salvage value</div>
+          <div class="compare-cell">Usually zero</div>
+          <div class="compare-cell highlight">Code, data, learnings redeployed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 14: NEXT STEPS ═════════════ -->
+  <div class="slide" data-slide="14">
+    <div class="cover-bg"></div>
+    <div class="slide-inner text-center" style="display:flex;flex-direction:column;align-items:center;">
+      <h3 class="label anim-fade d1">NEXT STEPS</h3>
+      <h1 class="anim-fade d2">Start With a Focused Pilot</h1>
+      <div class="anim-fade d3" style="margin-bottom:32px;">
+        <div class="closing-highlight">$1.5M · 12 Months · 10 Ventures</div>
+      </div>
+      <div class="anim-fade d4" style="margin-bottom:48px;">
+        <div class="closing-metrics">Success metrics: <strong style="color:var(--accent-emerald);">2+ ventures at $10K+ MRR</strong>, 10 Saudi market segments validated</div>
+      </div>
+      <div class="anim-fade d5" style="margin-bottom:16px;">
+        <div class="cover-logo" style="justify-content:center;">
+          <img src="../logo.jpeg" alt="One Studio">
+          <span>One Studio</span>
+        </div>
+      </div>
+      <div class="anim-fade d6" style="margin-bottom:8px;">
+        <div style="font-size:0.85rem;color:var(--text-muted);">Powered by Nala (نالا)</div>
+      </div>
+      <div class="anim-fade d7">
+        <div class="closing-contact">Mohammed Shurrab · One Studio · Jeddah</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════ -->
+<button id="jump-btn" title="Slide menu (ESC for overview)">☰</button>
+<div id="jump-menu"></div>
+
+<div id="nav-controls">
+  <button class="nav-btn" id="btn-prev" title="Previous slide" disabled>‹</button>
+  <button class="nav-btn" id="btn-next" title="Next slide">›</button>
+</div>
+
+<div id="slide-counter">1 / 14</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ─── SLIDE TITLES ─── */
+  const slideTitles = [
+    'Micro Ventures',
+    'Three Megatrends, One Window',
+    'Small Bets at Institutional Scale',
+    '$1M → 20 Ventures',
+    '10x Cheaper, 10x Faster',
+    '3 People + AI Agents',
+    'The Model Works',
+    'Capital Rich, Builder Poor',
+    '6 Sectors, 15 Ventures',
+    'Already Running AI-Natively',
+    'The Saudi Micro Venture Engine',
+    '$1.6M–$2.5M',
+    'Micro Ventures Reduce Risk',
+    'Start With a Focused Pilot'
+  ];
+
+  /* ─── SLIDESHOW CLASS ─── */
+  class SlideShow {
+    constructor() {
+      this.slides = document.querySelectorAll('.slide');
+      this.total = this.slides.length;
+      this.current = 0;
+      this.isAnimating = false;
+      this.overviewOpen = false;
+      this.touchStartX = 0;
+      this.touchEndX = 0;
+
+      this.progressBar = document.getElementById('progress-bar');
+      this.counter = document.getElementById('slide-counter');
+      this.btnPrev = document.getElementById('btn-prev');
+      this.btnNext = document.getElementById('btn-next');
+      this.jumpBtn = document.getElementById('jump-btn');
+      this.jumpMenu = document.getElementById('jump-menu');
+      this.overviewOverlay = document.getElementById('overview-overlay');
+      this.overviewGrid = document.getElementById('overview-grid');
+
+      this.init();
+    }
+
+    init() {
+      /* Read hash */
+      const hash = window.location.hash;
+      if (hash) {
+        const match = hash.match(/slide-(\d+)/);
+        if (match) {
+          const idx = parseInt(match[1], 10) - 1;
+          if (idx >= 0 && idx < this.total) this.current = idx;
+        }
+      }
+
+      /* Show first slide */
+      this.slides[this.current].classList.add('active');
+      this.updateUI();
+      this.triggerAnimations(this.current);
+      this.animateCounters(this.current);
+
+      /* Build overview grid */
+      this.buildOverview();
+
+      /* Build jump menu */
+      this.buildJumpMenu();
+
+      /* Keyboard */
+      document.addEventListener('keydown', (e) => this.onKey(e));
+
+      /* Nav buttons */
+      this.btnPrev.addEventListener('click', () => this.prev());
+      this.btnNext.addEventListener('click', () => this.next());
+
+      /* Jump menu */
+      this.jumpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.jumpMenu.classList.toggle('visible');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!this.jumpMenu.contains(e.target) && e.target !== this.jumpBtn) {
+          this.jumpMenu.classList.remove('visible');
+        }
+      });
+
+      /* Touch */
+      document.addEventListener('touchstart', (e) => {
+        this.touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      document.addEventListener('touchend', (e) => {
+        this.touchEndX = e.changedTouches[0].screenX;
+        this.handleSwipe();
+      }, { passive: true });
+
+      /* Hash change */
+      window.addEventListener('hashchange', () => {
+        const m = window.location.hash.match(/slide-(\d+)/);
+        if (m) {
+          const idx = parseInt(m[1], 10) - 1;
+          if (idx >= 0 && idx < this.total && idx !== this.current) {
+            this.goTo(idx);
+          }
+        }
+      });
+    }
+
+    buildOverview() {
+      this.overviewGrid.innerHTML = '';
+      for (let i = 0; i < this.total; i++) {
+        const thumb = document.createElement('div');
+        thumb.className = 'overview-thumb' + (i === this.current ? ' active' : '');
+        thumb.innerHTML = `<div class="thumb-num">${i + 1} / ${this.total}</div><div class="thumb-title">${slideTitles[i]}</div>`;
+        thumb.addEventListener('click', () => {
+          this.closeOverview();
+          this.goTo(i);
+        });
+        this.overviewGrid.appendChild(thumb);
+      }
+    }
+
+    buildJumpMenu() {
+      this.jumpMenu.innerHTML = '';
+      for (let i = 0; i < this.total; i++) {
+        const item = document.createElement('div');
+        item.className = 'jump-item' + (i === this.current ? ' active' : '');
+        item.innerHTML = `<span class="jump-num">${i + 1}</span><span>${slideTitles[i]}</span>`;
+        item.addEventListener('click', () => {
+          this.jumpMenu.classList.remove('visible');
+          this.goTo(i);
+        });
+        this.jumpMenu.appendChild(item);
+      }
+    }
+
+    onKey(e) {
+      if (this.overviewOpen) {
+        if (e.key === 'Escape') {
+          this.closeOverview();
+          e.preventDefault();
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case ' ':
+          e.preventDefault();
+          this.next();
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          e.preventDefault();
+          this.prev();
+          break;
+        case 'Home':
+          e.preventDefault();
+          this.goTo(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          this.goTo(this.total - 1);
+          break;
+        case 'Escape':
+          e.preventDefault();
+          this.openOverview();
+          break;
+      }
+    }
+
+    handleSwipe() {
+      const diff = this.touchStartX - this.touchEndX;
+      if (Math.abs(diff) > 60) {
+        if (diff > 0) this.next();
+        else this.prev();
+      }
+    }
+
+    goTo(index, direction) {
+      if (index === this.current || this.isAnimating || index < 0 || index >= this.total) return;
+
+      this.isAnimating = true;
+      const dir = direction || (index > this.current ? 'forward' : 'backward');
+      const oldSlide = this.slides[this.current];
+      const newSlide = this.slides[index];
+
+      /* Reset animations on new slide */
+      this.resetAnimations(index);
+
+      /* Exit old */
+      oldSlide.classList.remove('active');
+      oldSlide.classList.add(dir === 'forward' ? 'exit-left' : 'exit-right');
+
+      /* Enter new */
+      newSlide.style.transform = dir === 'forward' ? 'translateX(60px)' : 'translateX(-60px)';
+      newSlide.style.opacity = '0';
+      newSlide.classList.add('active');
+
+      /* Force reflow */
+      void newSlide.offsetWidth;
+
+      newSlide.style.transform = '';
+      newSlide.style.opacity = '';
+
+      this.current = index;
+      this.updateUI();
+
+      /* Trigger animations */
+      setTimeout(() => {
+        this.triggerAnimations(index);
+        this.animateCounters(index);
+      }, 100);
+
+      setTimeout(() => {
+        oldSlide.classList.remove('exit-left', 'exit-right');
+        this.isAnimating = false;
+      }, 600);
+    }
+
+    next() {
+      if (this.current < this.total - 1) this.goTo(this.current + 1, 'forward');
+    }
+
+    prev() {
+      if (this.current > 0) this.goTo(this.current - 1, 'backward');
+    }
+
+    updateUI() {
+      /* Progress */
+      const pct = ((this.current + 1) / this.total) * 100;
+      this.progressBar.style.width = pct + '%';
+
+      /* Counter */
+      this.counter.textContent = (this.current + 1) + ' / ' + this.total;
+
+      /* Nav buttons */
+      this.btnPrev.disabled = this.current === 0;
+      this.btnNext.disabled = this.current === this.total - 1;
+
+      /* Hash */
+      history.replaceState(null, '', '#slide-' + (this.current + 1));
+
+      /* Jump menu active state */
+      const items = this.jumpMenu.querySelectorAll('.jump-item');
+      items.forEach((item, i) => {
+        item.classList.toggle('active', i === this.current);
+      });
+
+      /* Overview active state */
+      const thumbs = this.overviewGrid.querySelectorAll('.overview-thumb');
+      thumbs.forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === this.current);
+      });
+    }
+
+    resetAnimations(index) {
+      const slide = this.slides[index];
+      const els = slide.querySelectorAll('.anim-fade');
+      els.forEach(el => el.classList.remove('visible'));
+    }
+
+    triggerAnimations(index) {
+      const slide = this.slides[index];
+      const els = slide.querySelectorAll('.anim-fade');
+      els.forEach(el => el.classList.add('visible'));
+    }
+
+    animateCounters(index) {
+      const slide = this.slides[index];
+      const counters = slide.querySelectorAll('[data-count]');
+      counters.forEach(el => {
+        const target = parseFloat(el.getAttribute('data-count'));
+        const prefix = el.getAttribute('data-prefix') || '';
+        const suffix = el.getAttribute('data-suffix') || '';
+        const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+        const duration = 1200;
+        const start = performance.now();
+
+        const step = (now) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = target * eased;
+
+          if (decimals > 0) {
+            el.textContent = prefix + current.toFixed(decimals) + suffix;
+          } else {
+            el.textContent = prefix + Math.round(current) + suffix;
+          }
+
+          if (progress < 1) requestAnimationFrame(step);
+        };
+
+        requestAnimationFrame(step);
+      });
+    }
+
+    openOverview() {
+      this.overviewOpen = true;
+      this.overviewOverlay.classList.add('visible');
+    }
+
+    closeOverview() {
+      this.overviewOpen = false;
+      this.overviewOverlay.classList.remove('visible');
+    }
+  }
+
+  /* ─── MOBILE COPY LINK ─── */
+  window.copyLink = function() {
+    const btn = document.getElementById('copy-link-btn');
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Link to Open on Desktop'; }, 2000);
+    }).catch(() => {
+      /* Fallback */
+      const ta = document.createElement('textarea');
+      ta.value = window.location.href;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Link to Open on Desktop'; }, 2000);
+    });
+  };
+
+  /* ─── INIT ─── */
+  document.addEventListener('DOMContentLoaded', () => {
+    new SlideShow();
+  });
+
+})();
+</script>
+</body>
+</html>
