@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Studio × Binladin — Partnership Proposal</title>
+<link rel="icon" type="image/jpeg" href="../logo.jpeg">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM
+   ═══════════════════════════════════════════ */
+:root {
+  --bg-primary: #0a0e27;
+  --bg-secondary: #0f1538;
+  --bg-card: rgba(15, 21, 56, 0.65);
+  --border-card: rgba(0, 212, 255, 0.12);
+  --accent-blue: #00d4ff;
+  --accent-gold: #ffd700;
+  --accent-emerald: #00c48c;
+  --accent-red: #ff4d6a;
+  --accent-orange: #ff5619;
+  --text-primary: #edf2ff;
+  --text-secondary: rgba(237, 242, 255, 0.6);
+  --text-muted: rgba(237, 242, 255, 0.35);
+  --glass-bg: rgba(15, 21, 56, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 24px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition-slide: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  --font-heading: 'Space Grotesk', -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE BLOCK
+   ═══════════════════════════════════════════ */
+#mobile-block {
+  display: none;
+  position: fixed; inset: 0; z-index: 10000;
+  background: linear-gradient(135deg, #070a1f 0%, #0d1235 50%, #0a0e27 100%);
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 2rem;
+}
+#mobile-block h2 { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+#mobile-block .mobile-subtitle { font-size: 1.1rem; color: var(--text-secondary); direction: rtl; margin-bottom: 0.5rem; line-height: 1.6; }
+#mobile-block .mobile-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; }
+#mobile-block .mobile-icon { font-size: 3rem; margin-bottom: 1.5rem; }
+#mobile-block button {
+  padding: 0.875rem 1.75rem; background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px;
+  color: var(--accent-blue); font-size: 0.95rem; font-weight: 500;
+  cursor: pointer; transition: all 0.3s; font-family: var(--font-body);
+}
+#mobile-block button:hover { background: rgba(0, 212, 255, 0.18); }
+#mobile-block .mobile-logo {
+  display: flex; align-items: center; gap: 10px; margin-top: 2rem;
+}
+#mobile-block .mobile-logo img { width: 28px; height: 28px; border-radius: 6px; }
+#mobile-block .mobile-logo span { font-weight: 700; font-size: 0.9rem; color: var(--accent-orange); }
+
+@media (max-width: 768px) {
+  #mobile-block { display: flex !important; }
+  #slides-container, #progress-bar, #slide-counter, #jump-btn, #jump-menu, #overview-overlay { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════ */
+#progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent-orange), var(--accent-gold));
+  box-shadow: 0 0 12px var(--accent-orange);
+  z-index: 1000;
+  transition: width 0.4s ease;
+}
+
+/* ═══════════════════════════════════════════
+   SLIDE CONTAINER
+   ═══════════════════════════════════════════ */
+#slides-container {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+}
+
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 60px 80px 100px;
+  opacity: 0; transform: translateX(60px);
+  transition: opacity var(--transition-slide), transform var(--transition-slide);
+  pointer-events: none; overflow-y: auto;
+}
+.slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; z-index: 1; }
+.slide.exit-left { opacity: 0; transform: translateX(-60px); }
+.slide.exit-right { opacity: 0; transform: translateX(60px); }
+
+.slide-inner { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════ */
+h1 {
+  font-family: var(--font-heading);
+  font-size: 2.8rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.15;
+  margin-bottom: 40px;
+}
+h3.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--accent-blue); margin-bottom: 12px;
+}
+h3.label.gold { color: var(--accent-gold); }
+h3.label.emerald { color: var(--accent-emerald); }
+h3.label.red { color: var(--accent-red); }
+h3.label.orange { color: var(--accent-orange); }
+
+p { font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); }
+
+/* ═══════════════════════════════════════════
+   GLASS CARDS
+   ═══════════════════════════════════════════ */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.glass-sm {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+}
+.glass:hover, .glass-sm:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+  transition: border-color var(--transition-fast);
+}
+
+.card-blue { border-color: rgba(0, 212, 255, 0.25); }
+.card-gold { border-color: rgba(255, 215, 0, 0.25); }
+.card-emerald { border-color: rgba(0, 196, 140, 0.25); }
+.card-red { border-color: rgba(255, 77, 106, 0.25); }
+.card-orange { border-color: rgba(255, 86, 25, 0.25); }
+
+/* ═══════════════════════════════════════════
+   STATS
+   ═══════════════════════════════════════════ */
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 3.2rem; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1;
+}
+.stat-number.blue { color: var(--accent-blue); }
+.stat-number.gold { color: var(--accent-gold); }
+.stat-number.emerald { color: var(--accent-emerald); }
+.stat-number.red { color: var(--accent-red); }
+.stat-number.orange { color: var(--accent-orange); }
+
+.stat-label { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-top: 8px; }
+.stat-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+
+/* ═══════════════════════════════════════════
+   GRIDS
+   ═══════════════════════════════════════════ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.flex-col { display: flex; flex-direction: column; }
+.gap-16 { gap: 16px; }
+.gap-24 { gap: 24px; }
+.gap-32 { gap: 32px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mb-24 { margin-bottom: 24px; }
+.w-full { width: 100%; }
+.text-center { text-align: center; }
+
+/* ═══════════════════════════════════════════
+   CARD ELEMENTS
+   ═══════════════════════════════════════════ */
+.card-icon { font-size: 2rem; margin-bottom: 16px; }
+.card-title { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 10px; }
+.card-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   ICON CIRCLES
+   ═══════════════════════════════════════════ */
+.icon-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; flex-shrink: 0;
+}
+.icon-circle.blue { background: rgba(0, 212, 255, 0.12); }
+.icon-circle.gold { background: rgba(255, 215, 0, 0.12); }
+.icon-circle.emerald { background: rgba(0, 196, 140, 0.12); }
+.icon-circle.orange { background: rgba(255, 86, 25, 0.12); }
+
+/* ═══════════════════════════════════════════
+   COMPARISON TABLE
+   ═══════════════════════════════════════════ */
+.compare-row {
+  display: grid; grid-template-columns: 160px 1fr 1fr; gap: 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.compare-row:last-child { border-bottom: none; }
+.compare-label { padding: 16px 20px; font-weight: 600; font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; }
+.compare-cell { padding: 16px 20px; font-size: 0.95rem; display: flex; align-items: center; }
+.compare-cell.highlight { color: var(--accent-emerald); font-weight: 600; }
+.compare-header { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 16px 20px; border-bottom: 1px solid var(--glass-border); }
+
+/* ═══════════════════════════════════════════
+   STACK LAYERS
+   ═══════════════════════════════════════════ */
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.stack-layer {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm); padding: 20px 28px;
+  display: flex; align-items: center; gap: 16px;
+  transition: transform var(--transition-fast);
+}
+.stack-layer:hover { transform: translateX(6px); }
+.stack-layer.blue { border-left: 3px solid var(--accent-blue); }
+.stack-layer.gold { border-left: 3px solid var(--accent-gold); }
+.stack-layer.emerald { border-left: 3px solid var(--accent-emerald); }
+.stack-layer.orange { border-left: 3px solid var(--accent-orange); }
+.stack-layer .layer-title { font-weight: 700; font-size: 1rem; }
+.stack-layer .layer-desc { font-size: 0.85rem; color: var(--text-secondary); }
+
+/* ═══════════════════════════════════════════
+   COST COMPARISON CARDS
+   ═══════════════════════════════════════════ */
+.cost-card { display: flex; flex-direction: column; gap: 8px; }
+.cost-card .cost-label { font-weight: 600; font-size: 0.9rem; }
+.cost-card .cost-old { font-size: 1.1rem; color: var(--accent-red); text-decoration: line-through; opacity: 0.7; }
+.cost-card .cost-new { font-size: 1.4rem; font-weight: 800; color: var(--accent-emerald); }
+
+/* ═══════════════════════════════════════════
+   BOTTOM ELEMENTS
+   ═══════════════════════════════════════════ */
+.bottom-quote {
+  margin-top: 32px; padding: 20px 28px;
+  border-left: 3px solid var(--accent-blue);
+  background: rgba(0, 212, 255, 0.04);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 1rem; color: var(--text-secondary); font-style: italic;
+}
+.bottom-line { margin-top: 24px; font-size: 1rem; color: var(--text-secondary); text-align: center; }
+.source-line { margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); text-align: center; }
+
+/* ═══════════════════════════════════════════
+   COVER SLIDE
+   ═══════════════════════════════════════════ */
+.cover-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;
+}
+.cover-bg::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255, 86, 25, 0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 50%, rgba(255, 215, 0, 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 100%, rgba(0, 196, 140, 0.05) 0%, transparent 40%);
+  animation: coverPulse 12s ease-in-out infinite alternate;
+}
+@keyframes coverPulse {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-2%, 1%) scale(1.02); }
+  100% { transform: translate(1%, -1%) scale(1); }
+}
+
+.cover-title {
+  font-family: var(--font-heading);
+  font-size: 4.5rem; font-weight: 800;
+  letter-spacing: -0.04em; line-height: 1.05;
+  background: linear-gradient(135deg, var(--text-primary) 0%, rgba(237, 242, 255, 0.7) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 12px;
+}
+.cover-subtitle { font-size: 1.3rem; color: var(--text-secondary); font-weight: 400; margin-bottom: 48px; }
+.cover-stats { display: flex; gap: 32px; margin-bottom: 48px; }
+.cover-stat-card {
+  background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border); border-radius: var(--radius);
+  padding: 28px 36px; text-align: center; min-width: 160px;
+  transition: transform var(--transition-fast);
+}
+.cover-stat-card:hover { transform: translateY(-4px); }
+.cover-stat-card.blue { border-color: rgba(0, 212, 255, 0.25); }
+.cover-stat-card.blue .cover-stat-value { color: var(--accent-blue); }
+.cover-stat-card.gold { border-color: rgba(255, 215, 0, 0.25); }
+.cover-stat-card.gold .cover-stat-value { color: var(--accent-gold); }
+.cover-stat-card.emerald { border-color: rgba(0, 196, 140, 0.25); }
+.cover-stat-card.emerald .cover-stat-value { color: var(--accent-emerald); }
+.cover-stat-card.orange { border-color: rgba(255, 86, 25, 0.25); }
+.cover-stat-card.orange .cover-stat-value { color: var(--accent-orange); }
+
+.cover-stat-value { font-family: var(--font-heading); font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.cover-stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px; font-weight: 500; }
+
+.cover-logo { display: flex; align-items: center; gap: 10px; }
+.cover-logo img { width: 32px; height: 32px; border-radius: 6px; }
+.cover-logo span { font-weight: 700; font-size: 0.95rem; color: var(--accent-orange); }
+
+/* ═══════════════════════════════════════════
+   PATH CARDS — Enhanced
+   ═══════════════════════════════════════════ */
+.path-card-featured {
+  background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+  border: 2px solid rgba(255, 86, 25, 0.3); border-radius: var(--radius);
+  padding: 36px; position: relative; overflow: hidden;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+.path-card-featured:hover { transform: translateY(-4px); border-color: rgba(255, 86, 25, 0.5); }
+.path-card-featured::before {
+  content: 'RECOMMENDED'; position: absolute; top: 20px; right: -32px;
+  background: var(--accent-orange); color: white; font-size: 0.6rem;
+  font-weight: 700; letter-spacing: 0.1em; padding: 4px 40px;
+  transform: rotate(45deg); z-index: 1;
+}
+
+.path-card-secondary {
+  background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(0, 212, 255, 0.2); border-radius: var(--radius);
+  padding: 36px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+.path-card-secondary:hover { transform: translateY(-4px); border-color: rgba(0, 212, 255, 0.4); }
+
+.path-label {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px;
+}
+.path-title {
+  font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+  margin-bottom: 8px;
+}
+.path-subtitle { font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+
+.path-list { list-style: none; padding: 0; }
+.path-list li {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;
+}
+.path-list li .dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 7px;
+}
+
+/* ═══════════════════════════════════════════
+   SHIFT DIAGRAM
+   ═══════════════════════════════════════════ */
+.shift-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center;
+}
+.shift-card { padding: 28px; }
+.shift-card ul { list-style: none; padding: 0; }
+.shift-card ul li {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 6px 0; font-size: 0.9rem; line-height: 1.5;
+}
+.shift-arrow {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.shift-arrow-amount {
+  font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;
+  color: var(--accent-orange);
+}
+.shift-arrow-line {
+  width: 2px; height: 40px;
+  background: linear-gradient(to bottom, var(--accent-orange), var(--accent-gold));
+}
+.shift-arrow-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; }
+
+/* ═══════════════════════════════════════════
+   PARTNERSHIP COLUMNS
+   ═══════════════════════════════════════════ */
+.partnership-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: start;
+}
+.partnership-col ul { list-style: none; padding: 0; }
+.partnership-col ul li {
+  padding: 10px 0; border-bottom: 1px solid var(--glass-border);
+  font-size: 0.95rem; color: var(--text-secondary);
+}
+.partnership-col ul li:last-child { border-bottom: none; }
+.jv-badge {
+  display: flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 86, 25, 0.15), rgba(255, 215, 0, 0.15));
+  border: 2px solid rgba(255, 86, 25, 0.3);
+  font-weight: 900; font-size: 1.2rem; align-self: center;
+}
+
+/* ═══════════════════════════════════════════
+   BREAKDOWN TABLE
+   ═══════════════════════════════════════════ */
+.breakdown-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 28px; border-bottom: 1px solid var(--glass-border);
+}
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-label { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+.breakdown-detail { font-size: 0.82rem; color: var(--text-secondary); }
+.breakdown-amount { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); }
+
+/* ═══════════════════════════════════════════
+   FEATURE CARDS
+   ═══════════════════════════════════════════ */
+.feature-title {
+  font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem;
+  color: var(--accent-blue); margin-bottom: 12px;
+}
+.feature-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   SECTOR PILLS
+   ═══════════════════════════════════════════ */
+.sector-icon { font-size: 1.8rem; margin-bottom: 12px; }
+.sector-title { font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+.sector-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* ═══════════════════════════════════════════
+   CLOSING
+   ═══════════════════════════════════════════ */
+.closing-highlight {
+  font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700;
+  color: var(--accent-orange); letter-spacing: 0.04em;
+}
+.closing-metrics { font-size: 1.05rem; color: var(--text-secondary); margin-top: 12px; }
+.closing-contact { font-size: 0.95rem; color: var(--text-muted); margin-top: 8px; }
+
+/* ═══════════════════════════════════════════
+   PROOF CARD
+   ═══════════════════════════════════════════ */
+.proof-row {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--glass-bg); border: 1px solid rgba(255, 86, 25, 0.15);
+  border-radius: var(--radius-sm); padding: 20px 28px;
+}
+.proof-badge { font-size: 2rem; flex-shrink: 0; }
+.proof-content { flex: 1; }
+.proof-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.proof-desc { font-size: 0.82rem; color: var(--text-secondary); }
+.proof-stats { display: flex; gap: 24px; }
+.proof-stat { text-align: center; }
+.proof-stat .val { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent-orange); }
+.proof-stat .lbl { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
+
+/* ═══════════════════════════════════════════
+   VERSUS BOX
+   ═══════════════════════════════════════════ */
+.vs-box {
+  background: rgba(255, 77, 106, 0.04);
+  border: 1px solid rgba(255, 77, 106, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+}
+.vs-title { font-weight: 700; font-size: 0.9rem; color: var(--accent-red); margin-bottom: 8px; }
+.vs-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
+
+#slide-counter {
+  position: fixed; bottom: 40px; right: 40px;
+  font-size: 0.8rem; color: var(--text-muted);
+  font-variant-numeric: tabular-nums; z-index: 100;
+}
+
+/* ═══════════════════════════════════════════
+   JUMP MENU
+   ═══════════════════════════════════════════ */
+#jump-btn {
+  position: fixed; top: 24px; right: 24px;
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px);
+  color: var(--text-secondary); font-size: 1.1rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  z-index: 200; outline: none; transition: all 0.25s;
+}
+#jump-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+#jump-menu {
+  position: fixed; top: 72px; right: 24px;
+  width: 280px; max-height: 70vh;
+  background: rgba(16, 20, 50, 0.92);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 8px 0;
+  overflow-y: auto; z-index: 200;
+  opacity: 0; pointer-events: none;
+  transform: translateY(-8px);
+  transition: all 0.25s;
+}
+#jump-menu.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+.jump-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; cursor: pointer;
+  transition: background 0.2s; font-size: 0.85rem; color: var(--text-secondary);
+}
+.jump-item:hover { background: rgba(255,255,255,0.06); }
+.jump-item.active { background: rgba(255, 86, 25, 0.08); color: var(--text-primary); }
+.jump-num {
+  width: 24px; height: 24px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+  background: rgba(255,255,255,0.06); color: var(--text-muted); flex-shrink: 0;
+}
+.jump-item.active .jump-num { background: rgba(255, 86, 25, 0.15); color: var(--accent-orange); }
+
+/* ═══════════════════════════════════════════
+   OVERVIEW MODE
+   ═══════════════════════════════════════════ */
+#overview-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(8, 11, 30, 0.95);
+  backdrop-filter: blur(12px);
+  display: none; flex-direction: column;
+  padding: 48px 60px; overflow-y: auto;
+}
+#overview-overlay.open { display: flex; }
+
+#overview-title {
+  font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700;
+  margin-bottom: 32px; color: var(--text-secondary);
+}
+#overview-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; flex: 1;
+}
+.overview-thumb {
+  aspect-ratio: 16/10; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer; transition: all 0.25s;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 1rem; text-align: center;
+}
+.overview-thumb:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); transform: translateY(-3px); }
+.overview-thumb.active { border-color: rgba(255, 86, 25, 0.4); background: rgba(255, 86, 25, 0.06); }
+.thumb-num { font-size: 1.5rem; font-weight: 700; color: rgba(255,255,255,0.15); margin-bottom: 8px; }
+.overview-thumb.active .thumb-num { color: rgba(255, 86, 25, 0.3); }
+.thumb-title { font-size: 0.78rem; color: var(--text-muted); line-height: 1.3; }
+.overview-thumb.active .thumb-title { color: var(--text-primary); }
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+.anim-fade {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-fade.visible { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.25s; }
+.d3 { transition-delay: 0.4s; }
+.d4 { transition-delay: 0.55s; }
+.d5 { transition-delay: 0.7s; }
+.d6 { transition-delay: 0.85s; }
+.d7 { transition-delay: 1s; }
+
+/* ═══════════════════════════════════════════
+   PREMIUM ENHANCEMENTS
+   ═══════════════════════════════════════════ */
+
+/* Subtle noise texture overlay */
+#slides-container::after {
+  content: ''; position: fixed; inset: 0; z-index: 999; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* Ambient glow on slides */
+.slide::before {
+  content: ''; position: absolute; top: 50%; left: 50%; width: 120%; height: 120%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at 30% 40%, rgba(255,86,25,0.03) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 60%, rgba(0,212,255,0.025) 0%, transparent 50%);
+  pointer-events: none; z-index: -1;
+}
+
+/* Elevated glass hover with glow */
+.glass { transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+.glass:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.05); }
+.glass-sm { transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+.glass-sm:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+
+/* Stat number shimmer on hover */
+.stat-number { transition: text-shadow 0.3s ease; }
+.glass:hover .stat-number.blue { text-shadow: 0 0 20px rgba(0,212,255,0.3); }
+.glass:hover .stat-number.gold { text-shadow: 0 0 20px rgba(255,215,0,0.3); }
+.glass:hover .stat-number.emerald { text-shadow: 0 0 20px rgba(0,196,140,0.3); }
+.glass:hover .stat-number.red { text-shadow: 0 0 20px rgba(255,77,106,0.3); }
+.glass:hover .stat-number.orange { text-shadow: 0 0 20px rgba(255,86,25,0.3); }
+
+/* Refined progress bar */
+#progress-bar { height: 2px; box-shadow: 0 0 16px rgba(255,86,25,0.4), 0 0 40px rgba(255,86,25,0.15); }
+
+/* Slide counter refinement */
+#slide-counter { font-family: var(--font-mono); letter-spacing: 0.05em; }
+
+/* Cover title ambient glow */
+.cover-title { text-shadow: 0 0 80px rgba(255,86,25,0.1); }
+
+/* Path card featured glow */
+.path-card-featured { box-shadow: 0 0 40px rgba(255,86,25,0.06); }
+.path-card-featured:hover { box-shadow: 0 0 60px rgba(255,86,25,0.12); }
+
+/* Proof row subtle lift */
+.proof-row { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.proof-row:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+
+/* ═══════════════════════════════════════════
+   NEXT STEPS
+   ═══════════════════════════════════════════ */
+.steps-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+.step-row {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm); padding: 20px 28px;
+  transition: transform var(--transition-fast);
+}
+.step-row:hover { transform: translateX(6px); }
+.step-num-circle {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading); font-weight: 800; font-size: 1rem;
+  flex-shrink: 0;
+}
+.step-text { flex: 1; font-size: 0.95rem; }
+.step-timeline { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     MOBILE BLOCK
+     ═══════════════════════════════════════════ -->
+<div id="mobile-block">
+  <div class="mobile-icon">&#128187;</div>
+  <h2>Desktop Only</h2>
+  <div class="mobile-subtitle">&#1607;&#1584;&#1575; &#1575;&#1604;&#1593;&#1585;&#1590; &#1605;&#1615;&#1589;&#1605;&#1605; &#1604;&#1604;&#1593;&#1585;&#1590; &#1593;&#1604;&#1609; &#1587;&#1591;&#1581; &#1575;&#1604;&#1605;&#1603;&#1578;&#1576;</div>
+  <div class="mobile-desc">This presentation requires a desktop screen for the best experience.</div>
+  <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{this.textContent='Copied!'})">Copy Link to Open on Desktop</button>
+  <div class="mobile-logo">
+    <img src="../logo.jpeg" alt="One Studio">
+    <span>One Studio</span>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<!-- OVERVIEW MODE -->
+<div id="overview-overlay">
+  <div id="overview-title">All Slides</div>
+  <div id="overview-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDES
+     ═══════════════════════════════════════════ -->
+<div id="slides-container">
+
+  <!-- ═════════════ SLIDE 1: COVER ═════════════ -->
+  <div class="slide" data-slide="1">
+    <div class="cover-bg"></div>
+    <div class="slide-inner text-center flex-col" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="anim-fade d1">
+        <div class="cover-title" style="font-size:3.8rem;">One Studio <span style="-webkit-text-fill-color:var(--accent-gold);">&times;</span> Binladin</div>
+      </div>
+      <div class="anim-fade d2">
+        <div class="cover-subtitle">A Partnership Proposal</div>
+      </div>
+      <div class="cover-stats anim-fade d3">
+        <div class="cover-stat-card orange">
+          <div class="cover-stat-value">$1M</div>
+          <div class="cover-stat-label">Annual Investment</div>
+        </div>
+        <div class="cover-stat-card blue">
+          <div class="cover-stat-value">10-20</div>
+          <div class="cover-stat-label">Ventures / Year</div>
+        </div>
+        <div class="cover-stat-card emerald">
+          <div class="cover-stat-value">$25K</div>
+          <div class="cover-stat-label">Monthly Ops</div>
+        </div>
+      </div>
+      <div class="cover-logo anim-fade d4">
+        <img src="../logo.jpeg" alt="One Studio">
+        <span>One Studio</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 2: WHO WE ARE ═════════════ -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">WHO WE ARE</h3>
+      <h1 class="anim-fade d2" style="margin-bottom:24px;"><span style="color:var(--accent-orange);">One Studio</span> &mdash; Fastest Value Delivery</h1>
+      <div class="grid-2 anim-fade d3">
+        <div class="glass">
+          <div class="feature-title">16+ Ventures</div>
+          <div class="feature-desc">Government platform clients (Sentra), Salla marketplace products shipping now, co-founded ventures (xSpace, RevXAI, TaxFlow) &mdash; across enterprise, consumer, and platform economy.</div>
+        </div>
+        <div class="glass">
+          <div class="feature-title" style="color:var(--accent-gold);">Nala &amp; 7 AI Agents</div>
+          <div class="feature-desc">HQ orchestrator + finance agent (775+ balanced journal entries), web developer, integrations monitor, and a Venture Founder agent that generated 15 tasks and 4 strategic decisions autonomously.</div>
+        </div>
+        <div class="glass">
+          <div class="feature-title" style="color:var(--accent-emerald);">FLOW v3.0</div>
+          <div class="feature-desc">Validated through 19 panel meetings across 11 industries &mdash; fintech, gaming, healthtech, government, solo founders. Externally stress-tested, not internally rationalized.</div>
+        </div>
+        <div class="glass">
+          <div class="feature-title" style="color:var(--accent-orange);">Product Engineers</div>
+          <div class="feature-desc">30+ team across Palestine, Jordan, Egypt, Turkey &mdash; transitioning from fullstack developers to product engineers with venture builder experience. They don't just code &mdash; they think in products.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 4: WHERE WE STAND ═════════════ -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">TRANSPARENCY</h3>
+      <h1 class="anim-fade d2">Where We Stand Today</h1>
+      <div class="grid-2 anim-fade d3" style="align-items:start;">
+        <div class="glass" style="border-color: rgba(255,215,0,0.15);">
+          <div class="card-title" style="color:var(--accent-gold);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:20px;">What We Have</div>
+          <div class="flex-col gap-16">
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--accent-gold);">&#9679;</span> <span style="font-size:0.92rem;">Government &amp; enterprise clients on our platform &mdash; Google &amp; Meltwater integrations, security-hardened, pen-tested</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--accent-gold);">&#9679;</span> <span style="font-size:0.92rem;">Products live on Salla Marketplace with paying merchants</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--accent-gold);">&#9679;</span> <span style="font-size:0.92rem;">7 AI agents running real daily ops &mdash; accounting, web dev, portfolio monitoring, venture founding</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--accent-gold);">&#9679;</span> <span style="font-size:0.92rem;">Graduated venture: iStoria ($100K MRR, 5M+ downloads)</span></div>
+          </div>
+        </div>
+        <div class="glass" style="border-color: rgba(255,255,255,0.08);">
+          <div class="card-title" style="color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:20px;">What We Need</div>
+          <div class="flex-col gap-16">
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--text-muted);">&#9679;</span> <span style="font-size:0.92rem;color:var(--text-secondary);">Capital to stop splitting team across services</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--text-muted);">&#9679;</span> <span style="font-size:0.92rem;color:var(--text-secondary);">Saudi presence, network, and market credibility</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--text-muted);">&#9679;</span> <span style="font-size:0.92rem;color:var(--text-secondary);">A partner who sees the long game in AI-native building</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--text-muted);">&#9679;</span> <span style="font-size:0.92rem;color:var(--text-secondary);">Institutional relationships for GovTech/enterprise access</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-quote anim-fade d4">"We have the machine. We need the fuel and the launchpad."</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 5: THE AGENTIC SHIFT ═════════════ -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">THIS CHANGES EVERYTHING</h3>
+      <h1 class="anim-fade d2">The Agentic Shift</h1>
+
+      <!-- ALAA STORY -->
+      <div class="glass anim-fade d3" style="border-color:rgba(255,215,0,0.2);padding:28px 32px;">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+          <div class="icon-circle gold">&#128104;&#8205;&#128187;</div>
+          <div>
+            <div style="font-weight:700;font-size:1.1rem;">Alaa &mdash; CEO Builds His Own Venture</div>
+            <div style="font-size:0.85rem;color:var(--text-secondary);">CEO of One Studio, testing the new era by his own hand</div>
+          </div>
+        </div>
+        <div class="grid-4" style="gap:16px;">
+          <div class="glass-sm text-center" style="padding:16px;">
+            <div class="stat-number gold" style="font-size:2rem;">6 days</div>
+            <div class="stat-sub">Full MVP delivered</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">What used to take a team 6 months</div>
+          </div>
+          <div class="glass-sm text-center" style="padding:16px;">
+            <div class="stat-number emerald" style="font-size:2rem;">Hours</div>
+            <div class="stat-sub">Live iteration cycle</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Product updated between client calls</div>
+          </div>
+          <div class="glass-sm text-center" style="padding:16px;">
+            <div class="stat-number blue" style="font-size:2rem;">0</div>
+            <div class="stat-sub">Developers needed</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Venture validated before hiring began</div>
+          </div>
+          <div class="glass-sm text-center" style="padding:16px;">
+            <div class="stat-number orange" style="font-size:2rem;">Real</div>
+            <div class="stat-sub">Client feedback loop</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Not a prototype &mdash; a working product shown to buyers</div>
+          </div>
+        </div>
+        <div style="font-size:0.88rem;color:var(--text-secondary);margin-top:16px;line-height:1.6;">The CEO didn't wait for a team. He built, showed clients, iterated in hours, and <strong style="color:var(--text-primary);">proved the market before spending a single dollar on engineering</strong>. When developers joined, they inherited a validated product &mdash; not a guess.</div>
+      </div>
+
+      <!-- QAYM DOCTORY — NEXT LEVEL -->
+      <div class="glass-sm anim-fade d4" style="margin-top:20px;border-color:rgba(255,86,25,0.2);display:flex;align-items:flex-start;gap:16px;">
+        <div style="font-size:1.5rem;flex-shrink:0;">&#9889;</div>
+        <div>
+          <div style="font-weight:700;font-size:0.9rem;color:var(--accent-orange);margin-bottom:4px;">Next level &mdash; Qaym Doctory: Full Agentic Company</div>
+          <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">5 AI agents (CEO, CTO, CMO, Content, Sales) built an entire company operation from a few lines of text &mdash; 7 strategy documents in <strong style="color:var(--text-primary);">22 minutes</strong>. The CEO agent pushed back on estimates demanding real numbers. Not just isolated agents &mdash; a <strong style="color:var(--text-primary);">full venture builder with cumulative learning, ongoing collaboration, and real feedback loops</strong>. We're heavily testing this model now.</div>
+        </div>
+      </div>
+
+      <div class="bottom-line anim-fade d5" style="margin-top:16px;">From one person validating a venture in days, to an AI team building a company from text &mdash; <strong style="color:var(--accent-orange);">this is how we build</strong></div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 6: TWO PATHS ═════════════ -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <h3 class="label orange anim-fade d1">THE PROPOSAL</h3>
+      <h1 class="anim-fade d2">Two Paths Forward</h1>
+      <div class="grid-2 anim-fade d3" style="gap:32px;">
+        <div class="path-card-featured">
+          <div class="path-label" style="color:var(--accent-orange);">Path A &mdash; Recommended</div>
+          <div class="path-title">Join the Studio</div>
+          <div class="path-subtitle">Invest directly in One Studio. Access the full portfolio, the team, and a <strong style="color:var(--text-primary);">dedicated Micro Ventures portfolio</strong> as an expansion arm.</div>
+          <ul class="path-list">
+            <li><span class="dot" style="background:var(--accent-orange);"></span> Full studio access &mdash; 16+ ventures, team, methodology</li>
+            <li><span class="dot" style="background:var(--accent-orange);"></span> New Micro Ventures portfolio built from inside</li>
+            <li><span class="dot" style="background:var(--accent-orange);"></span> Board seat &amp; first right on Saudi opportunities</li>
+            <li><span class="dot" style="background:var(--accent-orange);"></span> Shared infrastructure, shared learnings</li>
+          </ul>
+        </div>
+        <div class="path-card-secondary">
+          <div class="path-label" style="color:var(--accent-blue);">Path B &mdash; Alternative</div>
+          <div class="path-title">A Separate Entity</div>
+          <div class="path-subtitle">Create a standalone Micro Venture entity focused <strong style="color:var(--text-primary);">exclusively on Agentic-native venture building</strong>. Clean, focused, new.</div>
+          <ul class="path-list">
+            <li><span class="dot" style="background:var(--accent-blue);"></span> Fresh entity &mdash; no legacy, pure focus</li>
+            <li><span class="dot" style="background:var(--accent-blue);"></span> Agentic-native from day one</li>
+            <li><span class="dot" style="background:var(--accent-blue);"></span> One Studio as the operating partner</li>
+            <li><span class="dot" style="background:var(--accent-blue);"></span> Clear scope: only new Saudi ventures</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bottom-line anim-fade d4">Both paths share the same engine: <strong style="color:var(--accent-orange);">One Studio's team, methodology, and AI infrastructure</strong></div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 7: PATH A DEEP DIVE ═════════════ -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <h3 class="label orange anim-fade d1">PATH A</h3>
+      <h1 class="anim-fade d2">Join the Studio</h1>
+      <div class="shift-grid anim-fade d3">
+        <div class="glass shift-card" style="border-color: rgba(255,255,255,0.08);">
+          <div class="card-title" style="color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;">Today</div>
+          <ul>
+            <li><span style="color:var(--text-muted);">&#9679;</span> <span style="color:var(--text-secondary);">Revenue from outsourcing services</span></li>
+            <li><span style="color:var(--text-muted);">&#9679;</span> <span style="color:var(--text-secondary);">Co-founding with early equity stakes</span></li>
+            <li><span style="color:var(--text-muted);">&#9679;</span> <span style="color:var(--text-secondary);">Team split across client work</span></li>
+            <li><span style="color:var(--text-muted);">&#9679;</span> <span style="color:var(--text-secondary);">Bootstrapped, limited by cash flow</span></li>
+          </ul>
+        </div>
+        <div class="shift-arrow">
+          <div class="shift-arrow-amount">$1M</div>
+          <div class="shift-arrow-line"></div>
+          <div class="shift-arrow-label">per year</div>
+        </div>
+        <div class="glass shift-card" style="border-color: rgba(255,86,25,0.2);">
+          <div class="card-title" style="color:var(--accent-orange);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;">Tomorrow</div>
+          <ul>
+            <li><span style="color:var(--accent-orange);">&#9679;</span> <strong style="color:var(--text-primary);">Internal ideation engine</strong></li>
+            <li><span style="color:var(--accent-orange);">&#9679;</span> <strong style="color:var(--text-primary);">Dedicated Micro Ventures portfolio</strong></li>
+            <li><span style="color:var(--accent-orange);">&#9679;</span> <strong style="color:var(--text-primary);">Team focused on own ventures</strong></li>
+            <li><span style="color:var(--accent-orange);">&#9679;</span> <strong style="color:var(--text-primary);">Agentic-native &mdash; 5-10x more efficient</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div class="proof-row anim-fade d4" style="margin-top:24px;">
+        <div class="proof-badge">&#127942;</div>
+        <div class="proof-content">
+          <div class="proof-title">Proof: iStoria &mdash; Graduated Venture</div>
+          <div class="proof-desc">Built from zero by this team. Graduated with a studio CTO who now owns 15%. This is what the machine produces.</div>
+        </div>
+        <div class="proof-stats">
+          <div class="proof-stat"><div class="val">$100K</div><div class="lbl">MRR</div></div>
+          <div class="proof-stat"><div class="val">5M+</div><div class="lbl">Downloads</div></div>
+        </div>
+      </div>
+      <div class="proof-row anim-fade d5" style="margin-top:12px;border-color:rgba(255,215,0,0.15);">
+        <div class="proof-badge">&#129309;</div>
+        <div class="proof-content">
+          <div class="proof-title">Already Proven: Dual Builder Model</div>
+          <div class="proof-desc">We run this exact structure today with a 40-year-old Saudi government technology company &mdash; 6+ ventures co-built through the same partner + studio model.</div>
+        </div>
+        <div class="proof-stats">
+          <div class="proof-stat"><div class="val">6+</div><div class="lbl">Ventures</div></div>
+          <div class="proof-stat"><div class="val">40yr</div><div class="lbl">Partner</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 8: PATH A — THE VALUE ═════════════ -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <h3 class="label orange anim-fade d1">PATH A &mdash; WHAT YOU GET</h3>
+      <h1 class="anim-fade d2">The Full Studio Experience</h1>
+      <div class="grid-3 anim-fade d3" style="gap:16px;">
+        <div class="glass-sm card-orange" style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="icon-circle orange" style="width:44px;height:44px;font-size:1.2rem;flex-shrink:0;">&#127963;&#65039;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">Enterprise Platforms</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Sentra &mdash; government clients, Google &amp; Meltwater partnerships, one codebase serving multiple institutions.</div>
+          </div>
+        </div>
+        <div class="glass-sm card-gold" style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="icon-circle gold" style="width:44px;height:44px;font-size:1.2rem;flex-shrink:0;">&#127793;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">Marketplace &amp; Micro Ventures</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Salla apps shipping now. Plus 10-20 new agentic-native ventures per year at $50K each.</div>
+          </div>
+        </div>
+        <div class="glass-sm card-blue" style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="icon-circle blue" style="width:44px;height:44px;font-size:1.2rem;flex-shrink:0;">&#129309;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">Co-Founded Ventures</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">xSpace, RevXAI, TaxFlow &mdash; domain expert + studio. The exact model Abdullah would get.</div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-3 anim-fade d4" style="margin-top:16px;gap:16px;">
+        <div class="glass-sm card-orange" style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="icon-circle orange" style="width:44px;height:44px;font-size:1.2rem;flex-shrink:0;">&#128218;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">Board Seat</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Governance, strategic input, and visibility into every venture decision.</div>
+          </div>
+        </div>
+        <div class="glass-sm card-gold" style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="icon-circle gold" style="width:44px;height:44px;font-size:1.2rem;flex-shrink:0;">&#127942;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">First Right on Saudi</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Every new Saudi venture goes through you first. Your network picks the winners.</div>
+          </div>
+        </div>
+        <div class="glass-sm card-emerald" style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="icon-circle emerald" style="width:44px;height:44px;font-size:1.2rem;flex-shrink:0;">&#128279;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">Network &times; Ventures</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Binladin distribution meets studio products. Your relationships become venture fuel.</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-quote anim-fade d5" style="border-color:var(--accent-orange);margin-top:20px;padding:14px 24px;font-size:0.92rem;">"One investment &mdash; every path unlocked. The studio becomes a venture machine."</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 9: PATH B DEEP DIVE ═════════════ -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <h3 class="label anim-fade d1">PATH B</h3>
+      <h1 class="anim-fade d2">A Separate Micro Venture Entity</h1>
+      <div class="partnership-grid anim-fade d3">
+        <div class="glass partnership-col card-gold">
+          <div class="card-title" style="color:var(--accent-gold);margin-bottom:16px;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;">Abdullah Brings</div>
+          <ul>
+            <li>Growth capital ($1M/year)</li>
+            <li>Saudi CR &amp; entity</li>
+            <li>Distribution network &amp; wasta</li>
+            <li>Government &amp; institutional access</li>
+            <li>Brand credibility in KSA</li>
+          </ul>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <div class="jv-badge">JV</div>
+        </div>
+        <div class="glass partnership-col card-orange">
+          <div class="card-title" style="color:var(--accent-orange);margin-bottom:16px;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;">One Studio Brings</div>
+          <ul>
+            <li>Tech team &amp; product builders</li>
+            <li>FLOW methodology + kill gates</li>
+            <li>AI-native operations (Nala)</li>
+            <li>16+ venture building experience</li>
+            <li>Idea pipeline &amp; validation engine</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid-3 anim-fade d4" style="margin-top:28px;">
+        <div class="glass-sm text-center">
+          <div class="stat-number blue" style="font-size:2.2rem;">10-20</div>
+          <div class="stat-label">Ventures per year</div>
+        </div>
+        <div class="glass-sm text-center">
+          <div class="stat-number gold" style="font-size:2.2rem;">$25K</div>
+          <div class="stat-label">Monthly operations</div>
+        </div>
+        <div class="glass-sm text-center">
+          <div class="stat-number emerald" style="font-size:2.2rem;">100%</div>
+          <div class="stat-label">Agentic-native focus</div>
+        </div>
+      </div>
+      <div class="proof-row anim-fade d5" style="margin-top:20px;border-color:rgba(0,212,255,0.15);">
+        <div class="proof-badge">&#9989;</div>
+        <div class="proof-content">
+          <div class="proof-title" style="color:var(--accent-blue);">Proven Precedent</div>
+          <div class="proof-desc">This exact JV structure runs today &mdash; a 40-year-old Saudi company provides entity + market access, One Studio provides tech + product. Together: 6+ ventures co-built including marketplace apps, consumer products, and AI-native operations.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 10: MICRO VENTURE MODEL ═════════════ -->
+  <div class="slide" data-slide="9">
+    <div class="slide-inner">
+      <h3 class="label gold anim-fade d1">THE MATH</h3>
+      <h1 class="anim-fade d2">$1M &rarr; 20 Ventures</h1>
+      <div class="grid-4 anim-fade d3">
+        <div class="glass card-red text-center">
+          <div class="stat-number red" style="font-size:2.8rem;">14</div>
+          <div class="stat-label">Killed Fast (70%)</div>
+          <div class="stat-sub">$700K invested, learnings captured</div>
+        </div>
+        <div class="glass card-gold text-center">
+          <div class="stat-number gold" style="font-size:2.8rem;">3</div>
+          <div class="stat-label">Small Wins (15%)</div>
+          <div class="stat-sub">$5&ndash;20K MRR each</div>
+        </div>
+        <div class="glass card-emerald text-center">
+          <div class="stat-number emerald" style="font-size:2.8rem;">2</div>
+          <div class="stat-label">Real Businesses (10%)</div>
+          <div class="stat-sub">$50&ndash;200K MRR each</div>
+        </div>
+        <div class="glass card-blue text-center">
+          <div class="stat-number blue" style="font-size:2.8rem;">1</div>
+          <div class="stat-label">Breakout (5%)</div>
+          <div class="stat-sub">$500K+ MRR potential</div>
+        </div>
+      </div>
+      <div class="bottom-line anim-fade d4">Expected portfolio value: <strong style="color:var(--accent-gold);">3&ndash;15x</strong> on $1M deployed &mdash; <strong style="color:var(--accent-emerald);">in 1&ndash;3 years</strong>, not 7&ndash;12</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 11: SAUDI OPPORTUNITY ═════════════ -->
+  <div class="slide" data-slide="10">
+    <div class="slide-inner">
+      <h3 class="label red anim-fade d1">MARKET OPPORTUNITY</h3>
+      <h1 class="anim-fade d2">Capital Rich, Builder Poor</h1>
+      <div class="grid-4 anim-fade d3">
+        <div class="glass text-center">
+          <div class="stat-number blue" style="font-size:2.5rem;">$1.5B</div>
+          <div class="stat-label">Saudi startup funding (2024)</div>
+        </div>
+        <div class="glass text-center">
+          <div class="stat-number gold" style="font-size:2.5rem;">1.2M+</div>
+          <div class="stat-label">SMEs underserved by tech</div>
+        </div>
+        <div class="glass text-center">
+          <div class="stat-number red" style="font-size:2.5rem;">&lt;5</div>
+          <div class="stat-label">Venture studios in KSA</div>
+        </div>
+        <div class="glass text-center">
+          <div class="stat-number emerald" style="font-size:2.5rem;">$3.3T</div>
+          <div class="stat-label">Vision 2030 spending</div>
+        </div>
+      </div>
+      <div class="grid-3 anim-fade d4" style="margin-top:28px;">
+        <div class="glass-sm">
+          <div class="sector-icon">&#127968;</div>
+          <div class="sector-title">PropTech</div>
+          <div class="sector-desc">REGA sandbox, 70% homeownership target</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">&#127963;&#65039;</div>
+          <div class="sector-title">GovTech</div>
+          <div class="sector-desc">Every ministry has digitization budget</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">&#128188;</div>
+          <div class="sector-title">SME SaaS</div>
+          <div class="sector-desc">1.2M+ businesses on WhatsApp + Excel</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">&#127973;</div>
+          <div class="sector-title">HealthTech</div>
+          <div class="sector-desc">Hospital digitization mandate</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">&#128336;</div>
+          <div class="sector-title">Hajj / Umrah</div>
+          <div class="sector-desc">30M visitors by 2030</div>
+        </div>
+        <div class="glass-sm">
+          <div class="sector-icon">&#128176;</div>
+          <div class="sector-title">FinTech</div>
+          <div class="sector-desc">SAMA sandbox, embedded finance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 12: THE NUMBERS ═════════════ -->
+  <div class="slide" data-slide="11">
+    <div class="slide-inner">
+      <h3 class="label gold anim-fade d1">BOTH PATHS</h3>
+      <h1 class="anim-fade d2">The Numbers</h1>
+      <div class="grid-2 anim-fade d3" style="gap:32px;align-items:start;">
+        <div class="glass" style="padding:0;overflow:hidden;">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--glass-border);"><div class="card-title" style="color:var(--accent-orange);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:0;">Annual Investment</div></div>
+          <div class="breakdown-row">
+            <div><div class="breakdown-label">Studio Operations</div><div class="breakdown-detail">Team, AI tools, infrastructure</div></div>
+            <div class="breakdown-amount" style="color:var(--accent-orange);">$25K/mo</div>
+          </div>
+          <div class="breakdown-row">
+            <div><div class="breakdown-label">Venture Capital</div><div class="breakdown-detail">10-20 ventures &times; $50K avg</div></div>
+            <div class="breakdown-amount">$500K-$1M</div>
+          </div>
+          <div class="breakdown-row" style="background:rgba(255,86,25,0.04);">
+            <div><div class="breakdown-label" style="font-size:1.1rem;">Total Annual</div></div>
+            <div class="breakdown-amount" style="color:var(--accent-orange);font-size:1.5rem;">~$1M/yr</div>
+          </div>
+        </div>
+        <div>
+          <div class="glass" style="padding:0;overflow:hidden;">
+            <div class="compare-row" style="background:rgba(255,255,255,0.02);">
+              <div class="compare-label"></div>
+              <div class="compare-header" style="color:var(--text-muted);">Traditional VC</div>
+              <div class="compare-header" style="color:var(--accent-emerald);">Micro Studio</div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-label">Concentration</div>
+              <div class="compare-cell">$2M in 1 startup</div>
+              <div class="compare-cell highlight">$1M across 15-20</div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-label">Time to signal</div>
+              <div class="compare-cell">12&ndash;18 months</div>
+              <div class="compare-cell highlight">4&ndash;8 weeks</div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-label">Cost of failure</div>
+              <div class="compare-cell">$2&ndash;5M</div>
+              <div class="compare-cell highlight">$50K</div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-label">Salvage value</div>
+              <div class="compare-cell">Usually zero</div>
+              <div class="compare-cell highlight">Code, data, learnings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-line anim-fade d4">= Cost of <strong style="color:var(--accent-red);">ONE</strong> traditional startup raise. Buys <strong style="color:var(--accent-emerald);">10-20</strong> real market experiments.</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 13: PROOF — THEM & US ═════════════ -->
+  <div class="slide" data-slide="12">
+    <div class="slide-inner">
+      <h3 class="label gold anim-fade d1">PROOF POINTS</h3>
+      <h1 class="anim-fade d2">They Proved It. We're Doing It.</h1>
+
+      <!-- GLOBAL PROOF — compact horizontal -->
+      <div style="display:flex;gap:16px;margin-bottom:24px;" class="anim-fade d3">
+        <div class="glass-sm" style="flex:1;display:flex;align-items:center;gap:16px;padding:18px 22px;">
+          <div style="font-size:2rem;flex-shrink:0;">&#127959;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;color:var(--accent-blue);">Idealab</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);line-height:1.5;">150+ companies, 50+ IPOs. 70% success. The original studio.</div>
+          </div>
+        </div>
+        <div class="glass-sm" style="flex:1;display:flex;align-items:center;gap:16px;padding:18px 22px;">
+          <div style="font-size:2rem;flex-shrink:0;">&#9889;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;color:var(--accent-gold);">Atomic</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);line-height:1.5;">$25-100K per test. Hims &amp; Hers: $2B+ market cap.</div>
+          </div>
+        </div>
+        <div class="glass-sm" style="flex:1;display:flex;align-items:center;gap:16px;padding:18px 22px;">
+          <div style="font-size:2rem;flex-shrink:0;">&#128200;</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;color:var(--text-secondary);">Industry Average</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);line-height:1.5;">53% IRR for studios vs 21% traditional. 72% reach Series A.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="anim-fade d4" style="text-align:center;margin-bottom:24px;">
+        <div style="display:inline-flex;align-items:center;gap:12px;">
+          <div style="width:80px;height:1px;background:var(--glass-border);"></div>
+          <div style="font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--accent-orange);">Our Proof</div>
+          <div style="width:80px;height:1px;background:var(--glass-border);"></div>
+        </div>
+      </div>
+
+      <!-- OUR PROOF — two featured cards -->
+      <div class="grid-2 anim-fade d5" style="gap:20px;">
+        <div class="glass" style="border-color:rgba(0,196,140,0.2);padding:28px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+            <div class="icon-circle emerald" style="width:48px;height:48px;font-size:1.3rem;">&#127942;</div>
+            <div>
+              <div style="font-weight:700;font-size:1.1rem;color:var(--accent-emerald);">iStoria &mdash; Graduated</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Built from zero by this team</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:24px;margin-bottom:14px;">
+            <div><div style="font-family:var(--font-heading);font-size:1.8rem;font-weight:800;color:var(--accent-emerald);">$100K</div><div style="font-size:0.75rem;color:var(--text-secondary);">Monthly recurring revenue</div></div>
+            <div><div style="font-family:var(--font-heading);font-size:1.8rem;font-weight:800;color:var(--accent-emerald);">5M+</div><div style="font-size:0.75rem;color:var(--text-secondary);">App downloads</div></div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Studio CTO graduated with ownership. The venture machine produced a real, profitable company &mdash; not a slide deck.</div>
+        </div>
+        <div class="glass" style="border-color:rgba(255,86,25,0.2);padding:28px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+            <div class="icon-circle orange" style="width:48px;height:48px;font-size:1.3rem;">&#129302;</div>
+            <div>
+              <div style="font-weight:700;font-size:1.1rem;color:var(--accent-orange);">Agentic Operations &mdash; Live</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Running the studio today</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:24px;margin-bottom:14px;">
+            <div><div style="font-family:var(--font-heading);font-size:1.8rem;font-weight:800;color:var(--accent-orange);">7</div><div style="font-size:0.75rem;color:var(--text-secondary);">AI agents in production</div></div>
+            <div><div style="font-family:var(--font-heading);font-size:1.8rem;font-weight:800;color:var(--accent-orange);">775+</div><div style="font-size:0.75rem;color:var(--text-secondary);">Balanced journal entries</div></div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Venture Founder agent generating tasks autonomously. Finance, web dev, integrations &mdash; all agent-run. Not planning AI-native. Already there.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SLIDE 13: CLOSING ═════════════ -->
+  <div class="slide" data-slide="13">
+    <div class="cover-bg"></div>
+    <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;">
+
+      <!-- HEADLINE -->
+      <div class="anim-fade d1" style="text-align:center;margin-bottom:40px;">
+        <div style="font-family:var(--font-heading);font-size:3.5rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1;background:linear-gradient(135deg, var(--text-primary) 0%, rgba(237,242,255,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Your move.</div>
+        <div style="font-size:1.15rem;color:var(--text-secondary);margin-top:12px;">Two paths. One studio. Same conviction.</div>
+      </div>
+
+      <!-- TWO PATH SUMMARY -->
+      <div class="grid-2 anim-fade d2" style="gap:24px;width:100%;max-width:900px;margin-bottom:36px;">
+        <div class="glass-sm card-orange" style="text-align:center;padding:28px;">
+          <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent-orange);margin-bottom:8px;">Path A &mdash; Recommended</div>
+          <div style="font-family:var(--font-heading);font-size:1.4rem;font-weight:700;margin-bottom:6px;">Join the Studio</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);">Full portfolio + Micro Ventures inside</div>
+        </div>
+        <div class="glass-sm card-blue" style="text-align:center;padding:28px;">
+          <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent-blue);margin-bottom:8px;">Path B</div>
+          <div style="font-family:var(--font-heading);font-size:1.4rem;font-weight:700;margin-bottom:6px;">Separate Entity</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);">Standalone agentic-native ventures</div>
+        </div>
+      </div>
+
+      <!-- THE NUMBER -->
+      <div class="anim-fade d3" style="text-align:center;margin-bottom:36px;">
+        <div style="display:inline-flex;align-items:center;gap:20px;background:var(--glass-bg);border:1px solid rgba(255,86,25,0.2);border-radius:var(--radius);padding:20px 40px;backdrop-filter:blur(24px);">
+          <div style="font-family:var(--font-heading);font-size:2.4rem;font-weight:800;color:var(--accent-orange);">$1M</div>
+          <div style="width:1px;height:36px;background:var(--glass-border);"></div>
+          <div style="text-align:left;">
+            <div style="font-size:0.9rem;font-weight:600;">Per year</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">$25K/mo operations &middot; 10-20 ventures</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIMELINE -->
+      <div class="anim-fade d4" style="display:flex;align-items:center;gap:0;width:100%;max-width:700px;margin-bottom:40px;">
+        <div style="flex:1;text-align:center;">
+          <div style="font-family:var(--font-heading);font-size:0.95rem;font-weight:700;color:var(--accent-orange);">Now</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">Choose path</div>
+        </div>
+        <div style="flex:0.8;height:1px;background:linear-gradient(90deg,var(--accent-orange),var(--accent-gold));"></div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-family:var(--font-heading);font-size:0.95rem;font-weight:700;color:var(--accent-gold);">April</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">Structure &amp; governance</div>
+        </div>
+        <div style="flex:0.8;height:1px;background:linear-gradient(90deg,var(--accent-gold),var(--accent-emerald));"></div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-family:var(--font-heading);font-size:0.95rem;font-weight:700;color:var(--accent-emerald);">Q2 2026</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">Entity + first ventures</div>
+        </div>
+        <div style="flex:0.8;height:1px;background:linear-gradient(90deg,var(--accent-emerald),var(--accent-blue));"></div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-family:var(--font-heading);font-size:0.95rem;font-weight:700;color:var(--accent-blue);">Q3 2026</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">In market</div>
+        </div>
+      </div>
+
+      <!-- BRANDING -->
+      <div class="anim-fade d5">
+        <div class="cover-logo" style="justify-content:center;">
+          <img src="../logo.jpeg" alt="One Studio" style="width:36px;height:36px;">
+          <span style="font-size:1rem;">One Studio</span>
+        </div>
+      </div>
+      <div class="anim-fade d6" style="margin-top:8px;">
+        <div style="font-size:0.8rem;color:var(--text-muted);">Mohammed Shurrab &middot; Jeddah &middot; Prepared by Nala (&#1606;&#1575;&#1604;&#1575;)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════ -->
+<button id="jump-btn" title="Slide menu (ESC for overview)">&#9776;</button>
+<div id="jump-menu"></div>
+
+<div id="slide-counter">1 / 13</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  const slideTitles = [
+    'One Studio \u00d7 Binladin',
+    'One Studio \u2014 Who We Are',
+    'Where We Stand Today',
+    'The Agentic Shift',
+    'Two Paths Forward',
+    'Path A: Join the Studio',
+    'Path A: What You Get',
+    'Path B: Separate Entity',
+    '$1M \u2192 20 Ventures',
+    'Capital Rich, Builder Poor',
+    'The Numbers',
+    'The Model Works Globally',
+    'Next Steps'
+  ];
+
+  class SlideShow {
+    constructor() {
+      this.slides = document.querySelectorAll('.slide');
+      this.total = this.slides.length;
+      this.current = 0;
+      this.isAnimating = false;
+      this.overviewOpen = false;
+      this.touchStartX = 0;
+
+      this.progressBar = document.getElementById('progress-bar');
+      this.counter = document.getElementById('slide-counter');
+      this.jumpBtn = document.getElementById('jump-btn');
+      this.jumpMenu = document.getElementById('jump-menu');
+      this.overviewOverlay = document.getElementById('overview-overlay');
+      this.overviewGrid = document.getElementById('overview-grid');
+
+      this.init();
+    }
+
+    init() {
+      const hash = window.location.hash;
+      if (hash) {
+        const match = hash.match(/slide-(\d+)/);
+        if (match) {
+          const idx = parseInt(match[1], 10) - 1;
+          if (idx >= 0 && idx < this.total) this.current = idx;
+        }
+      }
+
+      this.slides[this.current].classList.add('active');
+      this.updateUI();
+      this.triggerAnimations(this.current);
+
+      this.buildOverview();
+      this.buildJumpMenu();
+
+      document.addEventListener('keydown', (e) => this.onKey(e));
+      this.jumpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.jumpMenu.classList.toggle('visible');
+      });
+      document.addEventListener('click', (e) => {
+        if (!this.jumpMenu.contains(e.target) && e.target !== this.jumpBtn) {
+          this.jumpMenu.classList.remove('visible');
+        }
+      });
+
+      document.addEventListener('touchstart', (e) => {
+        this.touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      document.addEventListener('touchend', (e) => {
+        const diff = this.touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 60) { diff > 0 ? this.next() : this.prev(); }
+      }, { passive: true });
+
+      window.addEventListener('hashchange', () => {
+        const m = window.location.hash.match(/slide-(\d+)/);
+        if (m) {
+          const idx = parseInt(m[1], 10) - 1;
+          if (idx >= 0 && idx < this.total && idx !== this.current) this.goTo(idx);
+        }
+      });
+    }
+
+    buildOverview() {
+      this.overviewGrid.innerHTML = '';
+      for (let i = 0; i < this.total; i++) {
+        const thumb = document.createElement('div');
+        thumb.className = 'overview-thumb' + (i === this.current ? ' active' : '');
+        thumb.innerHTML = `<div class="thumb-num">${i+1} / ${this.total}</div><div class="thumb-title">${slideTitles[i]}</div>`;
+        thumb.addEventListener('click', () => { this.closeOverview(); this.goTo(i); });
+        this.overviewGrid.appendChild(thumb);
+      }
+    }
+
+    buildJumpMenu() {
+      this.jumpMenu.innerHTML = '';
+      for (let i = 0; i < this.total; i++) {
+        const item = document.createElement('div');
+        item.className = 'jump-item' + (i === this.current ? ' active' : '');
+        item.innerHTML = `<span class="jump-num">${i+1}</span><span>${slideTitles[i]}</span>`;
+        item.addEventListener('click', () => { this.jumpMenu.classList.remove('visible'); this.goTo(i); });
+        this.jumpMenu.appendChild(item);
+      }
+    }
+
+    onKey(e) {
+      if (this.overviewOpen) {
+        if (e.key === 'Escape') { this.closeOverview(); e.preventDefault(); }
+        return;
+      }
+      switch (e.key) {
+        case 'ArrowRight': case 'ArrowDown': case ' ': e.preventDefault(); this.next(); break;
+        case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); this.prev(); break;
+        case 'Home': e.preventDefault(); this.goTo(0); break;
+        case 'End': e.preventDefault(); this.goTo(this.total - 1); break;
+        case 'Escape': e.preventDefault(); this.openOverview(); break;
+      }
+    }
+
+    goTo(index, direction) {
+      if (index === this.current || this.isAnimating || index < 0 || index >= this.total) return;
+      this.isAnimating = true;
+      const dir = direction || (index > this.current ? 'forward' : 'backward');
+      const oldSlide = this.slides[this.current];
+      const newSlide = this.slides[index];
+
+      this.resetAnimations(index);
+
+      oldSlide.classList.remove('active');
+      oldSlide.classList.add(dir === 'forward' ? 'exit-left' : 'exit-right');
+
+      newSlide.style.transform = dir === 'forward' ? 'translateX(60px)' : 'translateX(-60px)';
+      newSlide.style.opacity = '0';
+      newSlide.classList.add('active');
+
+      requestAnimationFrame(() => {
+        newSlide.style.transform = '';
+        newSlide.style.opacity = '';
+      });
+
+      this.current = index;
+      this.updateUI();
+      this.triggerAnimations(index);
+
+      setTimeout(() => {
+        oldSlide.classList.remove('exit-left', 'exit-right');
+        this.isAnimating = false;
+      }, 600);
+
+      window.location.hash = `slide-${index + 1}`;
+    }
+
+    next() { if (this.current < this.total - 1) this.goTo(this.current + 1, 'forward'); }
+    prev() { if (this.current > 0) this.goTo(this.current - 1, 'backward'); }
+
+    updateUI() {
+      const pct = ((this.current + 1) / this.total) * 100;
+      this.progressBar.style.width = pct + '%';
+      this.counter.textContent = `${this.current + 1} / ${this.total}`;
+      this.jumpMenu.querySelectorAll('.jump-item').forEach((el, i) => {
+        el.classList.toggle('active', i === this.current);
+      });
+      this.overviewGrid.querySelectorAll('.overview-thumb').forEach((el, i) => {
+        el.classList.toggle('active', i === this.current);
+      });
+    }
+
+    resetAnimations(index) {
+      this.slides[index].querySelectorAll('.anim-fade').forEach(el => {
+        el.classList.remove('visible');
+      });
+    }
+
+    triggerAnimations(index) {
+      requestAnimationFrame(() => {
+        this.slides[index].querySelectorAll('.anim-fade').forEach(el => {
+          el.classList.add('visible');
+        });
+      });
+    }
+
+    openOverview() {
+      this.overviewOpen = true;
+      this.overviewOverlay.classList.add('open');
+      this.buildOverview();
+    }
+
+    closeOverview() {
+      this.overviewOpen = false;
+      this.overviewOverlay.classList.remove('open');
+    }
+  }
+
+  new SlideShow();
+})();
+</script>
+
+</body>
+</html>
