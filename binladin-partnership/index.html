@@ -79,7 +79,7 @@ html, body {
 
 @media (max-width: 768px) {
   #mobile-block { display: flex !important; }
-  #slides-container, #progress-bar, #slide-counter, #jump-btn, #jump-menu, #overview-overlay { display: none !important; }
+  #slides-container, #progress-bar, #slide-counter, #jump-btn, #jump-menu, #overview-overlay, #pdf-btn { display: none !important; }
 }
 
 /* ═══════════════════════════════════════════
@@ -489,6 +489,18 @@ p { font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); }
 /* ═══════════════════════════════════════════
    JUMP MENU
    ═══════════════════════════════════════════ */
+#pdf-btn {
+  position: fixed; top: 24px; right: 72px;
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px);
+  color: var(--text-secondary); font-size: 1.1rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  z-index: 200; text-decoration: none; transition: all 0.25s;
+}
+#pdf-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
 #jump-btn {
   position: fixed; top: 24px; right: 24px;
   width: 40px; height: 40px; border-radius: 10px;
@@ -665,6 +677,7 @@ p { font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); }
   <div class="mobile-subtitle">&#1607;&#1584;&#1575; &#1575;&#1604;&#1593;&#1585;&#1590; &#1605;&#1615;&#1589;&#1605;&#1605; &#1604;&#1604;&#1593;&#1585;&#1590; &#1593;&#1604;&#1609; &#1587;&#1591;&#1581; &#1575;&#1604;&#1605;&#1603;&#1578;&#1576;</div>
   <div class="mobile-desc">This presentation requires a desktop screen for the best experience.</div>
   <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{this.textContent='Copied!'})">Copy Link to Open on Desktop</button>
+  <a href="deck.pdf" download="One-Studio-x-Binladin.pdf" style="display:inline-block;margin-top:12px;padding:0.875rem 1.75rem;background:rgba(255,86,25,0.12);border:1px solid rgba(255,86,25,0.3);border-radius:12px;color:var(--accent-orange);font-size:0.95rem;font-weight:500;text-decoration:none;font-family:var(--font-body);transition:all 0.3s;">&#128196; Download PDF</a>
   <div class="mobile-logo">
     <img src="../logo.jpeg" alt="One Studio">
     <span>One Studio</span>
@@ -1317,6 +1330,7 @@ p { font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); }
 <!-- ═══════════════════════════════════════════
      NAVIGATION
      ═══════════════════════════════════════════ -->
+<a id="pdf-btn" href="deck.pdf" download="One-Studio-x-Binladin.pdf" title="Download PDF">&#8681;</a>
 <button id="jump-btn" title="Slide menu (ESC for overview)">&#9776;</button>
 <div id="jump-menu"></div>
 
