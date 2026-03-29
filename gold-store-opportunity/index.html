@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Gold Store — Market Opportunity & Direction</title>
+<link rel="icon" type="image/jpeg" href="../logo.jpeg">
+<link rel="apple-touch-icon" href="../logo.jpeg">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121c;
+  --bg-card: rgba(18, 18, 28, 0.7);
+  --border-card: rgba(255, 195, 0, 0.12);
+  --accent-gold: #ffc300;
+  --accent-gold-light: #ffe066;
+  --accent-amber: #ff8c00;
+  --accent-emerald: #00c48c;
+  --accent-red: #ff4d6a;
+  --accent-blue: #4ea8de;
+  --text-primary: #f5f0e8;
+  --text-secondary: rgba(245, 240, 232, 0.6);
+  --text-muted: rgba(245, 240, 232, 0.35);
+  --glass-bg: rgba(18, 18, 28, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition-slide: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  --font-heading: 'Space Grotesk', -apple-system, 'SF Pro Display', system-ui, sans-serif;
+  --font-body: 'Inter', -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* MOBILE BLOCK */
+#mobile-block {
+  display: none; position: fixed; inset: 0; z-index: 99999;
+  background: var(--bg-primary);
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 2rem;
+}
+#mobile-block h1 { font-family: var(--font-heading); font-size: 1.6rem; color: var(--accent-gold); margin-bottom: 0.5rem; }
+#mobile-block p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.3rem; }
+#mobile-block .arabic { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; direction: rtl; }
+#mobile-block button {
+  padding: 12px 24px; border: 1px solid var(--accent-gold); border-radius: var(--radius-sm);
+  background: transparent; color: var(--accent-gold); font-size: 0.9rem; cursor: pointer;
+}
+@media (max-width: 768px) {
+  #mobile-block { display: flex; }
+  #deck, #progress-bar, #slide-counter, #nav-hint, #slide-menu { display: none !important; }
+}
+
+/* PROGRESS BAR */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-amber));
+  transition: width 0.4s ease; box-shadow: 0 0 12px rgba(255, 195, 0, 0.4);
+}
+
+/* SLIDE COUNTER */
+#slide-counter {
+  position: fixed; bottom: 28px; right: 36px; z-index: 1000;
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--text-muted); user-select: none; pointer-events: none;
+}
+#slide-counter .current { color: var(--accent-gold); font-weight: 600; }
+
+/* NAV */
+#nav-hint {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  z-index: 999; display: flex; gap: 8px; opacity: 0.25;
+  transition: opacity var(--transition-fast);
+}
+#nav-hint:hover { opacity: 0.6; }
+#nav-hint button {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  color: var(--text-secondary); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(12px); transition: all var(--transition-fast);
+}
+#nav-hint button:hover { background: rgba(255, 195, 0, 0.15); border-color: var(--accent-gold); color: var(--accent-gold); }
+
+/* SLIDE MENU */
+#slide-menu-btn {
+  position: fixed; bottom: 28px; left: 36px; z-index: 1000;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  color: var(--text-muted); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(12px); transition: all var(--transition-fast);
+}
+#slide-menu-btn:hover { opacity: 0.8; border-color: var(--accent-gold); color: var(--accent-gold); }
+#slide-menu {
+  display: none; position: fixed; bottom: 72px; left: 36px; z-index: 1001;
+  background: var(--bg-secondary); border: 1px solid var(--border-card);
+  border-radius: var(--radius); padding: 8px 0; min-width: 280px; max-height: 60vh;
+  overflow-y: auto; backdrop-filter: blur(24px);
+}
+#slide-menu.open { display: block; }
+#slide-menu button {
+  display: block; width: 100%; text-align: left; padding: 10px 16px;
+  background: none; border: none; color: var(--text-secondary);
+  font-size: 0.82rem; cursor: pointer; transition: all 0.15s;
+}
+#slide-menu button:hover { background: rgba(255, 195, 0, 0.08); color: var(--accent-gold); }
+#slide-menu button.active { color: var(--accent-gold); background: rgba(255, 195, 0, 0.06); }
+#slide-menu button span.num { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.75rem; margin-right: 8px; }
+
+/* DECK */
+#deck { position: fixed; inset: 0; }
+.slide {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: 60px 80px; opacity: 0; pointer-events: none;
+  transition: opacity var(--transition-slide), transform var(--transition-slide);
+  transform: translateX(60px);
+}
+.slide.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+.slide.prev { transform: translateX(-60px); }
+
+.slide-inner { max-width: 1200px; width: 100%; }
+
+/* TYPOGRAPHY */
+h1 { font-family: var(--font-heading); font-size: 2.8rem; font-weight: 700; line-height: 1.15; margin-bottom: 1rem; }
+h2 { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 600; line-height: 1.25; margin-bottom: 1.2rem; color: var(--accent-gold); }
+h3 { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 600; margin-bottom: 0.6rem; }
+p { font-size: 1rem; line-height: 1.65; color: var(--text-secondary); }
+.subtitle { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+.gold { color: var(--accent-gold); }
+.emerald { color: var(--accent-emerald); }
+.red { color: var(--accent-red); }
+.blue { color: var(--accent-blue); }
+.muted { color: var(--text-muted); }
+.big-number { font-family: var(--font-heading); font-size: 2.8rem; font-weight: 700; color: var(--accent-gold); line-height: 1; }
+.unit { font-size: 1rem; color: var(--text-secondary); font-weight: 400; }
+
+/* CARDS */
+.card {
+  background: var(--bg-card); border: 1px solid var(--border-card);
+  border-radius: var(--radius); padding: 1.5rem;
+  backdrop-filter: blur(16px);
+}
+.card-sm {
+  background: var(--bg-card); border: 1px solid var(--border-card);
+  border-radius: var(--radius-sm); padding: 1rem 1.2rem;
+}
+
+/* GRID */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; }
+.flex-col { display: flex; flex-direction: column; gap: 0.8rem; }
+
+/* TABLE */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.data-table th { text-align: left; padding: 8px 12px; color: var(--accent-gold); font-weight: 600; border-bottom: 1px solid var(--border-card); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.data-table td { padding: 8px 12px; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.03); }
+.data-table tr:hover td { color: var(--text-primary); }
+
+/* BADGES */
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.badge-gold { background: rgba(255, 195, 0, 0.12); color: var(--accent-gold); border: 1px solid rgba(255, 195, 0, 0.2); }
+.badge-green { background: rgba(0, 196, 140, 0.12); color: var(--accent-emerald); border: 1px solid rgba(0, 196, 140, 0.2); }
+.badge-red { background: rgba(255, 77, 106, 0.12); color: var(--accent-red); border: 1px solid rgba(255, 77, 106, 0.2); }
+.badge-blue { background: rgba(78, 168, 222, 0.12); color: var(--accent-blue); border: 1px solid rgba(78, 168, 222, 0.2); }
+
+/* TAGS */
+.tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+/* LISTS */
+ul.clean { list-style: none; padding: 0; }
+ul.clean li { padding: 0.4rem 0; color: var(--text-secondary); font-size: 0.9rem; display: flex; gap: 0.5rem; }
+ul.clean li::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-gold); margin-top: 8px; flex-shrink: 0; }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border-card); margin: 1.2rem 0; }
+
+/* BRAND */
+.brand-line { font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; }
+.brand-line .os { color: #ff5619; font-weight: 600; }
+
+/* VS TABLE */
+.vs-row { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.vs-label { flex: 1; font-size: 0.85rem; color: var(--text-secondary); }
+.vs-bar { flex: 2; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+.vs-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+
+/* GAP INDICATOR */
+.gap-indicator { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+.gap-dot { width: 10px; height: 10px; border-radius: 50%; }
+.gap-dot.massive { background: var(--accent-gold); box-shadow: 0 0 8px rgba(255,195,0,0.4); }
+.gap-dot.large { background: var(--accent-amber); }
+.gap-dot.medium { background: var(--accent-blue); }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- MOBILE BLOCK -->
+<div id="mobile-block">
+  <h1>Desktop Only</h1>
+  <p>This presentation requires a desktop screen.</p>
+  <p class="arabic">هذا العرض مصمم لشاشات الكمبيوتر فقط</p>
+  <button onclick="navigator.clipboard.writeText(location.href).then(()=>this.textContent='Copied!')" style="margin-bottom:12px;">Copy Link to Open on Desktop</button>
+  <a href="gold-store-opportunity.pdf" download style="padding:12px 24px; border:1px solid var(--accent-gold); border-radius:var(--radius-sm); color:var(--accent-gold); font-size:0.9rem; text-decoration:none; display:inline-block;">Download PDF</a>
+</div>
+
+<div id="progress-bar" style="width:0%"></div>
+<div id="slide-counter"><span class="current">1</span> / <span id="total">14</span></div>
+<div id="nav-hint">
+  <button onclick="go(-1)">&#8592;</button>
+  <button onclick="go(1)">&#8594;</button>
+</div>
+<a id="pdf-btn" href="gold-store-opportunity.pdf" download title="Download PDF" style="position:fixed;bottom:28px;left:80px;z-index:1000;width:36px;height:36px;border-radius:50%;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-muted);font-size:14px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);text-decoration:none;transition:all var(--transition-fast);" onmouseover="this.style.borderColor='var(--accent-gold)';this.style.color='var(--accent-gold)'" onmouseout="this.style.borderColor='';this.style.color='var(--text-muted)'">&#8681;</a>
+<button id="slide-menu-btn" onclick="toggleMenu()">&#9776;</button>
+<div id="slide-menu"></div>
+
+<div id="deck">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide active" data-title="Gold Store Opportunity">
+  <div class="slide-inner" style="text-align:center;">
+    <div style="font-size:4rem; margin-bottom:1rem;">&#x1FAA9;</div>
+    <h1>Gold Store<br><span class="gold">Market Opportunity</span></h1>
+    <p class="subtitle">Saudi Arabia Digital Gold — Market Research & Direction Discussion</p>
+    <div style="margin-top:2rem;">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Prepared for Abdulrahman Al-Tuwaijri</p>
+      <p style="font-size:0.85rem; color:var(--text-muted);">March 2026</p>
+    </div>
+    <div class="brand-line"><span class="os">One Studio</span> &middot; Fastest Value Delivery</div>
+  </div>
+</div>
+
+<!-- SLIDE 2: THE OPPORTUNITY -->
+<div class="slide" data-title="The Opportunity">
+  <div class="slide-inner">
+    <h2>The Opportunity</h2>
+    <p class="subtitle">Saudi Arabia is the Arab world's #1 gold consumer — but digital gold is almost nonexistent.</p>
+    <div class="grid-3" style="margin-top:1.5rem;">
+      <div class="card" style="text-align:center;">
+        <div class="big-number">50.4<span class="unit"> tonnes</span></div>
+        <p style="margin-top:0.5rem; font-size:0.85rem;">Annual gold demand (2024)</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="big-number">$7.6<span class="unit">B</span></div>
+        <p style="margin-top:0.5rem; font-size:0.85rem;">Precious metals market (2025)</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="big-number">+35%<span class="unit"> YoY</span></div>
+        <p style="margin-top:0.5rem; font-size:0.85rem;">Q1 2025 jewelry demand surge</p>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:1.2rem;">
+      <div class="card-sm">
+        <h3>&#127468;&#127463; Global Rank</h3>
+        <p style="font-size:0.85rem;"><span class="gold">6th</span> in jewelry demand &middot; <span class="gold">9th</span> in total gold demand</p>
+      </div>
+      <div class="card-sm">
+        <h3>&#128200; Investment Gold Rising</h3>
+        <p style="font-size:0.85rem;">Bars & coins at <span class="gold">15.4 tonnes</span> — highest since 2014, up 9% YoY</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: SAUDI DIGITAL LANDSCAPE -->
+<div class="slide" data-title="Current Saudi Players">
+  <div class="slide-inner">
+    <h2>What Exists in Saudi Today</h2>
+    <p class="subtitle" style="margin-bottom:1rem;">A few early movers, but no dominant platform. The market is wide open.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>Platform</th><th>Type</th><th>Key Features</th><th>Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="gold">GrowK</span></td><td>Fintech savings</td><td>Auto-savings, Al Rajhi vault, gifting</td><td>No marketplace, no delivery options</td></tr>
+        <tr><td><span class="gold">Sabayik</span></td><td>Bullion marketplace</td><td>PAMP Suisse bars, vault/delivery</td><td>High minimum (100g bars), no app</td></tr>
+        <tr><td><span class="gold">Kanz AlSahra</span></td><td>Manufacturer + e-shop</td><td>24K bars, physical delivery</td><td>No fractional, no savings features</td></tr>
+        <tr><td><span class="gold">SabikaGold</span></td><td>Digital platform</td><td>Al Rajhi vault, 0.5g min, gifting</td><td>Limited features, early stage</td></tr>
+        <tr><td class="muted">Bank accounts</td><td>SNB / Riyad Bank</td><td>Gold accounts via banking app</td><td>Clunky UX, branch-dependent delivery</td></tr>
+        <tr><td class="muted">Sabika (Egypt)</td><td>AI fintech</td><td>Expanding to Saudi 2025</td><td>Not Saudi-native, small</td></tr>
+      </tbody>
+    </table>
+    <div class="card-sm" style="margin-top:1.2rem; border-color: rgba(255, 195, 0, 0.3);">
+      <p style="font-size:0.9rem; text-align:center;"><span class="gold">Key insight:</span> No single platform owns the Saudi digital gold experience. GrowK is closest but focused only on savings — no marketplace, no commerce, no innovation.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: GLOBAL INNOVATORS -->
+<div class="slide" data-title="Global Gold Innovators">
+  <div class="slide-inner">
+    <h2>World's Best Gold Platforms</h2>
+    <p class="subtitle">What global leaders have built — and what Saudi is missing.</p>
+    <div class="grid-3">
+      <div class="card">
+        <h3>&#127468;&#127463; Glint Pay</h3>
+        <span class="badge badge-gold">Gold as Money</span>
+        <p style="margin-top:0.5rem; font-size:0.82rem;">Mastercard in 210 countries. Spend gold at any merchant — auto-converted to local currency at POS. FCA regulated.</p>
+      </div>
+      <div class="card">
+        <h3>&#127468;&#127463; BullionVault</h3>
+        <span class="badge badge-blue">P2P Marketplace</span>
+        <p style="margin-top:0.5rem; font-size:0.82rem;">$10B AUM, 125K clients. Users trade directly with each other. Daily public audit. Multi-vault worldwide. 0.12%/yr storage.</p>
+      </div>
+      <div class="card">
+        <h3>&#127482;&#127480; Acre Gold</h3>
+        <span class="badge badge-green">Subscription</span>
+        <p style="margin-top:0.5rem; font-size:0.82rem;">$30/month subscription. Physical gold bar mailed to your door when threshold met. Collectible editions (Hot Wheels x Gold).</p>
+      </div>
+      <div class="card">
+        <h3>&#127482;&#127480; Vaulted</h3>
+        <span class="badge badge-blue">Mint Storage</span>
+        <p style="margin-top:0.5rem; font-size:0.82rem;">Gold stored at Royal Canadian Mint. Serial-number tracked. 1.8% flat fee, zero ongoing. VaultPlan auto-purchase.</p>
+      </div>
+      <div class="card">
+        <h3>&#127470;&#127475; Jar App</h3>
+        <span class="badge badge-green">Round-Ups</span>
+        <p style="margin-top:0.5rem; font-size:0.82rem;">Every transaction rounds up — difference auto-buys gold. Millions of users. Profitable 2025. Most frictionless model globally.</p>
+      </div>
+      <div class="card">
+        <h3>&#127470;&#127475; SafeGold</h3>
+        <span class="badge badge-gold">Gifting</span>
+        <p style="margin-top:0.5rem; font-size:0.82rem;">Send gold via WhatsApp link. Millions of festival transactions during Diwali/Dhanteras. Cultural commerce at scale.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: INNOVATION MAP -->
+<div class="slide" data-title="Innovation Categories">
+  <div class="slide-inner">
+    <h2>Innovation Categories in Digital Gold</h2>
+    <div class="grid-2">
+      <div class="flex-col">
+        <div class="card-sm">
+          <h3><span class="gold">1.</span> Fractional Ownership</h3>
+          <p style="font-size:0.82rem;">Buy $1 of gold. Allocated. In 60 seconds. No minimum bar required.</p>
+        </div>
+        <div class="card-sm">
+          <h3><span class="gold">2.</span> Gold-Backed Payment Card</h3>
+          <p style="font-size:0.82rem;">Mastercard/Visa that spends your gold balance. Auto-converted at POS.</p>
+        </div>
+        <div class="card-sm">
+          <h3><span class="gold">3.</span> Savings & Round-Ups</h3>
+          <p style="font-size:0.82rem;">Every purchase rounds up to buy gold. Monthly subscriptions. Auto-accumulation.</p>
+        </div>
+        <div class="card-sm">
+          <h3><span class="gold">4.</span> Digital Gifting</h3>
+          <p style="font-size:0.82rem;">Send gold via link/WhatsApp for Eid, weddings, occasions. Instant delivery.</p>
+        </div>
+      </div>
+      <div class="flex-col">
+        <div class="card-sm">
+          <h3><span class="gold">5.</span> Storage + Delivery Hybrid</h3>
+          <p style="font-size:0.82rem;">Store digitally (insured vault). Request physical delivery anytime.</p>
+        </div>
+        <div class="card-sm">
+          <h3><span class="gold">6.</span> Gold-Backed Lending</h3>
+          <p style="font-size:0.82rem;">Deposit gold, get instant Shariah-compliant credit line. Huge in India (offline).</p>
+        </div>
+        <div class="card-sm">
+          <h3><span class="gold">7.</span> Tokenized Gold</h3>
+          <p style="font-size:0.82rem;">Blockchain-native. 24/7 global transfer. DeFi-composable. PAXG = $600M market cap.</p>
+        </div>
+        <div class="card-sm">
+          <h3><span class="gold">8.</span> Social & Community</h3>
+          <p style="font-size:0.82rem;">Gold savings circles, family accounts, milestones, leaderboards. Mostly whitespace globally.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: GAP ANALYSIS -->
+<div class="slide" data-title="Saudi Gap Analysis">
+  <div class="slide-inner">
+    <h2>What Saudi Doesn't Have</h2>
+    <p class="subtitle">Global proof exists. Saudi market is empty. Here are the biggest gaps.</p>
+    <div class="grid-2" style="margin-top:1rem;">
+      <div class="flex-col">
+        <div class="card" style="border-color: rgba(255,195,0,0.3);">
+          <div class="gap-indicator"><div class="gap-dot massive"></div><h3 style="margin:0;">Gold Gifting (Eid / Weddings)</h3></div>
+          <p style="font-size:0.82rem;">Send gold via WhatsApp for occasions. Proven at massive scale in India. <span class="gold">Zero competition in Saudi.</span> Perfect cultural fit — mahr, Eid, births.</p>
+          <div class="tag-row"><span class="badge badge-green">Low difficulty</span><span class="badge badge-gold">Perfect fit</span></div>
+        </div>
+        <div class="card" style="border-color: rgba(255,140,0,0.3);">
+          <div class="gap-indicator"><div class="gap-dot massive"></div><h3 style="margin:0;">Round-Up Gold Savings</h3></div>
+          <p style="font-size:0.82rem;">Every mada/Apple Pay purchase rounds up, auto-buys gold. Jar App proved this at scale. Habit-forming acquisition.</p>
+          <div class="tag-row"><span class="badge badge-blue">Medium difficulty</span><span class="badge badge-gold">High fit</span></div>
+        </div>
+        <div class="card" style="border-color: rgba(255,195,0,0.2);">
+          <div class="gap-indicator"><div class="gap-dot massive"></div><h3 style="margin:0;">Family Gold Savings Circles</h3></div>
+          <p style="font-size:0.82rem;">Group savings toward shared gold goal. Family contributes monthly, distributed at occasion. <span class="gold">First-mover globally.</span></p>
+          <div class="tag-row"><span class="badge badge-blue">Medium difficulty</span><span class="badge badge-gold">Unique to Saudi</span></div>
+        </div>
+      </div>
+      <div class="flex-col">
+        <div class="card">
+          <div class="gap-indicator"><div class="gap-dot large"></div><h3 style="margin:0;">Physical Delivery Subscription</h3></div>
+          <p style="font-size:0.82rem;">SAR 100-500/month. Gold bar shipped when threshold reached. "Golden Habit" for parents saving for daughters.</p>
+          <div class="tag-row"><span class="badge badge-blue">Medium</span></div>
+        </div>
+        <div class="card">
+          <div class="gap-indicator"><div class="gap-dot medium"></div><h3 style="margin:0;">Gold-Backed Payment Card</h3></div>
+          <p style="font-size:0.82rem;">Mada card backed by gold balance. Spend gold as SAR anywhere. Requires regulatory approval.</p>
+          <div class="tag-row"><span class="badge badge-red">High difficulty</span></div>
+        </div>
+        <div class="card">
+          <div class="gap-indicator"><div class="gap-dot medium"></div><h3 style="margin:0;">Shariah Gold Lending</h3></div>
+          <p style="font-size:0.82rem;">Deposit gold, get credit line. Billions in untapped home gold collateral. No digital product exists.</p>
+          <div class="tag-row"><span class="badge badge-red">High difficulty</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: THREE DIRECTIONS -->
+<div class="slide" data-title="Three Possible Directions">
+  <div class="slide-inner">
+    <h2>Three Possible Directions</h2>
+    <p class="subtitle">We need to decide: what kind of gold product do we build?</p>
+    <div class="grid-3" style="margin-top:1.5rem;">
+      <div class="card" style="border-color: rgba(255,195,0,0.3); position:relative;">
+        <span class="badge badge-gold" style="position:absolute; top:-10px; right:16px;">Recommended</span>
+        <h3 style="font-size:1.3rem; margin-top:0.5rem;">A. Innovative<br>Gold Platform</h3>
+        <div class="divider"></div>
+        <ul class="clean">
+          <li>Build what doesn't exist in Saudi or globally</li>
+          <li>Gold gifting + savings + cultural commerce</li>
+          <li>Round-ups, family circles, occasion-based</li>
+          <li>Mobile-first, Arabic-native</li>
+          <li>Kanz AlSahra as supply partner</li>
+        </ul>
+        <div class="divider"></div>
+        <p style="font-size:0.82rem;"><span class="gold">Upside:</span> Category creator. Defensible. Venture-scale.</p>
+        <p style="font-size:0.82rem;"><span class="red">Risk:</span> Longer to market. Regulatory navigation.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.3rem;">B. Gold<br>E-Commerce</h3>
+        <div class="divider"></div>
+        <ul class="clean">
+          <li>Standard marketplace for physical gold</li>
+          <li>Catalog, cart, checkout, delivery</li>
+          <li>Kanz AlSahra as sole supplier</li>
+          <li>Dynamic pricing from gold index</li>
+          <li>Digital ownership certificates</li>
+        </ul>
+        <div class="divider"></div>
+        <p style="font-size:0.82rem;"><span class="emerald">Upside:</span> Fast to market. Proven model.</p>
+        <p style="font-size:0.82rem;"><span class="red">Risk:</span> Commoditized. Low moat. Competes with Sabayik.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.3rem;">C. Hybrid<br>Approach</h3>
+        <div class="divider"></div>
+        <ul class="clean">
+          <li>Launch with e-commerce (fast MVP)</li>
+          <li>Layer innovation features over time</li>
+          <li>Gifting in month 2, savings in month 3</li>
+          <li>Gold card as Phase 2 moonshot</li>
+          <li>Revenue from day 1, innovation over time</li>
+        </ul>
+        <div class="divider"></div>
+        <p style="font-size:0.82rem;"><span class="emerald">Upside:</span> Best of both. Revenue + defensibility.</p>
+        <p style="font-size:0.82rem;"><span class="blue">Risk:</span> Needs clear phasing discipline.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: DIRECTION A DEEP DIVE -->
+<div class="slide" data-title="Direction A: Innovation Platform">
+  <div class="slide-inner">
+    <h2>Direction A: The Innovative Gold Platform</h2>
+    <p class="subtitle">Build what India built for Diwali — but for Eid, weddings, and Saudi culture.</p>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <h3>Core Product Thesis</h3>
+          <p style="font-size:0.85rem;">Gold is already the #1 gifting asset in Saudi culture. Digitize the entire experience: buy, save, gift, track, deliver — all from your phone. Make gold as easy to send as a WhatsApp message.</p>
+        </div>
+        <div class="card">
+          <h3>Killer Features</h3>
+          <ul class="clean">
+            <li><span class="gold">Eid Gold</span> — send gold to family with one tap</li>
+            <li><span class="gold">Mahr Savings Plan</span> — save toward marriage dowry</li>
+            <li><span class="gold">Gold Circles</span> — family group savings (first globally)</li>
+            <li><span class="gold">Baby Gold</span> — start a gold account at birth</li>
+            <li><span class="gold">Round-ups</span> — mada purchases auto-buy gold</li>
+            <li><span class="gold">Occasion Commerce</span> — wedding registry in gold</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <h3>Why This Wins</h3>
+          <ul class="clean">
+            <li>$7.6B market with zero digital-native players</li>
+            <li>Cultural fit is perfect — gold IS Saudi gifting</li>
+            <li>SafeGold proved this model at scale in India</li>
+            <li>Network effects: every gift onboards a new user</li>
+            <li>Retention: savings plans create daily engagement</li>
+          </ul>
+        </div>
+        <div class="card-sm">
+          <h3>Revenue Model</h3>
+          <p style="font-size:0.82rem;">Spread on buy/sell (0.5-1.5%) + Storage fees + Premium subscriptions + Partner commissions + Future: gold-backed lending margin</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: DIRECTION B DEEP DIVE -->
+<div class="slide" data-title="Direction B: E-Commerce">
+  <div class="slide-inner">
+    <h2>Direction B: Gold E-Commerce with Kanz AlSahra</h2>
+    <p class="subtitle">Straightforward marketplace — physical gold, dynamic pricing, certified delivery.</p>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <h3>Product Scope</h3>
+          <ul class="clean">
+            <li>Product catalog: 24K bars, coins, Swiss gold, silver</li>
+            <li>Dynamic pricing linked to LBMA index</li>
+            <li>Cart, checkout, promo codes</li>
+            <li>Digital certificate of ownership (QR code)</li>
+            <li>Order tracking & KSA delivery</li>
+            <li>Admin portal for Kanz AlSahra</li>
+            <li>Gifting with message card</li>
+          </ul>
+        </div>
+        <div class="card-sm">
+          <h3>Timeline</h3>
+          <p style="font-size:0.85rem;">MVP in <span class="emerald">8-10 weeks</span>. Full launch in 12-14 weeks.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <h3>Pricing Formula</h3>
+          <div style="background: rgba(0,0,0,0.3); border-radius:8px; padding:1rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--accent-gold); margin-top:0.5rem;">
+            Final Price = Index + Safety (0.7%) + Fabrication + Costs + Margin + Delivery
+          </div>
+          <p style="font-size:0.82rem; margin-top:0.5rem;">Quote TTL ~30s. Re-confirm on expiry. Margin by % or fixed value.</p>
+        </div>
+        <div class="card-sm">
+          <h3>What We Already Have</h3>
+          <ul class="clean">
+            <li>Full TRD (500 lines of requirements)</li>
+            <li>Complete Figma designs (8 screens)</li>
+            <li>API endpoint design</li>
+            <li>Kanz AlSahra partnership context</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: COMPETITIVE POSITIONING -->
+<div class="slide" data-title="Competitive Positioning">
+  <div class="slide-inner">
+    <h2>How We Compare</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Feature</th><th>Kanz AlSahra</th><th>GrowK</th><th>Sabayik</th><th>Bank Gold Accounts</th><th style="color:var(--accent-gold);">Gold Store</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Fractional gold (< 1g)</td><td class="red">&#10005;</td><td class="emerald">&#10003;</td><td class="red">&#10005;</td><td class="emerald">&#10003;</td><td class="emerald">&#10003;</td></tr>
+        <tr><td>Physical delivery</td><td class="emerald">&#10003;</td><td class="red">&#10005;</td><td class="emerald">&#10003;</td><td>Branch only</td><td class="emerald">&#10003;</td></tr>
+        <tr><td>Digital gifting</td><td class="red">&#10005;</td><td>Basic</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="gold">&#9733; Full</td></tr>
+        <tr><td>Savings / round-ups</td><td class="red">&#10005;</td><td class="emerald">&#10003;</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="gold">&#9733; Full</td></tr>
+        <tr><td>Dynamic pricing</td><td>Manual</td><td class="emerald">&#10003;</td><td class="emerald">&#10003;</td><td class="emerald">&#10003;</td><td class="emerald">&#10003;</td></tr>
+        <tr><td>Ownership certificate</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="gold">&#9733; QR</td></tr>
+        <tr><td>Vault storage option</td><td class="red">&#10005;</td><td class="emerald">Al Rajhi</td><td class="emerald">&#10003;</td><td class="emerald">&#10003;</td><td class="emerald">&#10003;</td></tr>
+        <tr><td>Sell-back / resale</td><td class="red">&#10005;</td><td class="emerald">&#10003;</td><td class="red">&#10005;</td><td class="emerald">&#10003;</td><td class="emerald">&#10003;</td></tr>
+        <tr><td>Family / group savings</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="gold">&#9733; First</td></tr>
+        <tr><td>Payment card</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td class="red">&#10005;</td><td>Phase 2</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 11: REGULATORY PATH -->
+<div class="slide" data-title="Regulatory Path">
+  <div class="slide-inner">
+    <h2>Regulatory Path</h2>
+    <p class="subtitle">Building outside a bank simplifies the regulatory landscape significantly.</p>
+    <div class="grid-2" style="margin-top:1.5rem;">
+      <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <h3><span class="emerald">&#10003;</span> Required</h3>
+          <ul class="clean">
+            <li><span class="gold">Ministry of Commerce</span> — CR with "precious metals trading" activity</li>
+            <li><span class="gold">SASO</span> — hallmarking & purity compliance</li>
+            <li><span class="gold">SAMA PSP</span> — if holding customer funds / processing payments</li>
+            <li><span class="gold">AML/KYC</span> — identity verification mandatory</li>
+          </ul>
+        </div>
+        <div class="card-sm" style="border-color: rgba(0,196,140,0.3);">
+          <h3>&#128161; Key Advantage</h3>
+          <p style="font-size:0.85rem;">As a standalone platform (not a bank product), we avoid SAMA's banking product regulation entirely. No clause 7.2.2 approval needed.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <h3>&#128276; Good to Know</h3>
+          <ul class="clean">
+            <li>0% VAT on investment gold (GCC VAT rules)</li>
+            <li>No purchase limits by default</li>
+            <li>Shariah compliance required for Saudi market</li>
+            <li>Penalty for unlicensed: up to SAR 90K + 6 months</li>
+          </ul>
+        </div>
+        <div class="card-sm">
+          <h3>If We Go Innovative (Direction A)</h3>
+          <p style="font-size:0.85rem;">Gold savings = likely needs SAMA payment license (holding funds). Gold-backed lending = CMA territory. Tokenization = unclear. <span class="gold">Start with e-commerce, add regulated features with licenses.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: WHAT WE BRING -->
+<div class="slide" data-title="What We Bring">
+  <div class="slide-inner">
+    <h2>What We Bring to the Table</h2>
+    <div class="grid-2" style="margin-top:1.5rem;">
+      <div class="card">
+        <h3 style="text-align:center; font-size:1.3rem; margin-bottom:1rem;"><span class="os" style="color:#ff5619;">One Studio</span></h3>
+        <ul class="clean">
+          <li>Full technical requirements document (ready)</li>
+          <li>Complete Figma designs (8-screen journey)</li>
+          <li>API architecture design</li>
+          <li>Pricing engine formula & logic</li>
+          <li>Deep domain knowledge from previous research</li>
+          <li>Engineering team to build & ship fast</li>
+          <li>Product management & delivery</li>
+          <li>Global competitive intelligence</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="text-align:center; font-size:1.3rem; margin-bottom:1rem;">Dr. Saleh & Team</h3>
+        <ul class="clean">
+          <li>Industry relationships (Kanz AlSahra, suppliers)</li>
+          <li>Regulatory navigation & banking context</li>
+          <li>Domain expertise in gold trading</li>
+          <li>Go-to-market network in Saudi</li>
+          <li>Business development & partnerships</li>
+          <li>?? <span class="muted">(to discuss: funding, entity, equity)</span></li>
+        </ul>
+        <div class="divider"></div>
+        <p style="font-size:0.82rem; text-align:center; color:var(--text-muted);">The partnership structure needs to be defined.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: QUESTIONS FOR DISCUSSION -->
+<div class="slide" data-title="Questions for Discussion">
+  <div class="slide-inner">
+    <h2>Questions for Discussion</h2>
+    <p class="subtitle">We need alignment on direction before we build.</p>
+    <div class="grid-2" style="margin-top:1.5rem;">
+      <div class="flex-col">
+        <div class="card">
+          <h3>1. Direction</h3>
+          <p style="font-size:0.85rem;">Do we build an <span class="gold">innovative gold platform</span> (gifting, savings, cultural commerce) or a <span class="emerald">straightforward gold e-commerce</span> marketplace? Or start with B and evolve to A?</p>
+        </div>
+        <div class="card">
+          <h3>2. Supply Partner</h3>
+          <p style="font-size:0.85rem;">Is Kanz AlSahra the confirmed partner? Exclusive or multi-vendor? Are there other suppliers to consider?</p>
+        </div>
+        <div class="card">
+          <h3>3. Target Customer</h3>
+          <p style="font-size:0.85rem;">Retail consumers? HNW investors? Gifting-first (social) or investment-first? This determines everything about the product.</p>
+        </div>
+      </div>
+      <div class="flex-col">
+        <div class="card">
+          <h3>4. Entity & Structure</h3>
+          <p style="font-size:0.85rem;">New company? JV? Who holds the MoC license? Equity split? Funding plan?</p>
+        </div>
+        <div class="card">
+          <h3>5. Go-to-Market</h3>
+          <p style="font-size:0.85rem;">Launch city? Riyadh or Jeddah? Timeline expectations? Marketing budget / strategy?</p>
+        </div>
+        <div class="card">
+          <h3>6. Regulatory Appetite</h3>
+          <p style="font-size:0.85rem;">E-commerce only (MoC) or willing to pursue SAMA PSP license for savings/wallet features? This gates the innovation level.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 14: CLOSING -->
+<div class="slide" data-title="Next Steps">
+  <div class="slide-inner" style="text-align:center;">
+    <div style="font-size:3.5rem; margin-bottom:1.5rem;">&#x1FAA9;</div>
+    <h1>The Saudi gold market<br>is <span class="gold">wide open</span>.</h1>
+    <p class="subtitle" style="max-width:600px; margin:0 auto 2rem;">$7.6B market. Zero dominant digital player. Deep cultural fit.<br>The question isn't <em>if</em> — it's <em>what</em> we build and <em>how fast</em>.</p>
+    <div class="card-sm" style="display:inline-block; margin-bottom:2rem;">
+      <p style="font-size:0.9rem;">Next step: Align on direction &rarr; Define entity &rarr; Build MVP &rarr; Launch</p>
+    </div>
+    <div class="brand-line"><span class="os">One Studio</span> &middot; Fastest Value Delivery</div>
+  </div>
+</div>
+
+</div><!-- end deck -->
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let cur = 0;
+
+document.getElementById('total').textContent = total;
+
+// Build menu
+const menu = document.getElementById('slide-menu');
+slides.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.innerHTML = `<span class="num">${String(i+1).padStart(2,'0')}</span>${s.dataset.title}`;
+  btn.onclick = () => { goTo(i); toggleMenu(); };
+  menu.appendChild(btn);
+});
+
+function goTo(n) {
+  if (n < 0 || n >= total || n === cur) return;
+  const goingForward = n > cur;
+  // Remove active from old slide
+  slides[cur].classList.remove('active');
+  if (goingForward) slides[cur].classList.add('prev');
+  cur = n;
+  // Reset all slides, then set correct states
+  slides.forEach((s, i) => {
+    if (i === cur) return;
+    s.classList.remove('active');
+    if (i < cur) {
+      s.classList.add('prev');
+    } else {
+      s.classList.remove('prev');
+    }
+  });
+  slides[cur].classList.remove('prev');
+  slides[cur].classList.add('active');
+  document.getElementById('progress-bar').style.width = ((cur / (total - 1)) * 100) + '%';
+  document.querySelector('#slide-counter .current').textContent = cur + 1;
+  menu.querySelectorAll('button').forEach((b, i) => b.classList.toggle('active', i === cur));
+  history.replaceState(null, '', `#slide-${cur + 1}`);
+}
+
+function go(d) { goTo(cur + d); }
+function toggleMenu() { menu.classList.toggle('open'); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+  if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+  if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+  if (e.key === 'Escape') { menu.classList.remove('open'); }
+});
+
+// Hash nav
+if (location.hash) {
+  const m = location.hash.match(/slide-(\d+)/);
+  if (m) goTo(parseInt(m[1]) - 1);
+}
+
+// Click outside menu to close
+document.addEventListener('click', e => {
+  if (!e.target.closest('#slide-menu') && !e.target.closest('#slide-menu-btn')) {
+    menu.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
