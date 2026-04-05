@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XSPACE — Product & Tech Update | April 2026</title>
+<link rel="icon" href="https://onestudio-co.github.io/slides/logo.jpeg" type="image/jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ===================== RESET & BASE ===================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080c14;
+    --surface: #0f1520;
+    --surface2: #161e2e;
+    --border: rgba(255,255,255,0.08);
+    --border-bright: rgba(255,255,255,0.15);
+    --text: #f0f4ff;
+    --text-dim: #8896aa;
+    --text-muted: #4a5568;
+    --accent: #00b4d8;
+    --accent2: #0077b6;
+    --accent-glow: rgba(0, 180, 216, 0.25);
+    --teal: #00b4d8;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --red-soft: rgba(239, 68, 68, 0.15);
+    --amber-soft: rgba(245, 158, 11, 0.15);
+    --green-soft: rgba(34, 197, 94, 0.15);
+    --teal-soft: rgba(0, 180, 216, 0.12);
+    --font-head: 'Space Grotesk', 'Tajawal', sans-serif;
+    --font-body: 'Inter', 'Tajawal', sans-serif;
+    --font-arabic: 'Tajawal', sans-serif;
+  }
+
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+  }
+
+  /* ===================== MOBILE BLOCK ===================== */
+  #mobile-block {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 2rem;
+    gap: 1.5rem;
+  }
+  #mobile-block .logo-text {
+    font-family: var(--font-head);
+    font-size: 1.8rem; font-weight: 700;
+    letter-spacing: 0.15em; color: var(--teal);
+  }
+  #mobile-block .arabic-sub {
+    font-family: var(--font-arabic);
+    font-size: 1.1rem; color: var(--text-dim);
+    line-height: 1.7;
+  }
+  #mobile-block .eng-sub {
+    font-family: var(--font-body);
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+  #mobile-block .copy-btn {
+    margin-top: 1rem;
+    background: rgba(0, 180, 216, 0.15);
+    border: 1px solid rgba(0, 180, 216, 0.4);
+    color: var(--teal); padding: 0.75rem 2rem;
+    border-radius: 50px; font-size: 0.9rem;
+    cursor: pointer; font-family: var(--font-body);
+    transition: all 0.2s;
+  }
+  #mobile-block .copy-btn:hover { background: rgba(0,180,216,0.25); }
+
+  @media (max-width: 768px) {
+    #mobile-block { display: flex; }
+    #app { display: none; }
+  }
+
+  /* ===================== PROGRESS BAR ===================== */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 200; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  /* ===================== APP SHELL ===================== */
+  #app { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+  /* ===================== SLIDES ===================== */
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateX(40px);
+  }
+  .slide.active {
+    opacity: 1; pointer-events: all;
+    transform: translateX(0);
+  }
+  .slide.exit-left {
+    opacity: 0; transform: translateX(-40px);
+  }
+
+  /* ===================== HEADER BAR ===================== */
+  .slide-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 2.5rem 0;
+    position: relative; z-index: 10;
+  }
+  .xspace-wordmark {
+    font-family: var(--font-head);
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.25em; color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .slide-tag {
+    font-family: var(--font-body);
+    font-size: 0.7rem; font-weight: 500;
+    color: var(--text-muted); letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ===================== SLIDE CONTENT AREA ===================== */
+  .slide-content {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 1.5rem 2.5rem 2rem;
+    overflow: hidden;
+  }
+
+  /* ===================== TYPOGRAPHY ===================== */
+  .slide-label {
+    font-family: var(--font-head);
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 0.75rem;
+  }
+  h1.title {
+    font-family: var(--font-head);
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    font-weight: 700; line-height: 1.1;
+    color: var(--text); margin-bottom: 0.5rem;
+  }
+  h2.slide-title {
+    font-family: var(--font-head);
+    font-size: clamp(1.5rem, 2.5vw, 2.4rem);
+    font-weight: 700; line-height: 1.15;
+    color: var(--text); margin-bottom: 1.2rem;
+  }
+  .arabic-title {
+    font-family: var(--font-arabic);
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-weight: 500; color: var(--text-dim);
+    margin-bottom: 1.5rem;
+  }
+  p.lead {
+    font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+    color: var(--text-dim); line-height: 1.7;
+    max-width: 70ch;
+  }
+
+  /* ===================== DIVIDER ===================== */
+  .divider {
+    width: 100%; height: 1px;
+    background: var(--border); margin: 1rem 0;
+  }
+  .divider-accent {
+    width: 3rem; height: 2px;
+    background: var(--teal); margin-bottom: 1.2rem;
+  }
+
+  /* ===================== GRID LAYOUTS ===================== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+  .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+
+  /* ===================== CARDS ===================== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.2rem 1.4rem;
+    position: relative;
+  }
+  .card-teal { border-color: rgba(0,180,216,0.3); }
+  .card-green { border-color: rgba(34,197,94,0.3); }
+  .card-amber { border-color: rgba(245,158,11,0.3); }
+  .card-red { border-color: rgba(239,68,68,0.3); }
+  .card-head {
+    font-family: var(--font-head);
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 0.6rem;
+  }
+  .card-head-teal { color: var(--teal); }
+  .card-head-green { color: var(--green); }
+  .card-head-amber { color: var(--amber); }
+  .card-head-red { color: var(--red); }
+  .card-value {
+    font-family: var(--font-head);
+    font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+    font-weight: 700; color: var(--text);
+  }
+  .card-desc {
+    font-size: 0.78rem; color: var(--text-dim);
+    margin-top: 0.3rem; line-height: 1.5;
+  }
+
+  /* ===================== STAT ROW ===================== */
+  .stat-row {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-weight: 700; color: var(--teal);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.85rem; color: var(--text-dim);
+  }
+
+  /* ===================== LISTS ===================== */
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+  .check-list li {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.88rem; color: var(--text-dim); line-height: 1.5;
+  }
+  .check-list li .icon {
+    flex-shrink: 0; width: 1.2rem; height: 1.2rem;
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 0.65rem; margin-top: 0.1rem;
+  }
+  .icon-check { background: var(--green-soft); color: var(--green); }
+  .icon-dot { background: var(--teal-soft); color: var(--teal); }
+  .icon-warn { background: var(--amber-soft); color: var(--amber); }
+  .icon-crit { background: var(--red-soft); color: var(--red); }
+  .icon-gate { background: rgba(139,92,246,0.15); color: #a78bfa; }
+
+  /* ===================== STATUS BADGE ===================== */
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.2rem 0.65rem; border-radius: 50px;
+    font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .badge-green { background: var(--green-soft); color: var(--green); }
+  .badge-amber { background: var(--amber-soft); color: var(--amber); }
+  .badge-red { background: var(--red-soft); color: var(--red); }
+  .badge-teal { background: var(--teal-soft); color: var(--teal); }
+  .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+  .badge-dot::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  /* ===================== TAG PILLS ===================== */
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+  .tag {
+    padding: 0.2rem 0.6rem; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 500;
+    background: var(--surface2); color: var(--text-dim);
+    border: 1px solid var(--border);
+    font-family: var(--font-head);
+  }
+  .tag-teal { background: var(--teal-soft); color: var(--teal); border-color: rgba(0,180,216,0.2); }
+
+  /* ===================== TIMELINE / EPIC BLOCKS ===================== */
+  .epic {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 0.9rem 1.1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 0.7rem;
+  }
+  .epic-letter {
+    flex-shrink: 0;
+    width: 2rem; height: 2rem; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head); font-weight: 700; font-size: 0.9rem;
+    background: var(--teal-soft); color: var(--teal);
+  }
+  .epic-body { flex: 1; }
+  .epic-title {
+    font-family: var(--font-head); font-size: 0.9rem;
+    font-weight: 600; color: var(--text); margin-bottom: 0.25rem;
+  }
+  .epic-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+  .epic-effort {
+    flex-shrink: 0;
+    font-family: var(--font-head); font-size: 0.7rem; font-weight: 600;
+    color: var(--amber); padding: 0.2rem 0.5rem;
+    background: var(--amber-soft); border-radius: 4px;
+    align-self: center;
+  }
+
+  /* ===================== FEATURE TABLE ===================== */
+  .feat-table { width: 100%; border-collapse: collapse; }
+  .feat-table th {
+    text-align: left; padding: 0.5rem 0.8rem;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .feat-table td {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.82rem; color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .feat-table tr:last-child td { border-bottom: none; }
+  .feat-table td:first-child { color: var(--text); font-weight: 500; }
+  .feat-table td.effort { color: var(--amber); font-family: var(--font-head); font-weight: 600; }
+  .feat-table td.status-live { color: var(--green); font-weight: 600; }
+  .feat-table td.status-ready { color: var(--teal); font-weight: 600; }
+
+  /* ===================== ARCH LAYER ===================== */
+  .arch-layer {
+    padding: 0.75rem 1.1rem; border-radius: 8px;
+    border-left: 3px solid var(--teal);
+    background: var(--surface); margin-bottom: 0.6rem;
+  }
+  .arch-layer-label {
+    font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 0.25rem;
+  }
+  .arch-layer-items {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+
+  /* ===================== GATE ITEM ===================== */
+  .gate-item {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; margin-bottom: 0.5rem;
+  }
+  .gate-num {
+    flex-shrink: 0; width: 1.6rem; height: 1.6rem;
+    border-radius: 50%; background: var(--teal-soft);
+    color: var(--teal); font-family: var(--font-head);
+    font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gate-text { font-size: 0.85rem; color: var(--text-dim); }
+  .gate-text strong { color: var(--text); }
+
+  /* ===================== RISK ITEM ===================== */
+  .risk-item {
+    padding: 0.9rem 1.1rem; border-radius: 10px;
+    margin-bottom: 0.6rem; display: flex;
+    gap: 0.9rem; align-items: flex-start;
+  }
+  .risk-item.critical { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2); }
+  .risk-item.high { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15); }
+  .risk-item.medium { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); }
+  .risk-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.1rem; }
+  .risk-body .risk-title {
+    font-family: var(--font-head); font-size: 0.88rem;
+    font-weight: 600; color: var(--text); margin-bottom: 0.25rem;
+  }
+  .risk-body .risk-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+  .risk-fix {
+    margin-top: 0.35rem; font-size: 0.73rem;
+    color: var(--green); font-weight: 500;
+  }
+
+  /* ===================== TWO-COL SPLIT ===================== */
+  .split { display: flex; gap: 2rem; height: 100%; }
+  .split-col { flex: 1; display: flex; flex-direction: column; }
+
+  /* ===================== BIG NUMBER HERO ===================== */
+  .hero-stats {
+    display: flex; gap: 1.5rem;
+    flex-wrap: wrap; margin: 1rem 0;
+  }
+  .hero-stat { text-align: center; }
+  .hero-num {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 3.5vw, 4rem);
+    font-weight: 700; color: var(--teal);
+    line-height: 1;
+  }
+  .hero-label {
+    font-size: 0.78rem; color: var(--text-dim);
+    margin-top: 0.2rem;
+  }
+
+  /* ===================== CLOSING SLIDE SPECIAL ===================== */
+  .closing-center {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; gap: 1.2rem;
+  }
+  .closing-headline {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700; color: var(--text);
+    line-height: 1.2;
+  }
+  .closing-sub {
+    font-family: var(--font-arabic);
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    color: var(--text-dim); font-weight: 400;
+  }
+  .closing-line {
+    width: 4rem; height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--accent2));
+    border-radius: 2px;
+  }
+  .closing-date {
+    font-size: 0.8rem; color: var(--text-muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: var(--font-head);
+  }
+
+  /* ===================== GLOW ORBS (title slide) ===================== */
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: 0.15; pointer-events: none;
+  }
+  .orb-1 { width: 500px; height: 500px; background: var(--teal); top: -150px; right: -100px; }
+  .orb-2 { width: 300px; height: 300px; background: var(--accent2); bottom: -100px; left: 100px; }
+
+  /* ===================== NAVIGATION ===================== */
+  #nav {
+    position: fixed; bottom: 1.8rem; left: 50%;
+    transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .nav-btn {
+    width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-bright);
+    color: var(--text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; transition: all 0.2s;
+    backdrop-filter: blur(12px);
+  }
+  .nav-btn:hover {
+    background: rgba(0,180,216,0.15);
+    border-color: rgba(0,180,216,0.4);
+    color: var(--teal);
+  }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  #slide-counter {
+    font-family: var(--font-head); font-size: 0.78rem;
+    color: var(--text-muted); min-width: 3rem; text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===================== JUMP MENU ===================== */
+  #menu-btn {
+    width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-bright);
+    color: var(--text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; transition: all 0.2s;
+    backdrop-filter: blur(12px);
+  }
+  #menu-btn:hover { background: rgba(0,180,216,0.15); border-color: rgba(0,180,216,0.4); color: var(--teal); }
+
+  #jump-menu {
+    position: fixed; bottom: 5rem; left: 50%;
+    transform: translateX(-50%); z-index: 150;
+    background: rgba(15, 21, 32, 0.97);
+    border: 1px solid var(--border-bright);
+    border-radius: 12px; width: 340px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+    display: none;
+  }
+  #jump-menu.open { display: block; }
+  .jump-header {
+    padding: 0.7rem 1rem;
+    font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .jump-item {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.6rem 1rem; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .jump-item:hover { background: rgba(0,180,216,0.08); }
+  .jump-item.active { background: rgba(0,180,216,0.12); }
+  .jump-num {
+    font-family: var(--font-head); font-size: 0.7rem;
+    color: var(--text-muted); width: 1.2rem; text-align: center;
+    flex-shrink: 0;
+  }
+  .jump-title { font-size: 0.82rem; color: var(--text-dim); }
+  .jump-item.active .jump-title { color: var(--teal); }
+
+  /* ===================== OVERVIEW GRID ===================== */
+  #overview {
+    display: none; position: fixed; inset: 0; z-index: 120;
+    background: rgba(8,12,20,0.97); overflow-y: auto;
+    padding: 3rem 2rem;
+  }
+  #overview.open { display: block; }
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem; max-width: 1000px; margin: 0 auto;
+  }
+  .thumb {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .thumb:hover, .thumb.active {
+    border-color: rgba(0,180,216,0.5);
+    background: var(--teal-soft);
+  }
+  .thumb-num {
+    font-family: var(--font-head); font-size: 0.68rem;
+    color: var(--text-muted); margin-bottom: 0.4rem;
+  }
+  .thumb-title { font-size: 0.82rem; color: var(--text); font-weight: 500; }
+  #overview-close {
+    position: fixed; top: 1.5rem; right: 1.5rem;
+    width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid var(--border-bright);
+    color: var(--text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+
+  /* ===================== SLIDE-SPECIFIC ADJUSTMENTS ===================== */
+  .slide-01 { background: var(--bg); }
+  .slide-01 .slide-content { justify-content: center; padding-top: 2rem; }
+
+  /* XSPACE logo large */
+  .xspace-logo-large {
+    font-family: var(--font-head);
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    font-weight: 700; letter-spacing: 0.3em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .xspace-logo-large span.arabic {
+    font-family: var(--font-arabic);
+    letter-spacing: 0; font-weight: 500;
+    font-size: 0.9em; color: rgba(0,180,216,0.6);
+  }
+
+  /* Section color accents */
+  .accent-red { color: var(--red); }
+  .accent-amber { color: var(--amber); }
+  .accent-green { color: var(--green); }
+  .accent-teal { color: var(--teal); }
+  .accent-purple { color: #a78bfa; }
+
+  /* Small mono */
+  .mono {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem; color: var(--text-dim);
+    background: rgba(255,255,255,0.04);
+    padding: 0.15rem 0.4rem; border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE BLOCK -->
+<div id="mobile-block">
+  <div class="xspace-logo-large">XSPACE <span class="arabic">إكس سبيس</span></div>
+  <div class="arabic-sub">هذا العرض مُصمَّم للشاشات الكبيرة<br>يُرجى فتحه على الحاسوب</div>
+  <div class="eng-sub">This deck is desktop-only. Open the link on your laptop.</div>
+  <button class="copy-btn" onclick="navigator.clipboard.writeText(location.href); this.textContent='Copied!'">Copy Link to Open on Desktop</button>
+</div>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar" style="width: 7.69%"></div>
+
+<!-- APP -->
+<div id="app">
+
+<!-- ================================================
+     SLIDE 01 — TITLE
+     ================================================ -->
+<div class="slide slide-01 active" data-index="0">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">Confidential — Leadership Only</div>
+  </div>
+  <div class="slide-content" style="justify-content: center; gap: 0; padding-top: 1rem;">
+    <div class="xspace-logo-large">
+      <span>XSPACE</span>
+      <span class="arabic">إكس سبيس</span>
+    </div>
+    <div class="slide-label">CTO Update</div>
+    <h1 class="title">Product & Tech<br>Status Report</h1>
+    <div class="arabic-title">تحديث المنتج والتقنية — أبريل ٢٠٢٦</div>
+    <div class="divider" style="max-width: 28rem;"></div>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 0.5rem;">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--green);"></div>
+        <span style="font-size: 0.82rem; color: var(--text-dim);">MVP: Shipped</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--amber);"></div>
+        <span style="font-size: 0.82rem; color: var(--text-dim);">Open Items: 9</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--teal);"></div>
+        <span style="font-size: 0.82rem; color: var(--text-dim);">Phase 2: Designed</span>
+      </div>
+    </div>
+    <div style="margin-top: 2rem;">
+      <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-head); letter-spacing: 0.1em; text-transform: uppercase;">Thumama · April 5, 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 02 — WHAT WE BUILT: OVERVIEW
+     ================================================ -->
+<div class="slide" data-index="1">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">02 / What We Built</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">MVP Delivery</div>
+    <h2 class="slide-title">The Foundation Is Built</h2>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-num">62</div>
+        <div class="hero-label">Database Migrations</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-num">45+</div>
+        <div class="hero-label">API Endpoints</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-num">20</div>
+        <div class="hero-label">Domain Models</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-num">10</div>
+        <div class="hero-label">Mobile Feature Modules</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-num">2</div>
+        <div class="hero-label">Platforms (iOS + Android)</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="grid-3" style="flex: 1;">
+      <div class="card card-teal">
+        <div class="card-head card-head-teal">Backend</div>
+        <div style="font-size: 0.85rem; color: var(--text); font-weight: 600; margin-bottom: 0.4rem;">Laravel 12 / PHP 8.2</div>
+        <div class="card-desc">PostgreSQL · REST API v1 · 15 business services · Filament admin panel</div>
+      </div>
+      <div class="card card-teal">
+        <div class="card-head card-head-teal">Mobile App</div>
+        <div style="font-size: 0.85rem; color: var(--text); font-weight: 600; margin-bottom: 0.4rem;">Flutter / Dart</div>
+        <div class="card-desc">iOS + Android · BLoC architecture · Arabic & English · Tap Payments</div>
+      </div>
+      <div class="card card-teal">
+        <div class="card-head card-head-teal">Admin Panel</div>
+        <div style="font-size: 0.85rem; color: var(--text); font-weight: 600; margin-bottom: 0.4rem;">Filament v3</div>
+        <div class="card-desc">Revenue widgets · Credit economy · Churn analysis · Plan performance</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 03 — BACKEND ARCHITECTURE
+     ================================================ -->
+<div class="slide" data-index="2">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">03 / Backend Architecture</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">Laravel 12 · PHP 8.2+ · PostgreSQL</div>
+    <h2 class="slide-title">Backend Architecture</h2>
+    <div class="grid-2-1" style="flex: 1; align-content: start;">
+      <div>
+        <div class="arch-layer">
+          <div class="arch-layer-label">API Layer</div>
+          <div class="arch-layer-items">
+            <span class="tag tag-teal">REST API v1</span>
+            <span class="tag tag-teal">Versioned routes</span>
+            <span class="tag tag-teal">JSON envelopes</span>
+            <span class="tag tag-teal">Sanctum auth</span>
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-label">Business Services (15)</div>
+          <div class="arch-layer-items">
+            <span class="tag">AuthService</span>
+            <span class="tag">BookingService</span>
+            <span class="tag">TapPaymentService</span>
+            <span class="tag">WalletService</span>
+            <span class="tag">NotificationService</span>
+            <span class="tag">CreditService</span>
+            <span class="tag">PlanService</span>
+            <span class="tag">SupportService</span>
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-label">Domain Models (20)</div>
+          <div class="arch-layer-items">
+            <span class="tag">User</span><span class="tag">Booking</span>
+            <span class="tag">Plan</span><span class="tag">CreditPack</span>
+            <span class="tag">UserWallet</span><span class="tag">WalletTransaction</span>
+            <span class="tag">SavedCard</span><span class="tag">DeskReservation</span>
+            <span class="tag">PushNotification</span><span class="tag">Support</span>
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-label">Infrastructure</div>
+          <div class="arch-layer-items">
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Laravel Queue (DB)</span>
+            <span class="tag">Firebase FCM</span>
+            <span class="tag">Spatie RBAC</span>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.7rem;">
+        <div class="card">
+          <div class="card-head">Security</div>
+          <ul class="check-list">
+            <li><span class="icon icon-check">✓</span>OTP token auth (revocable)</li>
+            <li><span class="icon icon-check">✓</span>DB transaction safety</li>
+            <li><span class="icon icon-check">✓</span>RBAC permissions</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head">Payments</div>
+          <ul class="check-list">
+            <li><span class="icon icon-check">✓</span>Tap Payments integrated</li>
+            <li><span class="icon icon-check">✓</span>Wallet credit economy</li>
+            <li><span class="icon icon-check">✓</span>Transaction history</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head">Admin Panel</div>
+          <ul class="check-list">
+            <li><span class="icon icon-check">✓</span>Revenue overview widget</li>
+            <li><span class="icon icon-check">✓</span>Churn analysis</li>
+            <li><span class="icon icon-check">✓</span>Plan performance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 04 — MOBILE APP
+     ================================================ -->
+<div class="slide" data-index="3">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">04 / Mobile App</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">Flutter / Dart · iOS + Android</div>
+    <h2 class="slide-title">Mobile App Architecture</h2>
+    <div class="grid-2" style="flex: 1; align-content: start;">
+      <div>
+        <div style="margin-bottom: 0.8rem; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">10 Feature Modules</div>
+        <div class="grid-2" style="gap: 0.5rem; margin-bottom: 1rem;">
+          <div class="card" style="padding: 0.6rem 0.8rem;">
+            <div style="font-size: 0.78rem; color: var(--text); font-weight: 600;">Auth & Onboarding</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.15rem;">OTP, splash, onboarding flow</div>
+          </div>
+          <div class="card" style="padding: 0.6rem 0.8rem;">
+            <div style="font-size: 0.78rem; color: var(--text); font-weight: 600;">Booking</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.15rem;">Instant booking + rooms</div>
+          </div>
+          <div class="card" style="padding: 0.6rem 0.8rem;">
+            <div style="font-size: 0.78rem; color: var(--text); font-weight: 600;">Plans & Credits</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.15rem;">Membership + credit packs</div>
+          </div>
+          <div class="card" style="padding: 0.6rem 0.8rem;">
+            <div style="font-size: 0.78rem; color: var(--text); font-weight: 600;">Wallet & Transactions</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.15rem;">Full financial history</div>
+          </div>
+          <div class="card" style="padding: 0.6rem 0.8rem;">
+            <div style="font-size: 0.78rem; color: var(--text); font-weight: 600;">Home & Spaces</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.15rem;">Browse + discovery</div>
+          </div>
+          <div class="card" style="padding: 0.6rem 0.8rem;">
+            <div style="font-size: 0.78rem; color: var(--text); font-weight: 600;">Support</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.15rem;">In-app support tickets</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="margin-bottom: 0.8rem; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">Technical Stack</div>
+        <div class="arch-layer" style="margin-bottom: 0.6rem;">
+          <div class="arch-layer-label">State Management</div>
+          <div class="arch-layer-items"><span class="tag tag-teal">BLoC / Cubit pattern</span><span class="tag tag-teal">Feature-first architecture</span></div>
+        </div>
+        <div class="arch-layer" style="margin-bottom: 0.6rem;">
+          <div class="arch-layer-label">Navigation & Storage</div>
+          <div class="arch-layer-items">
+            <span class="tag">go_router v17</span>
+            <span class="tag">Deep links</span>
+            <span class="tag">flutter_secure_storage</span>
+            <span class="tag">Encrypted tokens</span>
+          </div>
+        </div>
+        <div class="arch-layer" style="margin-bottom: 0.6rem;">
+          <div class="arch-layer-label">Integrations</div>
+          <div class="arch-layer-items">
+            <span class="tag">Tap Payments</span>
+            <span class="tag">Firebase FCM</span>
+            <span class="tag">Push notifications</span>
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-label">Localization</div>
+          <div class="arch-layer-items">
+            <span class="tag tag-teal">Arabic (RTL)</span>
+            <span class="tag tag-teal">English (LTR)</span>
+            <span class="tag">Full i18n</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 05 — ADMIN DASHBOARD
+     ================================================ -->
+<div class="slide" data-index="4">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">05 / Admin Dashboard</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">Filament v3 · Business Intelligence</div>
+    <h2 class="slide-title">Admin Dashboard — Built</h2>
+    <div class="grid-3" style="margin-bottom: 1rem;">
+      <div class="card card-teal">
+        <div class="card-head card-head-teal">Revenue Overview</div>
+        <div class="card-desc">Real-time revenue tracking across plans, credit packs, and one-off bookings. Filterable by period.</div>
+      </div>
+      <div class="card card-teal">
+        <div class="card-head card-head-teal">Credit Economy</div>
+        <div class="card-desc">Tracks credit issuance, consumption, wallet balances, and credit velocity across the user base.</div>
+      </div>
+      <div class="card card-teal">
+        <div class="card-head card-head-teal">Churn Analysis</div>
+        <div class="card-desc">Identifies churned customers by last booking date. Actionable retention intelligence.</div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-head">Plan Performance</div>
+        <div class="card-desc">Active vs. cancelled plans. Subscription health and revenue mix per plan tier.</div>
+      </div>
+      <div class="card">
+        <div class="card-head">QuickSnap Widget</div>
+        <div class="card-desc">Operator-facing fast view — live occupancy snapshot and today's booking count.</div>
+      </div>
+      <div class="card">
+        <div class="card-head">RBAC Access Control</div>
+        <div class="card-desc">Spatie Laravel Permission. Role-based panel access — operators vs. admin vs. super-admin.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 06 — FEATURES SHIPPED / DEMO READY
+     ================================================ -->
+<div class="slide" data-index="5">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">06 / Features Live</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">MVP Scope — Complete</div>
+    <h2 class="slide-title">What's Live & Demo-Ready</h2>
+    <div class="grid-2" style="flex: 1; align-content: start; gap: 1rem;">
+      <div>
+        <table class="feat-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Status</th>
+              <th>Platform</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>OTP Authentication</td><td class="status-live">Live</td><td>Mobile + Backend</td></tr>
+            <tr><td>Space & Room Browsing</td><td class="status-live">Live</td><td>Mobile</td></tr>
+            <tr><td>Instant Booking</td><td class="status-live">Live</td><td>Mobile + Backend</td></tr>
+            <tr><td>Plans & Memberships</td><td class="status-live">Live</td><td>Mobile + Backend</td></tr>
+            <tr><td>Credit Packs</td><td class="status-live">Live</td><td>Mobile + Backend</td></tr>
+            <tr><td>Wallet & Transactions</td><td class="status-live">Live</td><td>Mobile + Backend</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <table class="feat-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Status</th>
+              <th>Platform</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Tap Payments</td><td class="status-live">Live</td><td>Mobile + Backend</td></tr>
+            <tr><td>Push Notifications</td><td class="status-live">Live</td><td>Mobile + Firebase</td></tr>
+            <tr><td>In-App Support</td><td class="status-live">Live</td><td>Mobile + Backend</td></tr>
+            <tr><td>Admin Panel</td><td class="status-live">Live</td><td>Web (Filament)</td></tr>
+            <tr><td>XPOINTS System</td><td class="status-ready">Designed</td><td>Backend-ready</td></tr>
+            <tr><td>Arabic RTL</td><td class="status-live">Live</td><td>Full app</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card card-green" style="margin-top: 1rem; padding: 0.8rem 1.2rem;">
+      <div style="display: flex; align-items: center; gap: 0.8rem;">
+        <span class="badge badge-green badge-dot">All core flows functional</span>
+        <span style="font-size: 0.82rem; color: var(--text-dim);">XPOINTS loyalty is the only designed-but-not-built item — infrastructure is already in place (UserWallet + WalletTransaction models). Estimated: 1–2 weeks to ship.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 07 — OPEN ITEMS: SECURITY
+     ================================================ -->
+<div class="slide" data-index="6">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">07 / Open Items — Security</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label" style="color: var(--red);">Security — Must Close Before Investor Due Diligence</div>
+    <h2 class="slide-title">Security Findings</h2>
+    <div style="flex: 1; overflow-y: auto;">
+      <div class="risk-item critical">
+        <div class="risk-icon">🔴</div>
+        <div class="risk-body">
+          <div class="risk-title">Firebase private key committed to public repo</div>
+          <div class="risk-desc">Service account key exposed in git history since January 19 — 76 days. Any actor with the commit history has full Firebase project access.</div>
+          <div class="risk-fix">Fix: Rotate key immediately. Clean git history (BFG / filter-branch). Confirm no unauthorized access in Firebase audit log.</div>
+        </div>
+      </div>
+      <div class="risk-item critical">
+        <div class="risk-icon">🔴</div>
+        <div class="risk-body">
+          <div class="risk-title">Tap Payments API keys hardcoded in config defaults</div>
+          <div class="risk-desc">Production payment keys visible in source. If the production key is active, any merchant-level fraud is possible.</div>
+          <div class="risk-fix">Fix: Move all keys to environment variables. Verify production key status with Tap directly.</div>
+        </div>
+      </div>
+      <div class="risk-item high">
+        <div class="risk-icon">🔴</div>
+        <div class="risk-body">
+          <div class="risk-title">OTP test mode may be active in production</div>
+          <div class="risk-desc"><span class="mono">OTP_TEST_MODE=true</span> with hardcoded code <span class="mono">1234</span> in <span class="mono">.env.example</span>. If this leaked into production .env, any account is bypassable.</div>
+          <div class="risk-fix">Fix: Confirm production .env. Enforce OTP_TEST_MODE=false in deployment checklist.</div>
+        </div>
+      </div>
+      <div class="risk-item high">
+        <div class="risk-icon">🔴</div>
+        <div class="risk-body">
+          <div class="risk-title">Mobile API key hardcoded in source</div>
+          <div class="risk-desc">API key compiled into the APK binary. Extractable by any user with the APK.</div>
+          <div class="risk-fix">Fix: Implement certificate pinning + backend API key rotation strategy.</div>
+        </div>
+      </div>
+      <div class="risk-item high">
+        <div class="risk-icon">🔴</div>
+        <div class="risk-body">
+          <div class="risk-title">Payment webhook — no HMAC signature verification</div>
+          <div class="risk-desc">Tap Payments webhook endpoint accepts payloads without verifying origin. Spoofed payment confirmations are possible.</div>
+          <div class="risk-fix">Fix: Implement Tap's HMAC header verification. 2–4 hour fix. High priority.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 08 — OPEN ITEMS: IP HANDOVER
+     ================================================ -->
+<div class="slide" data-index="7">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">08 / Open Items — IP & Ownership</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label" style="color: var(--red);">IP Handover — Incomplete Despite Final Payment</div>
+    <h2 class="slide-title">IP & Asset Ownership</h2>
+    <div class="grid-2" style="flex: 1; align-content: start;">
+      <div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.7rem;">What's Missing</div>
+        <div class="risk-item critical" style="margin-bottom: 0.6rem;">
+          <div class="risk-icon">🔴</div>
+          <div class="risk-body">
+            <div class="risk-title">No LICENSE files in either repository</div>
+            <div class="risk-desc">Neither Xpace-Backend nor Xpace-Mobile has any license declaration. Ownership is legally ambiguous.</div>
+          </div>
+        </div>
+        <div class="risk-item critical" style="margin-bottom: 0.6rem;">
+          <div class="risk-icon">🔴</div>
+          <div class="risk-body">
+            <div class="risk-title">No signed IP assignment from developers</div>
+            <div class="risk-desc">4 developers (Mohammed Alimoor, Muhammed Musabeh, Abdallah Nasar, AhmedRefaatA + mobile: Ahmed Mobark) — no individual IP assignment agreements on file.</div>
+          </div>
+        </div>
+        <div class="risk-item medium">
+          <div class="risk-icon">🟡</div>
+          <div class="risk-body">
+            <div class="risk-title">Firebase, Tap, APNS — ownership unconfirmed</div>
+            <div class="risk-desc">Firebase project, Tap Payments merchant account, and Apple APNS certificates — not confirmed to be registered under xSpace legal entity.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.7rem;">Why This Matters</div>
+        <div class="card" style="margin-bottom: 0.7rem;">
+          <div class="card-desc" style="font-size: 0.83rem; line-height: 1.7;">
+            Any investor doing due diligence will ask for IP chain of title. Without signed assignments, the codebase is legally unprotected.
+          </div>
+        </div>
+        <div class="card card-amber">
+          <div class="card-head card-head-amber">Required Actions</div>
+          <ul class="check-list">
+            <li><span class="icon icon-warn">!</span>IP assignment letter — all 5 developers sign</li>
+            <li><span class="icon icon-warn">!</span>Add PROPRIETARY license header to both repos</li>
+            <li><span class="icon icon-warn">!</span>Transfer Firebase project to xSpace account</li>
+            <li><span class="icon icon-warn">!</span>Transfer Tap merchant account ownership</li>
+            <li><span class="icon icon-warn">!</span>Confirm APNS certs under xSpace Apple ID</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 09 — OPEN ITEMS: PAYMENTS & APP STORE
+     ================================================ -->
+<div class="slide" data-index="8">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">09 / Open Items — Payments & App Store</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label" style="color: var(--amber);">Operational Gaps — Needs Confirmation</div>
+    <h2 class="slide-title">Payments & App Store Status</h2>
+    <div class="grid-2" style="flex: 1; align-content: start; gap: 1.2rem;">
+      <div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.7rem;">Payment Gateway</div>
+        <div class="risk-item medium" style="margin-bottom: 0.6rem;">
+          <div class="risk-icon">🟡</div>
+          <div class="risk-body">
+            <div class="risk-title">Moyasar activation status: unconfirmed</div>
+            <div class="risk-desc">Tap Payments is integrated and working. Moyasar was discussed as the Saudi-native alternative. Without a live gateway, the product is not fully commercially operational.</div>
+            <div class="risk-fix">Action: Confirm Tap is live in production. Decide Moyasar timeline.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">Current Payment Stack</div>
+          <ul class="check-list">
+            <li><span class="icon icon-check">✓</span>Tap Payments — integrated in backend + mobile</li>
+            <li><span class="icon icon-check">✓</span>Saved cards — stored and tokenized</li>
+            <li><span class="icon icon-check">✓</span>Transaction history — full audit trail</li>
+            <li><span class="icon icon-warn">!</span>Webhook HMAC — needs fix (see security slide)</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.7rem;">App Distribution</div>
+        <div class="risk-item medium" style="margin-bottom: 0.6rem;">
+          <div class="risk-icon">🟡</div>
+          <div class="risk-body">
+            <div class="risk-title">App Store / Play Store upload — unconfirmed</div>
+            <div class="risk-desc">Internal build (APK / TestFlight) status not confirmed. App Store listing, screenshots, metadata — not verified as complete.</div>
+            <div class="risk-fix">Action: Confirm current distribution channel. Get TestFlight link or Play Store internal track access.</div>
+          </div>
+        </div>
+        <div class="card card-amber">
+          <div class="card-head card-head-amber">Tech Debt (Acceptable for MVP)</div>
+          <ul class="check-list">
+            <li><span class="icon icon-warn">!</span>Zero test coverage — both repos</li>
+            <li><span class="icon icon-warn">!</span>No CI/CD pipeline</li>
+            <li><span class="icon icon-warn">!</span>No API documentation (45+ endpoints)</li>
+            <li><span class="icon icon-warn">!</span>Queue driver: DB (Redis needed at 10+ spaces)</li>
+            <li><span class="icon icon-warn">!</span>Laravel Telescope active (debug tool — must gate)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 10 — PHASE 2: EPIC OVERVIEW
+     ================================================ -->
+<div class="slide" data-index="9">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">10 / Phase 2 — EPICs</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">Phase 2 Architecture</div>
+    <h2 class="slide-title">Four EPICs — Tech Roadmap</h2>
+    <div style="flex: 1; overflow-y: auto;">
+      <div class="epic">
+        <div class="epic-letter">A</div>
+        <div class="epic-body">
+          <div class="epic-title">Instant Access & Booking — Enhanced</div>
+          <div class="epic-desc">Smart booking UX, recurring reservations, desk-specific selection, member check-in via QR / NFC. Builds on existing BookingService and DeskReservation models.</div>
+        </div>
+        <div class="epic-effort">4–6 weeks</div>
+      </div>
+      <div class="epic">
+        <div class="epic-letter">B</div>
+        <div class="epic-body">
+          <div class="epic-title">Payments & Usage Flow</div>
+          <div class="epic-desc">Moyasar integration, dynamic pricing engine (hook into BookingService), usage-based billing, ZATCA e-invoicing path for KSA compliance.</div>
+        </div>
+        <div class="epic-effort">5–7 weeks</div>
+      </div>
+      <div class="epic">
+        <div class="epic-letter">C</div>
+        <div class="epic-body">
+          <div class="epic-title">Community Engagement</div>
+          <div class="epic-desc">XPOINTS loyalty activation (infrastructure already exists — 1–2 weeks to ship), community feed, member directory, event listings. Retention flywheel.</div>
+        </div>
+        <div class="epic-effort">3–5 weeks</div>
+      </div>
+      <div class="epic">
+        <div class="epic-letter">D</div>
+        <div class="epic-body">
+          <div class="epic-title">Services Marketplace</div>
+          <div class="epic-desc">In-space services discovery and booking — printing, catering, meeting room add-ons. New revenue layer. Requires marketplace service model + new models.</div>
+        </div>
+        <div class="epic-effort">6–8 weeks</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 11 — FEATURE ROADMAP WITH ESTIMATES
+     ================================================ -->
+<div class="slide" data-index="10">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">11 / Feature Estimates</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">Platform Products — Effort Estimates</div>
+    <h2 class="slide-title">What We Can Ship & When</h2>
+    <div class="grid-2" style="flex: 1; align-content: start; gap: 1.2rem;">
+      <div>
+        <table class="feat-table">
+          <thead>
+            <tr><th>Feature</th><th>Effort</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>XPOINTS Loyalty</td>
+              <td class="effort">1–2 wks</td>
+              <td>Infrastructure already in UserWallet + WalletTransaction</td>
+            </tr>
+            <tr>
+              <td>Space Investor Dashboard</td>
+              <td class="effort">1–2 wks</td>
+              <td>Filament + Spatie role gate, read-only view</td>
+            </tr>
+            <tr>
+              <td>Dynamic Pricing Engine</td>
+              <td class="effort">2–3 wks</td>
+              <td>Hook into existing BookingService</td>
+            </tr>
+            <tr>
+              <td>Moyasar Integration</td>
+              <td class="effort">2–3 wks</td>
+              <td>Replace / parallel to Tap Payments</td>
+            </tr>
+            <tr>
+              <td>QR / NFC Check-in</td>
+              <td class="effort">2–3 wks</td>
+              <td>Mobile + hardware trigger</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <table class="feat-table">
+          <thead>
+            <tr><th>Feature</th><th>Effort</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ZATCA E-Invoicing</td>
+              <td class="effort">3–4 wks</td>
+              <td>KSA compliance path — API integration</td>
+            </tr>
+            <tr>
+              <td>Community Feed</td>
+              <td class="effort">3–4 wks</td>
+              <td>New models + mobile module</td>
+            </tr>
+            <tr>
+              <td>Services Marketplace</td>
+              <td class="effort">6–8 wks</td>
+              <td>Largest scope — new service layer</td>
+            </tr>
+            <tr>
+              <td>XSPACE OS (Operator Layer)</td>
+              <td class="effort">8–12 wks</td>
+              <td>Multi-tenant operator management — flagship</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="card" style="margin-top: 0.8rem;">
+          <div class="card-head">Scale Note</div>
+          <div class="card-desc">Architecture supports 25-space scale today. No rewrite needed. Redis queue migration recommended before 10 concurrent spaces — 1 week migration task.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 12 — PRE-PHASE 2 GATES
+     ================================================ -->
+<div class="slide" data-index="11">
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">12 / Pre-Phase 2 Gates</div>
+  </div>
+  <div class="slide-content">
+    <div class="slide-label">Non-Negotiable Before We Build Phase 2</div>
+    <h2 class="slide-title">Gates That Must Close First</h2>
+    <div class="grid-2" style="flex: 1; align-content: start; gap: 1.2rem;">
+      <div>
+        <div class="gate-item">
+          <div class="gate-num">1</div>
+          <div class="gate-text"><strong>Security Remediation Complete</strong><br>All 5 critical issues closed, credentials rotated, and verified clean.</div>
+        </div>
+        <div class="gate-item">
+          <div class="gate-num">2</div>
+          <div class="gate-text"><strong>IP Handover Signed & Filed</strong><br>Developer IP assignments signed. License headers in repos. Firebase + Tap account transfers complete.</div>
+        </div>
+        <div class="gate-item">
+          <div class="gate-num">3</div>
+          <div class="gate-text"><strong>Test Coverage Mandate</strong><br>All new Phase 2 code ships with unit tests. Minimum 70% coverage on new business logic. Zero-test legacy is acceptable — new code is not.</div>
+        </div>
+      </div>
+      <div>
+        <div class="gate-item">
+          <div class="gate-num">4</div>
+          <div class="gate-text"><strong>API Documentation</strong><br>Swagger / OpenAPI spec for all 45+ endpoints. Required for any third-party integration and developer onboarding.</div>
+        </div>
+        <div class="gate-item">
+          <div class="gate-num">5</div>
+          <div class="gate-text"><strong>CI/CD Pipeline Live</strong><br>Automated deployment pipeline. No more manual deploys. Staging environment with production parity.</div>
+        </div>
+        <div class="card card-teal" style="margin-top: 0.8rem;">
+          <div class="card-head card-head-teal">Estimated Time to Clear All Gates</div>
+          <div style="font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; color: var(--teal); margin: 0.3rem 0;">3–4 Weeks</div>
+          <div class="card-desc">Security fixes: 1 week. IP paperwork: parallel. CI/CD + docs: 2 weeks. These run concurrently — not sequentially.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SLIDE 13 — CLOSING
+     ================================================ -->
+<div class="slide" data-index="12">
+  <div class="orb orb-1" style="opacity: 0.1;"></div>
+  <div class="orb orb-2" style="opacity: 0.08;"></div>
+  <div class="slide-header">
+    <div class="xspace-wordmark">XSPACE · إكس سبيس</div>
+    <div class="slide-tag">13 / Summary</div>
+  </div>
+  <div class="slide-content" style="justify-content: center; text-align: center; align-items: center;">
+    <div class="closing-center">
+      <div class="closing-line"></div>
+      <div class="closing-headline">The foundation is solid.<br>Let's ship Phase 2.</div>
+      <div class="closing-sub">الأساس التقني جاهز — ننتقل لمرحلة البناء الحقيقية</div>
+      <div class="divider" style="max-width: 20rem; margin: 0.5rem auto;"></div>
+      <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <div style="font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; color: var(--green);">MVP</div>
+          <div style="font-size: 0.75rem; color: var(--text-dim);">Built & Running</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; color: var(--amber);">3–4 wks</div>
+          <div style="font-size: 0.75rem; color: var(--text-dim);">To Clear Gates</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; color: var(--teal);">4 EPICs</div>
+          <div style="font-size: 0.75rem; color: var(--text-dim);">Designed & Estimated</div>
+        </div>
+      </div>
+      <div class="closing-date" style="margin-top: 1.5rem;">Thumama · April 5, 2026 · CTO Briefing</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<!-- ================================================
+     NAVIGATION
+     ================================================ -->
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" title="Previous (←)">&#8592;</button>
+  <div id="slide-counter">1 / 13</div>
+  <button class="nav-btn" id="btn-next" onclick="navigate(1)" title="Next (→)">&#8594;</button>
+  <button id="menu-btn" onclick="toggleMenu()" title="Jump to slide">&#9783;</button>
+</div>
+
+<!-- JUMP MENU -->
+<div id="jump-menu">
+  <div class="jump-header">Jump to Slide</div>
+  <div id="jump-list"></div>
+</div>
+
+<!-- OVERVIEW -->
+<div id="overview">
+  <button id="overview-close" onclick="closeOverview()">&#10005;</button>
+  <div class="overview-grid" id="overview-grid"></div>
+</div>
+
+<script>
+const SLIDES = [
+  { title: "Title — Product & Tech Update" },
+  { title: "What We Built — Overview" },
+  { title: "Backend Architecture" },
+  { title: "Mobile App Architecture" },
+  { title: "Admin Dashboard" },
+  { title: "Features Live & Demo-Ready" },
+  { title: "Open Items — Security" },
+  { title: "Open Items — IP & Ownership" },
+  { title: "Open Items — Payments & App Store" },
+  { title: "Phase 2 — Four EPICs" },
+  { title: "Feature Estimates" },
+  { title: "Pre-Phase 2 Gates" },
+  { title: "Closing — Let's Ship" },
+];
+
+const TOTAL = SLIDES.length;
+let current = 0;
+let menuOpen = false;
+let overviewOpen = false;
+
+// Build jump list
+const jumpList = document.getElementById('jump-list');
+const overviewGrid = document.getElementById('overview-grid');
+SLIDES.forEach((s, i) => {
+  // Jump menu item
+  const item = document.createElement('div');
+  item.className = 'jump-item' + (i === 0 ? ' active' : '');
+  item.innerHTML = `<span class="jump-num">${i+1}</span><span class="jump-title">${s.title}</span>`;
+  item.onclick = () => { goTo(i); toggleMenu(); };
+  jumpList.appendChild(item);
+
+  // Overview thumb
+  const thumb = document.createElement('div');
+  thumb.className = 'thumb' + (i === 0 ? ' active' : '');
+  thumb.innerHTML = `<div class="thumb-num">Slide ${i+1}</div><div class="thumb-title">${s.title}</div>`;
+  thumb.onclick = () => { goTo(i); closeOverview(); };
+  overviewGrid.appendChild(thumb);
+});
+
+function goTo(idx) {
+  if (idx < 0 || idx >= TOTAL) return;
+  const slides = document.querySelectorAll('.slide');
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit-left');
+  setTimeout(() => slides[current === idx ? idx : current].classList.remove('exit-left'), 500);
+
+  const dir = idx > current ? 1 : -1;
+  slides[idx].style.transform = dir > 0 ? 'translateX(40px)' : 'translateX(-40px)';
+
+  current = idx;
+  slides[current].classList.add('active');
+  slides[current].style.transform = '';
+
+  // Update progress bar
+  document.getElementById('progress-bar').style.width = ((current + 1) / TOTAL * 100) + '%';
+  // Update counter
+  document.getElementById('slide-counter').textContent = `${current + 1} / ${TOTAL}`;
+  // Update buttons
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = current === TOTAL - 1;
+  // Update jump menu active
+  document.querySelectorAll('.jump-item').forEach((el, i) => el.classList.toggle('active', i === current));
+  document.querySelectorAll('.thumb').forEach((el, i) => el.classList.toggle('active', i === current));
+  // URL hash
+  history.replaceState(null, '', '#slide-' + (current + 1));
+}
+
+function navigate(dir) { goTo(current + dir); }
+
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  document.getElementById('jump-menu').classList.toggle('open', menuOpen);
+}
+
+function closeOverview() {
+  overviewOpen = false;
+  document.getElementById('overview').classList.remove('open');
+}
+
+// Initial state
+document.getElementById('btn-prev').disabled = true;
+
+// Hash navigation on load
+const hash = location.hash;
+if (hash && hash.startsWith('#slide-')) {
+  const n = parseInt(hash.replace('#slide-', ''), 10);
+  if (n >= 1 && n <= TOTAL) goTo(n - 1);
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (e.key === 'Home') goTo(0);
+  else if (e.key === 'End') goTo(TOTAL - 1);
+  else if (e.key === 'Escape') {
+    if (overviewOpen) closeOverview();
+    else if (menuOpen) toggleMenu();
+    else {
+      overviewOpen = true;
+      document.getElementById('overview').classList.add('open');
+    }
+  }
+});
+
+// Click outside jump menu to close
+document.addEventListener('click', e => {
+  if (menuOpen && !document.getElementById('jump-menu').contains(e.target) && e.target.id !== 'menu-btn') {
+    toggleMenu();
+  }
+});
+</script>
+</body>
+</html>
