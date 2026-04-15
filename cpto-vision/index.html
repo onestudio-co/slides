@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Chief, One Venture — CPTO Vision for One Studio</title>
+<link rel="icon" type="image/jpeg" href="../logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:          #110e0d;
+  --bg-2:        #1c1816;
+  --bg-3:        #261f1c;
+  --border:      #322c29;
+  --fg:          #f4f3ef;
+  --fg-dim:      #a39a92;
+  --fg-mute:     #6b625b;
+  --primary:     #ff5619;
+  --primary-dim: #c8441a;
+  --gold:        #f5a822;
+  --emerald:     #3dd68c;
+  --danger:      #ee4343;
+  --glass-bg:    rgba(255, 255, 255, 0.04);
+  --glass-brd:   rgba(255, 255, 255, 0.08);
+  --grad-orange: linear-gradient(135deg, #ff5619 0%, #f5a822 100%);
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+
+/* ===== BACKGROUND MESH ===== */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(255, 86, 25, 0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(245, 168, 34, 0.05), transparent 50%),
+    var(--bg);
+}
+
+/* ===== MOBILE BLOCK ===== */
+#mobile-block {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: linear-gradient(135deg, #0a0706 0%, #1c1816 50%, #110e0d 100%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+#mobile-block .mb-icon {
+  width: 80px; height: 80px;
+  margin-bottom: 2rem;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+#mobile-block .mb-icon img { width: 100%; height: 100%; object-fit: cover; }
+#mobile-block h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+#mobile-block .mb-arabic {
+  font-size: 1.05rem;
+  color: var(--fg-dim);
+  margin-bottom: 2.5rem;
+  direction: rtl;
+  line-height: 1.6;
+  max-width: 320px;
+}
+#mobile-block .mb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  background: rgba(255, 86, 25, 0.12);
+  border: 1px solid rgba(255, 86, 25, 0.35);
+  border-radius: 12px;
+  color: var(--primary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#mobile-block .mb-btn:hover {
+  background: rgba(255, 86, 25, 0.2);
+  border-color: rgba(255, 86, 25, 0.55);
+}
+#mobile-block .mb-copied {
+  color: var(--emerald);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (max-width: 900px) {
+  #mobile-block { display: flex !important; }
+  #presentation, #progress-bar, #slide-counter, #nav-controls, #menu-btn, #slide-menu-overlay, #grid-overlay { display: none !important; }
+}
+
+/* ===== PRESENTATION ===== */
+#presentation {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 6rem;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.slide.exit-left {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+.slide-inner {
+  max-width: 1100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slide-inner.left { align-items: flex-start; text-align: left; }
+
+/* ===== PROGRESS BAR ===== */
+#progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--grad-orange);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+}
+
+/* ===== NAV CONTROLS ===== */
+#nav-controls {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 200;
+}
+.nav-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-brd);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--fg-dim);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  outline: none;
+}
+.nav-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--fg);
+}
+.nav-btn:disabled { opacity: 0.25; cursor: default; pointer-events: none; }
+#nav-counter {
+  font-size: 0.78rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  min-width: 3.2rem;
+  text-align: center;
+  user-select: none;
+}
+
+/* ===== MENU BUTTON ===== */
+#menu-btn {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-brd);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--fg-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  z-index: 200;
+  outline: none;
+}
+#menu-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--fg);
+}
+
+/* ===== SLIDE MENU ===== */
+#slide-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#slide-menu-overlay.open { pointer-events: auto; opacity: 1; }
+#slide-menu-overlay .menu-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+#slide-menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background: rgba(28, 24, 22, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid var(--glass-brd);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+#slide-menu-overlay.open #slide-menu-panel { transform: translateX(0); }
+.menu-header {
+  padding: 0 1.25rem 1rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--fg-dim);
+  font-weight: 600;
+  border-bottom: 1px solid var(--glass-brd);
+  margin-bottom: 0.5rem;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  background: none;
+  color: var(--fg-dim);
+  width: 100%;
+  text-align: left;
+  font-size: 0.88rem;
+  font-family: inherit;
+}
+.menu-item:hover { background: rgba(255,255,255,0.04); color: var(--fg); }
+.menu-item.active { color: var(--primary); }
+.menu-item .mi-num {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-mute);
+  min-width: 1.4rem;
+}
+.menu-item.active .mi-num { color: var(--primary); }
+
+/* ===== GRID OVERVIEW ===== */
+#grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(17, 14, 13, 0.96);
+  backdrop-filter: blur(20px);
+  display: none;
+  padding: 3rem;
+  overflow-y: auto;
+}
+#grid-overlay.open { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; align-content: start; }
+.grid-cell {
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--glass-brd);
+  border-radius: 10px;
+  background: var(--bg-2);
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.grid-cell:hover {
+  border-color: var(--primary);
+  background: var(--bg-3);
+  transform: translateY(-2px);
+}
+.grid-cell .gc-num {
+  font-size: 0.72rem;
+  color: var(--fg-mute);
+  letter-spacing: 0.1em;
+}
+.grid-cell .gc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--fg);
+  line-height: 1.25;
+}
+.grid-cell .gc-sub {
+  font-size: 0.78rem;
+  color: var(--fg-dim);
+  line-height: 1.4;
+}
+
+/* ===== SLIDE CONTENT STYLES ===== */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 86, 25, 0.1);
+  border: 1px solid rgba(255, 86, 25, 0.3);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--primary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.pill .pill-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+}
+
+.eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--fg-dim);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+h1.hero {
+  font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+h1.hero .accent {
+  background: var(--grad-orange);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h2.section {
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+h2.section.left { text-align: left; }
+h2.section .accent { color: var(--primary); }
+
+.lede {
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  line-height: 1.55;
+  color: var(--fg-dim);
+  max-width: 820px;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.lede.left { text-align: left; }
+.lede strong { color: var(--fg); font-weight: 500; }
+
+.subtle {
+  font-size: 0.92rem;
+  color: var(--fg-mute);
+  font-style: italic;
+}
+
+/* Card grids */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; width: 100%; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; width: 100%; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; }
+
+.card {
+  padding: 1.5rem;
+  border-radius: 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.card:hover { border-color: rgba(255, 86, 25, 0.3); background: var(--bg-3); }
+.card .card-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+.card .card-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.6rem;
+  line-height: 1.25;
+}
+.card .card-body {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--fg-dim);
+}
+
+.card.ghost {
+  background: transparent;
+  border: 1px dashed var(--border);
+}
+.card.ghost .card-title { color: var(--fg-dim); text-decoration: line-through; text-decoration-color: var(--fg-mute); }
+
+.card.accent {
+  background: linear-gradient(135deg, rgba(255,86,25,0.08), rgba(245,168,34,0.04));
+  border-color: rgba(255, 86, 25, 0.4);
+}
+.card.accent .card-title { color: var(--primary); }
+
+.card .card-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+/* Bullet list */
+.bullets {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 900px;
+}
+.bullets li {
+  padding: 1rem 0;
+  padding-left: 2.5rem;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--fg);
+}
+.bullets li:last-child { border-bottom: none; }
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 1.55rem;
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 86, 25, 0.5);
+}
+.bullets li strong { color: var(--primary); font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
+.bullets li .sub { display: block; color: var(--fg-dim); font-size: 0.92rem; margin-top: 0.35rem; }
+
+/* Negation list */
+.negations {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 820px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.negations li {
+  padding: 0.9rem 1.25rem;
+  border-left: 3px solid var(--danger);
+  background: rgba(238, 67, 67, 0.04);
+  border-radius: 0 8px 8px 0;
+  font-size: 1rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+.negations li strong {
+  color: var(--fg);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* Negation grid (2x3) */
+.neg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 0.5rem;
+}
+.neg-card {
+  padding: 1.1rem 1.2rem;
+  border-radius: 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--danger);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 150px;
+  transition: all 0.25s;
+}
+.neg-card:hover { background: var(--bg-3); }
+.neg-card .neg-x {
+  font-size: 1rem;
+  color: var(--danger);
+  opacity: 0.7;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  line-height: 1;
+}
+.neg-card .neg-check {
+  font-size: 1.1rem;
+  color: var(--primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  line-height: 1;
+}
+.neg-card .neg-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--fg);
+  line-height: 1.25;
+}
+.neg-card .neg-body {
+  font-size: 0.86rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+.neg-card.yes {
+  border-left-color: var(--primary);
+  background: linear-gradient(135deg, rgba(255,86,25,0.1), rgba(245,168,34,0.04));
+  border-color: rgba(255, 86, 25, 0.4);
+}
+.neg-card.yes .neg-title { color: var(--primary); }
+.neg-card.yes .neg-body { color: var(--fg); }
+
+/* Quote / emphasis */
+.quote-lg {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--fg);
+  text-align: center;
+  max-width: 900px;
+  margin: 2rem 0;
+  letter-spacing: -0.01em;
+}
+.quote-lg .accent { color: var(--primary); }
+
+/* Big number */
+.big-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(6rem, 15vw, 12rem);
+  font-weight: 700;
+  line-height: 1;
+  background: var(--grad-orange);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+/* Split block for before/after */
+.split {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 2rem;
+  width: 100%;
+  align-items: center;
+  margin: 1rem 0;
+}
+.split-card {
+  padding: 1.75rem;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+}
+.split-card.before { border-color: var(--border); }
+.split-card.after { border-color: rgba(255, 86, 25, 0.4); background: linear-gradient(135deg, rgba(255,86,25,0.08), rgba(245,168,34,0.04)); }
+.split-card .sc-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  margin-bottom: 0.75rem;
+}
+.split-card.after .sc-label { color: var(--primary); }
+.split-card .sc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.split-card .sc-body {
+  font-size: 0.92rem;
+  color: var(--fg-dim);
+  line-height: 1.55;
+}
+.split-arrow {
+  font-size: 1.8rem;
+  color: var(--primary);
+  opacity: 0.7;
+}
+
+/* Self-check grid */
+.self-check {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 920px;
+}
+.self-check .sc-item {
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--fg-dim);
+}
+.self-check .sc-item.not { border-left: 3px solid var(--danger); }
+.self-check .sc-item.yes { border-left: 3px solid var(--primary); background: linear-gradient(90deg, rgba(255,86,25,0.06), rgba(255,86,25,0.02)); color: var(--fg); }
+.self-check .sc-item strong { display: block; font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--fg); margin-bottom: 0.4rem; }
+.self-check .sc-item.yes strong { color: var(--primary); }
+
+/* Footer credits on title slide */
+.footer-line {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.footer-line .brand-mark {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Logo watermark */
+.logo-stamp {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  height: 32px;
+  width: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0.75;
+  transition: opacity 0.25s;
+  z-index: 90;
+}
+.logo-stamp:hover { opacity: 1; }
+.logo-stamp img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Timeline */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+  position: relative;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary) 20%, var(--primary) 80%, transparent);
+  opacity: 0.3;
+  z-index: 0;
+}
+.tl-step {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem 1.25rem 1.25rem;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.tl-step.current { border-color: var(--primary); background: linear-gradient(135deg, rgba(255,86,25,0.1), rgba(245,168,34,0.04)); }
+.tl-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  color: var(--fg-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  margin: -36px auto 1rem;
+  position: relative;
+  z-index: 2;
+}
+.tl-step.current .tl-dot {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(255, 86, 25, 0.15);
+}
+.tl-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  margin-bottom: 0.5rem;
+}
+.tl-step.current .tl-label { color: var(--primary); }
+.tl-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+.tl-body { font-size: 0.85rem; color: var(--fg-dim); line-height: 1.55; }
+
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<!-- ===== MOBILE BLOCK ===== -->
+<div id="mobile-block">
+  <div class="mb-icon"><img src="../logo.jpeg" alt="One Studio"></div>
+  <h2>Desktop Only</h2>
+  <p class="mb-arabic">هذا العرض مصمم للعرض على شاشة الكمبيوتر. الرجاء فتح الرابط من جهازك لضمان أفضل تجربة.</p>
+  <button class="mb-btn" onclick="copyMobileLink()">
+    <span>Copy Link to Open on Desktop</span>
+  </button>
+  <div class="mb-copied" id="mb-copied">✓ Link copied</div>
+</div>
+
+<!-- ===== LOGO STAMP ===== -->
+<div class="logo-stamp"><img src="../logo.jpeg" alt=""></div>
+
+<!-- ===== PRESENTATION ===== -->
+<div id="presentation">
+
+  <!-- SLIDE 1 — TITLE -->
+  <section class="slide active" data-title="Title" data-sub="Opening">
+    <div class="slide-inner">
+      <div class="pill"><span class="pill-dot"></span>One Studio · Internal</div>
+      <h1 class="hero">One Chief.<br><span class="accent">One Venture.</span></h1>
+      <p class="lede">A new shape of leadership for what One Studio is becoming — and the most strategic venture we've ever attempted.</p>
+    </div>
+    <div class="footer-line">Mohammed Shurrab · <span class="brand-mark">One Studio</span> · April 2026</div>
+  </section>
+
+  <!-- SLIDE 2 — WHERE WE ARE -->
+  <section class="slide" data-title="Where We Are" data-sub="The studio today">
+    <div class="slide-inner left">
+      <div class="eyebrow">Today</div>
+      <h2 class="section left">The arc we've been running.</h2>
+      <p class="lede left">We've already reshaped how we build — twice. <strong>Product Engineers</strong> in Q3 2025. <strong>Venture Operators</strong> in Q4. The next step is the biggest one: an <strong>Autonomous Venture Builder</strong> running on the Venture OS. That's why the leadership shape has to change.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-label">Q3 2025</div>
+          <div class="card-title">Product Engineers</div>
+          <div class="card-body">One person. Customer interview, product call, shipped code — same afternoon.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Q4 2025</div>
+          <div class="card-title">Venture Operators</div>
+          <div class="card-body">Product Engineers who run entire ventures end-to-end. Autonomous, agentic, accountable.</div>
+        </div>
+        <div class="card accent">
+          <div class="card-label">2026</div>
+          <div class="card-title">Autonomous Venture Builder</div>
+          <div class="card-body">Venture OS live. New ventures stand up and reach decision points without a human pushing every step.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 — THE GAP -->
+  <section class="slide" data-title="The Gap" data-sub="Product is split">
+    <div class="slide-inner">
+      <div class="eyebrow">The Gap</div>
+      <h2 class="section">Product is split between two founders.</h2>
+      <p class="lede">Alaa runs Product as <strong>CEO / CPO</strong>. Shurrab runs Product as <strong>CTO / CPO</strong>. Both doubling up — neither owning it fully. That's the gap we need to close.</p>
+      <div class="split">
+        <div class="split-card before">
+          <div class="sc-label">Today</div>
+          <div class="sc-title">Alaa · CEO / CPO</div>
+          <div class="sc-body">Runs the studio. Also owns Product direction. Two full jobs sharing one seat.</div>
+        </div>
+        <div class="split-arrow">+</div>
+        <div class="split-card before">
+          <div class="sc-label">Today</div>
+          <div class="sc-title">Shurrab · CTO / CPO</div>
+          <div class="sc-body">Owns Technology. Also holding Product threads. Two full jobs sharing one seat.</div>
+        </div>
+      </div>
+      <p class="subtle" style="margin-top: 2rem;">We don't need <em>more</em> of that shape. We need the right shape.</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 — THE ROLE WE REFUSE TO HIRE -->
+  <section class="slide" data-title="Not This" data-sub="What we refuse to hire">
+    <div class="slide-inner">
+      <div class="eyebrow">What this role is not</div>
+      <h2 class="section">Five roles we're <span class="accent">not</span> hiring.</h2>
+      <div class="neg-grid">
+        <div class="neg-card">
+          <div class="neg-x">✕</div>
+          <div class="neg-title">CTO</div>
+          <div class="neg-body">Leads engineering. Our people don't split into eng and product — one discipline, one brain.</div>
+        </div>
+        <div class="neg-card">
+          <div class="neg-x">✕</div>
+          <div class="neg-title">CPO</div>
+          <div class="neg-body">Same reason as CTO — mirrored.</div>
+        </div>
+        <div class="neg-card">
+          <div class="neg-x">✕</div>
+          <div class="neg-title">CPTO of a Venture</div>
+          <div class="neg-body">Single-venture Chiefs exist elsewhere. Here, one person owns the craft across every venture.</div>
+        </div>
+        <div class="neg-card">
+          <div class="neg-x">✕</div>
+          <div class="neg-title">Engineering Manager / Head of Product</div>
+          <div class="neg-body">Managers assign work. This role doesn't.</div>
+        </div>
+        <div class="neg-card">
+          <div class="neg-x">✕</div>
+          <div class="neg-title">A Hired Gun</div>
+          <div class="neg-body">We aren't buying throughput. We're hiring a standard-bearer.</div>
+        </div>
+        <div class="neg-card yes">
+          <div class="neg-check">→</div>
+          <div class="neg-title">The CPTO</div>
+          <div class="neg-body">One Chief. Product + Technology unified. Portfolio-wide. Next slide.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 — INTRODUCING THE CPTO -->
+  <section class="slide" data-title="The Role" data-sub="CPTO, unified">
+    <div class="slide-inner">
+      <div class="eyebrow">The Role</div>
+      <h2 class="section"><span class="accent">CPTO</span> of the One Studio<br>Venture Builder.</h2>
+      <p class="lede">One Chief. Product and Technology unified under a single seat — because at One Studio, they already are.</p>
+      <div class="grid-2" style="max-width: 820px;">
+        <div class="card accent">
+          <div class="card-label">Unifies</div>
+          <div class="card-title">Product + Technology</div>
+          <div class="card-body">The fused discipline our Product Engineers already live. Leadership matches the work.</div>
+        </div>
+        <div class="card accent">
+          <div class="card-label">Owns</div>
+          <div class="card-title">The Whole Portfolio</div>
+          <div class="card-body">Studio-wide. Every venture, every Product Engineer, one standard.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 — THE PEOPLE THEY LEAD -->
+  <section class="slide" data-title="The Species" data-sub="Agentic / Vibe Product Engineers">
+    <div class="slide-inner left">
+      <div class="eyebrow">The People They Lead</div>
+      <h2 class="section left">Agentic / Vibe<br><span class="accent">Product Engineers.</span></h2>
+      <p class="lede left">A new species of builder. Not junior engineers waiting for tickets. Not PMs writing specs. Something the industry hasn't named yet — but we already hire for it.</p>
+      <ul class="bullets">
+        <li><strong>Build <em>with</em> AI, not around it.</strong><span class="sub">Cursor, Claude Code, Orchestra, agents — these are their hands, not their crutch.</span></li>
+        <li><strong>Move fluidly across the stack of thinking.</strong><span class="sub">Customer interview, product decision, shipped code — in the same afternoon.</span></li>
+        <li><strong>Velocity and taste are the same muscle.</strong><span class="sub">They don't trade one for the other. Both sharpen together or neither moves.</span></li>
+        <li><strong>Portfolio-native.</strong><span class="sub">Work across multiple ventures at once. The craft translates; the domain shifts.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 — THE MANDATE: VENTURE OS -->
+  <section class="slide" data-title="The Mandate" data-sub="Venture OS">
+    <div class="slide-inner">
+      <div class="pill"><span class="pill-dot"></span>The Mandate</div>
+      <h1 class="hero">The <span class="accent">Venture OS.</span></h1>
+      <p class="lede">The internal Agentic Venture Builder Operating System. Our most strategic venture ever — and the defining work of this role.</p>
+      <div class="quote-lg" style="margin-top: 1rem;">This is not a tool the CPTO uses.<br><span class="accent">It is the venture they build.</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 — WHAT VENTURE OS REPLACES -->
+  <section class="slide" data-title="What It Replaces" data-sub="Playbook · experience · tribal knowledge">
+    <div class="slide-inner">
+      <div class="eyebrow">What Venture OS Replaces</div>
+      <h2 class="section">From tacit to <span class="accent">autonomous.</span></h2>
+      <p class="lede">Today, venture building runs on a playbook, a decade of founder experience, and the tacit knowledge of a few key people. The Venture OS turns all of it into a system anyone can run.</p>
+      <ul class="bullets">
+        <li><strong>Replaces the playbook.</strong><span class="sub">What sits in documents becomes what runs in the system.</span></li>
+        <li><strong>Replaces the founder's experience.</strong><span class="sub">Instincts earned over a decade become agents anyone can use.</span></li>
+        <li><strong>Replaces tribal knowledge.</strong><span class="sub">"Ask X" becomes "ask the OS."</span></li>
+        <li><strong>Makes venture building autonomous.</strong><span class="sub">New ventures stand up, run, and reach decision points without a human pushing every step.</span></li>
+        <li><strong>Bridges every gap.</strong><span class="sub">Signal capture, hypothesis framing, resource allocation, kill decisions, handoffs — all flow through one substrate.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SLIDE 9 — 100x AMBITION -->
+  <section class="slide" data-title="100x" data-sub="Not 10x">
+    <div class="slide-inner">
+      <div class="big-num">100<span style="font-size: 0.6em;">×</span></div>
+      <h2 class="section">Not 10x. <span class="accent">100x.</span></h2>
+      <p class="lede">10x is a better version of what we already do. 100x is a different category of company. The Venture OS is how we get there — and the CPTO is who makes it happen.</p>
+      <div class="grid-2" style="max-width: 820px; margin-top: 1rem;">
+        <div class="card">
+          <div class="card-label">10x thinking</div>
+          <div class="card-title">Better playbook.</div>
+          <div class="card-body">More documents. Better templates. Faster onboarding. Human-bound throughput.</div>
+        </div>
+        <div class="card accent">
+          <div class="card-label">100x thinking</div>
+          <div class="card-title">No playbook needed.</div>
+          <div class="card-body">The system <em>is</em> the playbook. Ventures run themselves to decision points. Founders unblock, not drive.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10 — THE BAR -->
+  <section class="slide" data-title="The Bar" data-sub="Who this person is">
+    <div class="slide-inner left">
+      <div class="eyebrow">The Bar</div>
+      <h2 class="section left">Chief-level, <span class="accent">or not at all.</span></h2>
+      <p class="lede left">This isn't a skills checklist. It's a shape.</p>
+      <ul class="bullets">
+        <li><strong>Chief-level ambition.</strong><span class="sub">If being Mohammed's #2 sounds like a landing, this role isn't yours. This is the ceiling of its own discipline — not a stepping stone.</span></li>
+        <li><strong>Builder who ships.</strong><span class="sub">Writes code. Uses agents daily. Leads from the front, not the conference room.</span></li>
+        <li><strong>Inspires by proximity.</strong><span class="sub">Product Engineers choose to work with this person because they get better just by being around them.</span></li>
+        <li><strong>Strategic taste.</strong><span class="sub">Knows when to invest in infrastructure, when to duct-tape, when to kill a venture's technical direction.</span></li>
+        <li><strong>Portfolio-native.</strong><span class="sub">Holds multiple ventures in their head at once, with opinions on all of them.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 — THE PATH -->
+  <section class="slide" data-title="The Path" data-sub="Transitional · 3–6 months">
+    <div class="slide-inner">
+      <div class="eyebrow">The Path</div>
+      <h2 class="section">Earnable. <span class="accent">Internal first.</span></h2>
+      <p class="lede">We're not going outside to hire this role. We're holding the seat open and watching who steps up. Target handoff: 3–6 months.</p>
+      <div class="timeline">
+        <div class="tl-step current">
+          <div class="tl-dot">1</div>
+          <div class="tl-label">Now · Apr 2026</div>
+          <div class="tl-title">Transitional CTO</div>
+          <div class="tl-body">Mohammed holds the CTO seat. Alaa keeps CPO. The structure is explicit and temporary.</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-dot">2</div>
+          <div class="tl-label">Q2–Q3 2026</div>
+          <div class="tl-title">The Rise</div>
+          <div class="tl-body">Someone on the team starts carrying CPTO-shaped weight. Owns Venture OS directionally. Grows other engineers.</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-dot">3</div>
+          <div class="tl-label">Q3–Q4 2026</div>
+          <div class="tl-title">The Handoff</div>
+          <div class="tl-body">CPTO is named. Mohammed and Alaa hand off both product tracks. One Chief, one venture — live.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 — IS THIS YOU? -->
+  <section class="slide" data-title="Is This You?" data-sub="Self-check">
+    <div class="slide-inner">
+      <div class="eyebrow">If you're reading this</div>
+      <h2 class="section">How to know <span class="accent">if it's you.</span></h2>
+      <p class="lede">Four honest self-checks. There's no wrong answer — only alignment.</p>
+      <div class="self-check">
+        <div class="sc-item not">
+          <strong>"I could grow into this in a few years."</strong>
+          You're the right person in a few years, not now. Keep building.
+        </div>
+        <div class="sc-item not">
+          <strong>"I'd love to be part of a team like that."</strong>
+          You want to <em>join</em> this role, not own it. That's a different path.
+        </div>
+        <div class="sc-item not">
+          <strong>"The room feels too big. Too exposed."</strong>
+          That's honest. This isn't your seat — and that's fine.
+        </div>
+        <div class="sc-item yes">
+          <strong>"The room finally feels the right size."</strong>
+          Then we should talk.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13 — CLOSING -->
+  <section class="slide" data-title="The Invitation" data-sub="Closing">
+    <div class="slide-inner">
+      <div class="pill"><span class="pill-dot"></span>The Invitation</div>
+      <h1 class="hero">The seat is <span class="accent">open.</span></h1>
+      <p class="lede">We're not waiting for a résumé. We're watching for behavior. Ship like a CPTO, think like a CPTO, grow people like a CPTO — and the title follows.</p>
+      <div class="quote-lg">If the room just got the right size, <span class="accent">come find us.</span></div>
+    </div>
+    <div class="footer-line"><span class="brand-mark">One Studio</span> · Venture Builder · Jeddah</div>
+  </section>
+
+</div>
+
+<!-- ===== UI CONTROLS ===== -->
+<div id="progress-bar"></div>
+
+<button id="menu-btn" aria-label="Open menu">☰</button>
+
+<div id="nav-controls">
+  <button class="nav-btn" id="prev-btn" aria-label="Previous slide">‹</button>
+  <div id="nav-counter">1 / 13</div>
+  <button class="nav-btn" id="next-btn" aria-label="Next slide">›</button>
+</div>
+
+<!-- ===== SLIDE MENU ===== -->
+<div id="slide-menu-overlay">
+  <div class="menu-backdrop"></div>
+  <aside id="slide-menu-panel">
+    <div class="menu-header">Slides · Press M to toggle</div>
+    <div id="menu-list"></div>
+  </aside>
+</div>
+
+<!-- ===== GRID OVERVIEW ===== -->
+<div id="grid-overlay"></div>
+
+<script>
+(function() {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  const navCounter = document.getElementById('nav-counter');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const progressBar = document.getElementById('progress-bar');
+  const menuBtn = document.getElementById('menu-btn');
+  const menuOverlay = document.getElementById('slide-menu-overlay');
+  const menuList = document.getElementById('menu-list');
+  const gridOverlay = document.getElementById('grid-overlay');
+
+  // Build menu
+  slides.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'menu-item' + (i === 0 ? ' active' : '');
+    btn.innerHTML = `<span class="mi-num">${String(i+1).padStart(2,'0')}</span><span>${s.dataset.title}</span>`;
+    btn.addEventListener('click', () => { go(i); closeMenu(); });
+    menuList.appendChild(btn);
+  });
+
+  // Build grid
+  slides.forEach((s, i) => {
+    const cell = document.createElement('button');
+    cell.className = 'grid-cell';
+    cell.innerHTML = `
+      <div>
+        <div class="gc-num">${String(i+1).padStart(2,'0')} / ${total}</div>
+        <div class="gc-title" style="margin-top: 0.6rem;">${s.dataset.title}</div>
+      </div>
+      <div class="gc-sub">${s.dataset.sub || ''}</div>`;
+    cell.style.border = 'none';
+    cell.style.cursor = 'pointer';
+    cell.style.font = 'inherit';
+    cell.style.color = 'inherit';
+    cell.style.textAlign = 'left';
+    cell.addEventListener('click', () => { go(i); closeGrid(); });
+    gridOverlay.appendChild(cell);
+  });
+
+  function go(i) {
+    if (i < 0 || i >= total || i === current) return;
+    const prev = slides[current];
+    const next = slides[i];
+    prev.classList.remove('active');
+    prev.classList.add('exit-left');
+    setTimeout(() => prev.classList.remove('exit-left'), 600);
+    next.classList.add('active');
+    current = i;
+    updateUI();
+    history.replaceState(null, '', `#${i+1}`);
+  }
+
+  function updateUI() {
+    navCounter.textContent = `${current+1} / ${total}`;
+    progressBar.style.width = `${((current+1) / total) * 100}%`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    Array.from(menuList.children).forEach((m, i) => m.classList.toggle('active', i === current));
+  }
+
+  function next() { go(current + 1); }
+  function prev() { go(current - 1); }
+  function openMenu() { menuOverlay.classList.add('open'); }
+  function closeMenu() { menuOverlay.classList.remove('open'); }
+  function openGrid() { gridOverlay.classList.add('open'); }
+  function closeGrid() { gridOverlay.classList.remove('open'); }
+
+  // Events
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  menuBtn.addEventListener('click', openMenu);
+  menuOverlay.querySelector('.menu-backdrop').addEventListener('click', closeMenu);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(total - 1); }
+    else if (e.key === 'Escape') {
+      if (gridOverlay.classList.contains('open')) closeGrid();
+      else if (menuOverlay.classList.contains('open')) closeMenu();
+      else openGrid();
+    }
+    else if (e.key === 'm' || e.key === 'M') { menuOverlay.classList.contains('open') ? closeMenu() : openMenu(); }
+    else if (/^[0-9]$/.test(e.key)) {
+      const n = parseInt(e.key, 10);
+      if (n >= 1 && n <= total) go(n - 1);
+    }
+  });
+
+  // Hash nav
+  const hash = parseInt(location.hash.replace('#',''), 10);
+  if (hash >= 1 && hash <= total) {
+    slides[0].classList.remove('active');
+    slides[hash - 1].classList.add('active');
+    current = hash - 1;
+    updateUI();
+  } else {
+    updateUI();
+  }
+
+  // Mobile copy link
+  window.copyMobileLink = function() {
+    navigator.clipboard.writeText(location.href).then(() => {
+      const c = document.getElementById('mb-copied');
+      c.style.opacity = '1';
+      setTimeout(() => c.style.opacity = '0', 2000);
+    });
+  };
+})();
+</script>
+
+</body>
+</html>
